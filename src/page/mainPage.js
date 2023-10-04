@@ -1,0 +1,28 @@
+import React from 'react';
+import { View, Text, StyleSheet } from 'react-native';
+import AnswerBlock from "../components/answerBlock";
+
+const MainPage = () => {
+    return (
+        <View style={styles.container}>
+            <Text style={styles.text}>mainPage</Text>
+            <AnswerBlock></AnswerBlock>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: '#F5FCFF', // 예시 배경색
+    },
+    text: {
+        fontSize: 20,
+        fontWeight: 'bold',
+        color: 'blue', // 예시 텍스트 색상
+    },
+});
+
+export default MainPage;
