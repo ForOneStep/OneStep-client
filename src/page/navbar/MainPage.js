@@ -1,12 +1,11 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
-import AnswerBlock from "../components/answerBlock";
+import AnswerBlock from "../../components/answerBlock";
 
 const MainPage = () => {
     return (
         <View style={styles.container}>
             <Text style={styles.text}>mainPage</Text>
-            <AnswerBlock></AnswerBlock>
         </View>
     );
 };

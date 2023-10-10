@@ -5,10 +5,11 @@ import type {PropsWithChildren} from 'react';
 import {SafeAreaView, Text, View} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
-import MainPage from "./src/page/mainPage";
-import RecodePage from "./src/page/recodePage";
-import UserPage from "./src/page/userPage";
-import AlbumPage from "./src/page/albumPage";
+import MainPage from "./src/page/navbar/MainPage";
+import RecodePage from "./src/page/navbar/RecodePage";
+import UserPage from "./src/page/navbar/UserPage";
+import AlbumPage from "./src/page/navbar/AlbumPage";
+import QuestionPage from "./src/page/navbar/QuestionPage";
 
 
 type SectionProps = PropsWithChildren<{
@@ -23,6 +24,7 @@ function App(): JSX.Element {
       <NavigationContainer>
         <Tab.Navigator>
           <Tab.Screen name="Main" component={MainPage} />
+          <Tab.Screen name="Question" component={QuestionPage} />
           <Tab.Screen name="Recode" component={RecodePage} />
           <Tab.Screen name="AlbumPage" component={AlbumPage} />
           <Tab.Screen name="User" component={UserPage} />

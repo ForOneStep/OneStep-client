@@ -1,32 +1,57 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { Card, Button } from 'react-native-paper';
 
-const AnswerBlock = () => {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.name}>이름이</Text>
-            <Text style={styles.content}>내용내용내용내용내용내용내용내용내용내용내용내용</Text>
-            <View>
-                <Text> 하트 </Text>
-                <Text> 댓글 </Text>
+const AnswerBlock = ({ name, content, date, comments }) => {
 
-            </View>
-        </View>
-    );
+  return (
+    <Card style={styles.card}>
+      <Card.Content>
+        <Text style={styles.name}>{name}</Text>
+        <View style={styles.gap} />
+        <Text>{content}</Text>
+        <View style={styles.separator} />
+      </Card.Content>
+      <Card.Actions>
+        <Text>{date}</Text>
+        <Button
+          mode="contained"
+          onPress={() => console.log('Pressed')}
+          style={styles.button}
+        >
+          댓글
+        </Button>
+
+        {comments && comments.map((comment,i) => (
+          <View key={i}>
+            <Text>{comment.name}: {comment.content} ({comment.time})</Text>
+          </View>
+        ))}
+      </Card.Actions>
+    </Card>
+  );
 };
 
 const styles = StyleSheet.create({
-    container: {
-        width:"100%",
-        borderRadius:200,
-        backgroundColor: '#FFFFFF', // 예시 배경색
-    },
-    name:{
-
-    },
-    content:{
-
-    }
+  gap:{
+    marginVertical: 10,
+  },
+  card: {
+    margin: 10,
+    width: '90%',
+  },
+  name: {
+    fontWeight: "bold",
+    fontSize: 20,
+  },
+  separator: {
+    borderBottomColor: 'black',
+    borderBottomWidth: 1,
+    marginVertical: 10,
+  },
+  button:{
+    marginLeft:'auto'
+  }
 });
 
-export default AnswerBlock;
+export default AnswerBlock
