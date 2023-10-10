@@ -1,15 +1,42 @@
-import React from 'react';
+import React, { useState } from "react";
 import { View, Text, StyleSheet } from 'react-native';
 import AnswerBlock from "../../components/answerBlock";
+import answerBlock from "../../components/answerBlock";
+import { Button, Card } from "react-native-paper";
 
-const MainPage = () => {
+const QuestionPage = () => {
+  const [answerBlockList,setAnswerBlockList] = useState([
+    {name:'이름',content:'내용',date:'2023',id:'1'},
+    {name:'이름',content:'내용',date:'2023', id:'2'}
+  ])
+
   return (
     <View style={styles.container}>
-      <Text style={styles.text}>질문 페이지</Text>
+      {/* 오늘의 질문 카드 */}
+      {/* 질문 내용을 상태에서 가져와야 합니다. */}
+      {/* 임시로 하드코딩된 문자열을 사용했습니다. */}
+      <Card style={{margin:10}}>
+        <Card.Title title="오늘의 질문" />
+        <Card.Content><Text>질문 내용</Text></Card.Content>
+      </Card>
 
-      <AnswerBlock  name={'아무튼 이름'} content={'아무튼 내용 내용 내용'} date={'2023'} comments={[]} ></AnswerBlock>
-      <AnswerBlock  name={'저런 이름'} content={'아무튼 내용 아무런 내용'} date={'2023'} comments={[]} ></AnswerBlock>
-      <AnswerBlock  name={'아무 이름'} content={'아무튼 대충 대충 내용'} date={'2023'} comments={[]} ></AnswerBlock>
+      {/* 대답 카드들 */}
+      {answerBlockList.map((answer) => {
+        return(
+          <AnswerBlock  key={answer.id} name={answer.name}
+                        content={answer.content} date={answer.date}
+                        comments={[]} ></AnswerBlock>
+        )
+      })}
+
+      {/* 내 대답 추가 버튼 */}
+      <Button
+        mode="contained"
+        onPress={() => console.log('Add Answer Pressed')}
+        style={{ margin: 10 }}
+      >
+        내 대답 추가
+      </Button>
     </View>
   );
 };
@@ -28,4 +55,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default MainPage;
+export default QuestionPage;
