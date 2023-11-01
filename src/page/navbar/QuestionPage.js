@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { View, Text, StyleSheet } from 'react-native';
 import AnswerBlock from "../../components/answerBlock";
 import answerBlock from "../../components/answerBlock";
@@ -6,10 +6,12 @@ import { Button, Card } from "react-native-paper";
 
 const QuestionPage = () => {
   const [answerBlockList,setAnswerBlockList] = useState([
-    {name:'이름',content:'내용',date:'2023',id:'1'},
-    {name:'이름',content:'내용',date:'2023', id:'2'}
+    {name:'이름',content:'내용111',date:'2023',id:'1',comments:[{name:'김ㅇ',content:'댓글 내용',date:'1시간전'},{name:'최ㅇㅇ',content:'댓글 내용222',date:'1시간전'}]},
+    {name:'이름',content:'내용',date:'2023', id:'2',comments:[{name:'김ㅇ',content:'댓글 내용333',date:'1시간전'}]}
   ])
+  useEffect(() => {
 
+  }, []);
   return (
     <View style={styles.container}>
       {/* 오늘의 질문 카드 */}
@@ -25,7 +27,7 @@ const QuestionPage = () => {
         return(
           <AnswerBlock  key={answer.id} name={answer.name}
                         content={answer.content} date={answer.date}
-                        comments={[]} ></AnswerBlock>
+                        comments={answer.comments} ></AnswerBlock>
         )
       })}
 
