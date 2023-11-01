@@ -3,11 +3,16 @@ import { View, StyleSheet, Text } from "react-native";
 import AnswerBlock from "../../components/answerBlock";
 
 const MainPage = () => {
+    const [dDay,setDDay] = useState()
+    const [letterAlert,setLetterAlert] = useState()
+    const [question,setQuestion] = useState()
+    const [level,setLevel] = useState()
+
+
     return (
             <View style={styles.pageBackground}>
                 <View style={styles.islandBackground}>
-                    <View style={styles.dDayText}>
-                    </View>
+
                     <View style={styles.letterText}></View>
                 </View>
                 <View  style={styles.questionBlock}>
@@ -18,36 +23,31 @@ const MainPage = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: '#F5FCFF', // 예시 배경색
+    pageBackground: {
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        backgroundColor: '#FBE6E1',
+        justifyContent: 'start', // 주 축에서 중앙 정렬
+        alignItems: 'center', // 교차 축에서 중앙 정렬
     },
     islandBackground: {
         width: '100%',
-        height: 480,
+        height: 400,
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
-        borderWidth: 1,
-        borderTopWidth: 0   ,
-        borderColor: '#000',
         backgroundColor: '#F6F5F1',
         shadowOffset: { width: 0, height: 10 },
         shadowColor: '#000',
         shadowOpacity: 0.1,
         shadowRadius: 4,
     },
-    pageBackground: {
-        width: '100%',
-        height: '100%',
-        backgroundColor: '#FBE6E1',
-    },
     questionBlock : {
-        width: 100,
-        height: 20,
+        width: '90%',
+        height: 100,
+        marginTop: 40,
         borderRadius: 15,
-        background: '#FFF',
+        backgroundColor: '#FFF',
     },
     dDayText: {
         position: 'absolute',
