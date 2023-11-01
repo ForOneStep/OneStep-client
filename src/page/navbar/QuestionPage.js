@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet } from 'react-native';
 import AnswerBlock from "../../components/answerBlock";
 import answerBlock from "../../components/answerBlock";
 import { Button, Card } from "react-native-paper";
+import LetterIcon from '../../assets/images/svg/letter.svg';
 
 const AnswerItem = ({ item }) => (
     <View style={styles.answerItem}>
@@ -14,6 +15,7 @@ const AnswerItem = ({ item }) => (
 );
 const QuestionItem = ({ question }) => (
     <View style={styles.questionItem}>
+        <LetterIcon style={styles.letterIcon}/>
         <Text style={styles.questionId}>#{question.question_id} 번째 질문</Text>
         <Text style={styles.questionContent}>{question.question_txt}</Text>
     </View>
@@ -78,23 +80,33 @@ const QuestionPage = () => {
 
   }, []);
     return (
-      <View>
-          <QuestionItem question={{ question_id: 1, question_txt: '질문1' }} />
-        <FlatList
+      <View style={styles.container}>
+          <QuestionItem question={{ question_id: 1, question_txt: '가장 기억에 남는 가족 여행은?' }} />
+          <FlatList
+
             data={answerBlockList}
             keyExtractor={item => item.answer_id.toString()}
             renderItem={({ item }) => <AnswerItem item={item} />}
-        />
+
+          />
+          <Button style={styles.creatAnswerButton}>
+              <Text style={styles.answerButtonText}>내 대답 작성하기</Text>
+          </Button>
+
       </View>
     );
 };
 
 const styles = StyleSheet.create({
+    container:{
+      flex:1,
+    },
     questionItem:{
         padding: 20,
         backgroundColor:'#ffe6e0',
         borderRadius:15,
-        marginTop:20,
+        marginTop:30,
+        marginBottom:10,
         marginHorizontal:10,
         shadowColor: '#000', // 그림자 색상
         shadowOffset: {
@@ -116,9 +128,19 @@ const styles = StyleSheet.create({
         color: '#f7b599',
         position: 'absolute',
         top: 10,
-        left:10,
+        left:20,
         fontSize: 12, // 작은 크기로 설정
 
+    },
+    letterIcon: {
+        position: 'absolute',
+        left: -8,
+        top: -20,
+        transform: [{ scaleX: -1 }],
+    },
+    answerFlatList:{
+        top:0,
+        bottom:0,
     },
     answerItem:{
         padding: 20,
@@ -153,6 +175,24 @@ const styles = StyleSheet.create({
     like:{
 
     },
+    creatAnswerButton:{
+        position:'absolute',
+        backgroundColor:'#ff9f9f',
+        height: 60,
+        borderRadius:15,
+        bottom:10,
+        left:10,
+        right:10,
+        justifyContent:'center',
+        alignItems:'center',
+        borderColor:'black',
+        borderWidth:1,
+    },
+    answerButtonText:{
+    color:'black',
+
+        fontSize: 16, // 크기를 크게 설정
+      },
 });
 
 export default QuestionPage;
