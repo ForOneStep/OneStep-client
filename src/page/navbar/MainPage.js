@@ -1,13 +1,34 @@
 import React,{useState} from 'react';
-import { View, StyleSheet, Text } from "react-native";
+import { View, StyleSheet, Text, Image } from "react-native";
 import AnswerBlock from "../../components/answerBlock";
 import LetterIcon from '../../assets/images/svg/letter.svg';
+import island1 from '../../assets/images/png/island1.png';
+import island2 from '../../assets/images/png/island2.png';
+import island3 from '../../assets/images/png/island3.png';
+import island4 from '../../assets/images/png/island4.png';
+import island5 from '../../assets/images/png/island5.png';
+import island6 from '../../assets/images/png/island6.png';
+import island7 from '../../assets/images/png/island7.png';
+import island8 from '../../assets/images/png/island8.png';
+
+
+
 const MainPage = () => {
     const [dDay,setDDay] = useState()
     const [letterAlert,setLetterAlert] = useState()
     const [question,setQuestion] = useState()
-    const [level,setLevel] = useState()
+    const [level,setLevel] = useState(8)
 
+    const islands = {
+        island1,
+        island2,
+        island3,
+        island4,
+        island5,
+        island6,
+        island7,
+        island8,
+    };
 
     return (
             <View style={styles.pageBackground}>
@@ -19,10 +40,14 @@ const MainPage = () => {
                     <View style={styles.letterText}>
                         <LetterIcon width={40} height={40} />
                     </View>
+                    <View>
+                        <Image source={islands[`island${level}`]} style={styles.islandImg} />
+                    </View>
                 </View>
                 <View  style={styles.questionBlock}>
                     <Text style={styles.questionText}> 가장 기억에 남는 가족 여행은? </Text>
                 </View>
+                <Text style={styles.goToAnwser}>답변하러 가기 ></Text>
             </View>
     );
 };
@@ -39,6 +64,8 @@ const styles = StyleSheet.create({
     islandBackground: {
         width: '100%',
         height: 400,
+        alignItems:'center',
+        justifyContent:'center',
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         backgroundColor: '#F6F5F1',
@@ -72,6 +99,11 @@ const styles = StyleSheet.create({
         elevation: 5, // Android에만 적용되는 그림자 깊이
 
     },
+    islandImg:{
+        width: 320,
+        height: 320,
+        top:20,
+    },
     dDayText: {
         position: 'absolute',
         top: 20,
@@ -100,8 +132,11 @@ const styles = StyleSheet.create({
         fontSize: 16, // 크기를 크게 설정
         fontWeight: 'bold', // 굵게 설정
         marginLeft:40,
+    },
+    goToAnwser:{
+        top: 10,
+        left : 120,
     }
-
 });
 
 export default MainPage;
