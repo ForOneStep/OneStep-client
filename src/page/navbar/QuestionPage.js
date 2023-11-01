@@ -14,8 +14,8 @@ const AnswerItem = ({ item }) => (
 );
 const QuestionItem = ({ question }) => (
     <View style={styles.questionItem}>
-        <Text style={styles.questionId}>질문 ID: {question.question_id}</Text>
-        <Text style={styles.questionContent}>질문 내용: {question.question_txt}</Text>
+        <Text style={styles.questionId}>#{question.question_id} 번째 질문</Text>
+        <Text style={styles.questionContent}>{question.question_txt}</Text>
     </View>
 );
 
