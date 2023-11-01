@@ -1,4 +1,4 @@
-import React from 'react';
+import React,{useState} from 'react';
 import { View, StyleSheet, Text } from "react-native";
 import AnswerBlock from "../../components/answerBlock";
 
@@ -12,8 +12,13 @@ const MainPage = () => {
     return (
             <View style={styles.pageBackground}>
                 <View style={styles.islandBackground}>
+                    <View style={styles.dDayText}>
+                        <Text style={styles.dDayTextDate}>D-39</Text>
+                        <Text style={styles.dDayTextName}>"이름"님 생일</Text>
+                    </View>
+                    <View style={styles.letterText}>
 
-                    <View style={styles.letterText}></View>
+                    </View>
                 </View>
                 <View  style={styles.questionBlock}>
 
@@ -51,14 +56,27 @@ const styles = StyleSheet.create({
     },
     dDayText: {
         position: 'absolute',
-        top: 10,
-        left: 10,
+        top: 20,
+        left: 20,
+        display: 'flex',
+        flexDirection:'row',
+        alignItems:'flex-end',
+    },
+    dDayTextDate:{
+        fontSize: 24, // 크기를 크게 설정
+        fontWeight: 'bold', // 굵게 설정
+    },
+    dDayTextName:{
+        fontSize: 16, // 크기를 크게 설정
+        marginLeft:10,
+        marginBottom:3,
     },
     letterText: {
         position: 'absolute',
         top: 10,
         right: 10,
     },
+
 });
 
 export default MainPage;
