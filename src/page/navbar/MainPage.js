@@ -2,6 +2,7 @@ import React,{useState} from 'react';
 import { View, StyleSheet, Text, Image } from "react-native";
 import AnswerBlock from "../../components/answerBlock";
 import LetterIcon from '../../assets/images/svg/letter.svg';
+import LoudSpeaker from '../../assets/images/svg/loudSpeaker.svg';
 import island1 from '../../assets/images/png/island1.png';
 import island2 from '../../assets/images/png/island2.png';
 import island3 from '../../assets/images/png/island3.png';
@@ -45,6 +46,7 @@ const MainPage = () => {
                     </View>
                 </View>
                 <View  style={styles.questionBlock}>
+                    <LoudSpeaker style={styles.loudSpeaker}/>
                     <Text style={styles.questionText}> 가장 기억에 남는 가족 여행은? </Text>
                 </View>
                 <Text style={styles.goToAnwser}>답변하러 가기 ></Text>
@@ -98,6 +100,11 @@ const styles = StyleSheet.create({
 
         elevation: 5, // Android에만 적용되는 그림자 깊이
 
+    },
+    loudSpeaker:{
+        position:'absolute',
+      left:-16,
+      top:-24,
     },
     islandImg:{
         width: 320,
