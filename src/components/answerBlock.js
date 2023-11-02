@@ -30,13 +30,13 @@ const AnswerBlock = ({ name, content, date, comments }) => {
           </Button>
         </View>
         <Card style={styles.commentBox}>
-        {comments && comments.map((comment,i) => (
-          <View key={i} style={styles.comment}>
-            {/*comments:[{name:'김ㅇ',content:'댓글 내용',date:'1시간전'}*/}
-            <Text>{comment.name}: {comment.content} ({comment.date})</Text>
-          </View>
-        ))}
-    </Card>
+          {comments && comments.map((comment,i) => (
+            <View key={i} style={styles.comment}>
+              {/*comments:[{name:'김ㅇ',content:'댓글 내용',date:'1시간전'}*/}
+              <Text>{comment.name}: {comment.content} ({comment.date})</Text>
+            </View>
+          ))}
+        </Card>
       </Card.Actions>
     </Card>
   );

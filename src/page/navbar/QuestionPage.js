@@ -75,7 +75,7 @@ const QuestionPage = () => {
           "write_date": "2023-10-10",
           "like": []
       },{
-          "answer_id": 7,
+          "answer_id": 10,
           "question_id": 1,
           "user_id": "user1",
           "user_nickname": "닉네임1",
@@ -85,7 +85,7 @@ const QuestionPage = () => {
           "write_date": "2023-10-17",
           "like": []
       },{
-          "answer_id": 7,
+          "answer_id": 11,
           "question_id": 1,
           "user_id": "user1",
           "user_nickname": "닉네임1",
@@ -107,7 +107,6 @@ const QuestionPage = () => {
                 data={answerBlockList}
                 keyExtractor={item => item.answer_id.toString()}
                 renderItem={({ item }) => <AnswerItem item={item} />}
-
           />
           <Button style={styles.creatAnswerButton}>
               <Text style={styles.answerButtonText}>내 대답 작성하기</Text>
@@ -198,7 +197,7 @@ const styles = StyleSheet.create({
     },
     creatAnswerButton:{
         position:'absolute',
-        backgroundColor:'#ff9f9f',
+        backgroundColor:'#fbe6e1',
         height: 60,
         borderRadius:15,
         bottom:10,
@@ -206,7 +205,7 @@ const styles = StyleSheet.create({
         right:10,
         justifyContent:'center',
         alignItems:'center',
-        borderColor:'black',
+        borderColor:'#00000077',
         borderWidth:1,
     },
     answerButtonText:{

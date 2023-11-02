@@ -1,6 +1,5 @@
 import React,{useState} from 'react';
 import { View, StyleSheet, Text, Image } from "react-native";
-import AnswerBlock from "../../components/answerBlock";
 import LetterIcon from '../../assets/images/svg/letter.svg';
 import LoudSpeaker from '../../assets/images/svg/loudSpeaker.svg';
 import island1 from '../../assets/images/png/island1.png';
@@ -43,9 +42,8 @@ const MainPage = ({ navigation }) => {
                             onPress={() => navigation.navigate('Letter')}
                             width={40} height={40} />
                     </View>
-                    <View>
-                        <Image source={islands[`island${level}`]} style={styles.islandImg} />
-                    </View>
+                    <Image source={islands[`island${level}`]} style={styles.islandImg} />
+                    <Text  style={styles.famliyName}>000가족의 섬</Text>
                 </View>
                 <View  style={styles.questionBlock}>
                     <LoudSpeaker style={styles.loudSpeaker}/>
@@ -104,6 +102,11 @@ const styles = StyleSheet.create({
 
         elevation: 5, // Android에만 적용되는 그림자 깊이
 
+    },
+    famliyName:{
+        color:'#00000077',
+        fontSize: 24, // 크기를 크게 설정
+        fontWeight: 'bold', // 굵게 설정
     },
     loudSpeaker:{
         position:'absolute',

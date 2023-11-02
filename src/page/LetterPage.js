@@ -10,9 +10,52 @@ const LetterPage = ({navigation}) => {
         {"letter_id":2,"writer_id":"user1","family_id":"아이디1","letter_title":"제목1","letter_txt":"내용1","write_date":"2023-10-11","letter_state":1},
         {"letter_id":3,"writer_id":"user2","family_id":"아이디1","letter_title":"제목3","letter_txt":"내용3","write_date":"2023-10-11","letter_state":1}
     ])
+    const [modalVisible, setModalVisible] = useState(true);
+    const [titlelnputValue, setTitleInputValue] = useState('');
+    const [contentInputValue, setContentInputValue] = useState('');
+
+    const openModal = () => {
+        setModalVisible(true);
+    };
+
+    // 모달을 끄는 함수
+    const closeModal = () => {
+        setModalVisible(false);
+    };
+
+    // 타이틀 인풋 값이 바뀌면 타이틀 값을 바꾸는 함수
+    const handleTitleInputChange = (text) => {
+        setTitleInputValue(text);
+    };
+
+    // 컨텐츠 인풋 값이 바뀌면 컨텐츠 값을 바꾸는 함수
+    const handleContentInputChange = (text) => {
+        setContentInputValue(text);
+    };
+
+    // 버튼을 누르면 타이틀 값과 컨텐츠 값을 백엔드로 보내는 함수
+    const handleSubmit = () => {
+        // 서버로 데이터를 보내는 코드는 주석으로만 표시합니다
+        // fetch('/api/submit', {
+        //   method: 'POST',
+        //   headers: {
+        //     'Content-Type': 'application/json',
+        //   },
+        //   body: JSON.stringify({
+        //     title: titleInputValue,
+        //     content: contentInputValue,
+        //   }),
+        // });
+
+        // 모달을 닫고, 입력 필드를 초기화합니다
+        closeModal();
+        setTitleInputValue('');
+        setContentInputValue('');
+    };
 
     return (
         <View style={styles.container}>
+
             <View style={styles.letterInfoBox}>
                 <LetterIcon style={styles.letterIcon}/>
                 <View style={styles.myLetterBox}>
@@ -26,9 +69,15 @@ const LetterPage = ({navigation}) => {
             </View>
             <View style={styles.infoTextView}>
                 <Text style={styles.infoTextAlert}>
-                    <Text style={styles.infoTextNumber}>3</Text>  개의 익명 편지가 도착했어요
+                    이번주엔 <Text style={styles.infoTextNumber}>3</Text> 개의 편지가 도착했어요
                 </Text>
-                <Text style={styles.infoTextCreate}>작성하기 ></Text>
+                <Text
+                  style={styles.infoTextCreate}
+                  onPress={openModal}
+                >
+                    작성하기
+                </Text>
+
             </View>
             <FlatList
                 horizontal={false}
