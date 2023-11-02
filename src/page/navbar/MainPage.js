@@ -14,7 +14,7 @@ import island8 from '../../assets/images/png/island8.png';
 
 
 
-const MainPage = () => {
+const MainPage = ({ navigation }) => {
     const [dDay,setDDay] = useState()
     const [letterAlert,setLetterAlert] = useState()
     const [question,setQuestion] = useState()
@@ -36,10 +36,12 @@ const MainPage = () => {
                 <View style={styles.islandBackground}>
                     <View style={styles.dDayText}>
                         <Text style={styles.dDayTextDate}>D-39</Text>
-                        <Text style={styles.dDayTextName}>"이름"님 생일</Text>
+                        <Text style={styles.dDayTextName}>"이름"님 생일asd</Text>
                     </View>
                     <View style={styles.letterText}>
-                        <LetterIcon width={40} height={40} />
+                        <LetterIcon
+                            onPress={() => navigation.navigate('Letter')}
+                            width={40} height={40} />
                     </View>
                     <View>
                         <Image source={islands[`island${level}`]} style={styles.islandImg} />
@@ -49,7 +51,9 @@ const MainPage = () => {
                     <LoudSpeaker style={styles.loudSpeaker}/>
                     <Text style={styles.questionText}> 가장 기억에 남는 가족 여행은? </Text>
                 </View>
-                <Text style={styles.goToAnwser}>답변하러 가기 ></Text>
+                <Text
+                    onPress={() => navigation.navigate('Question')}
+                    style={styles.goToAnwser}>답변하러 가기 ></Text>
             </View>
     );
 };
