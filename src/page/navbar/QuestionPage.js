@@ -74,7 +74,27 @@ const QuestionPage = () => {
           "answer_img": null,
           "write_date": "2023-10-10",
           "like": []
-      }
+      },{
+          "answer_id": 7,
+          "question_id": 1,
+          "user_id": "user1",
+          "user_nickname": "닉네임1",
+          "profile_path": "",
+          "answer_txt": "ABc",
+          "answer_img": null,
+          "write_date": "2023-10-17",
+          "like": []
+      },{
+          "answer_id": 7,
+          "question_id": 1,
+          "user_id": "user1",
+          "user_nickname": "닉네임1",
+          "profile_path": "",
+          "answer_txt": "ABc",
+          "answer_img": null,
+          "write_date": "2023-10-17",
+          "like": []
+      },
   ])
   useEffect(() => {
 
@@ -83,10 +103,10 @@ const QuestionPage = () => {
       <View style={styles.container}>
           <QuestionItem question={{ question_id: 1, question_txt: '가장 기억에 남는 가족 여행은?' }} />
           <FlatList
-
-            data={answerBlockList}
-            keyExtractor={item => item.answer_id.toString()}
-            renderItem={({ item }) => <AnswerItem item={item} />}
+                contentContainerStyle={styles.answerFlatList}
+                data={answerBlockList}
+                keyExtractor={item => item.answer_id.toString()}
+                renderItem={({ item }) => <AnswerItem item={item} />}
 
           />
           <Button style={styles.creatAnswerButton}>
@@ -98,6 +118,7 @@ const QuestionPage = () => {
 };
 
 const styles = StyleSheet.create({
+
     container:{
       flex:1,
     },
@@ -139,8 +160,8 @@ const styles = StyleSheet.create({
         transform: [{ scaleX: -1 }],
     },
     answerFlatList:{
-        top:0,
-        bottom:0,
+        paddingBottom: 100,
+        // flex: 1,
     },
     answerItem:{
         padding: 20,

@@ -36,7 +36,7 @@ const MainPage = ({ navigation }) => {
                 <View style={styles.islandBackground}>
                     <View style={styles.dDayText}>
                         <Text style={styles.dDayTextDate}>D-39</Text>
-                        <Text style={styles.dDayTextName}>"이름"님 생일asd</Text>
+                        <Text style={styles.dDayTextName}>"이름"님 생일</Text>
                     </View>
                     <View style={styles.letterText}>
                         <LetterIcon
@@ -74,7 +74,7 @@ const styles = StyleSheet.create({
         justifyContent:'center',
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
-        backgroundColor: '#F6F5F1',
+        backgroundColor: '#f9f8f5',
         shadowColor: '#000', // 그림자 색상
         shadowOffset: {
             width: 0, // 좌우 그림자 위치
