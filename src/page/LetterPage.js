@@ -65,21 +65,30 @@ const LetterPage = ({navigation}) => {
               animationType="slide"
               transparent={true}
             >
-
                 <View style={styles.centeredView}>
                     <View style={styles.modalView}>
-                        <Text>모달 화면</Text>
-                        <TouchableOpacity style={styles.closeIcon} onPress={() => closeModal()}>
-                            <CloseIcon  width={32} height={32} />
-                        </TouchableOpacity>
-                        <EditIcon style={styles.editIcon}  width={24} height={24}/>
+                        <View style={styles.header}>
+                            <Text style={styles.title}>편지 작성</Text>
+                            <TouchableOpacity style={styles.closeIcon} onPress={() => closeModal()}>
+                                <CloseIcon width={32} height={32} />
+                            </TouchableOpacity>
+                        </View>
                         <TextInput
                           style={styles.titleInput}
-                          value={titleInputValue} onChangeText={handleTitleInputChange} />
+                          value={titleInputValue}
+                          onChangeText={handleTitleInputChange}
+                          placeholder="제목을 입력해주세요"
+                        />
                         <TextInput
                           style={styles.contentInput}
-                          value={contentInputValue} onChangeText={handleContentInputChange} />
-                        <Button title="Submit" onPress={handleSubmit} />
+                          value={contentInputValue}
+                          onChangeText={handleContentInputChange}
+                          placeholder="내용을 입력해주세요"
+                          multiline
+                        />
+                        <Button style={styles.submitButton} title="Submit" onPress={handleSubmit} >
+                            제출 하기
+                        </Button>
                     </View>
                 </View>
             </Modal>
@@ -134,27 +143,55 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // 모달 외부를 반투명한 검은색으로 설정
     },
+    submitButton:{
+        backgroundColor:'#fbe6e1',
+    },
     closeIcon:{
         position:"absolute",
-        right:10,
-        top:10,
+        right:0,
+        top:0,
     },
-    editIcon:{
 
+    header: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'center',
+        width: '100%',
     },
-    modalView:{
-        width:'80%',
-        height:'70%',
+    title: {
+        fontSize: 18,
+        textAlign: 'center',
+        flex: 1,
+    },
 
+    editIcon: {
+        position: "absolute",
+        left: 10,
+        top: 10,
+    },
+    modalView: {
+        width: '80%',
+        height: '70%',
         backgroundColor: 'white', // 모달 창의 배경색을 흰색으로 설정
         borderRadius: 20, // 모달 창의 모서리를 둥글게 설정
         padding: 35, // 모달 창 내부의 패딩 설정
-        alignItems: 'center', // 모달 창 내부의 항목들을 가운데 정렬
         shadowColor: "#000", // 그림자 색상 설정
         shadowOffset: { width: 0, height: 2 }, // 그림자 위치 설정
         shadowOpacity: 0.25, // 그림자 투명도 설정
         shadowRadius: 3.84, // 그림자 반경 설정
         elevation: 5, // 그림자 깊이 설정 (안드로이드만 해당)
+    },
+    titleInput: {
+        width: '100%',
+        borderBottomWidth: 1,
+        borderBottomColor: '#ccc',
+        paddingBottom: 10,
+        marginBottom: 20,
+    },
+    contentInput: {
+        flex: 1,
+        width: '100%',
+        textAlignVertical: 'top', // 안드로이드에서 텍스트를 상단에 정렬
     },
     container: {
         flex: 1,
@@ -167,12 +204,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         backgroundColor: 'rgba(0, 0, 0, 0.5)', // 모달 외부를 반투명한 검은색으로 설정
     },
-    titleInput:{
 
-    },
-    contentInput:{
-
-    },
     letterInfoBox:{
         flexDirection:'row',
         height: 120,
