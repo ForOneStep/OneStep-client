@@ -8,6 +8,7 @@ import UserPage from "./src/page/navbar/UserPage";
 import AlbumPage from "./src/page/navbar/AlbumPage";
 import QuestionPage from "./src/page/navbar/QuestionPage";
 import LetterPage from "./src/page/LetterPage";
+import LoadingPage from "./src/page/LoadingPage";
 
 const Tab = createBottomTabNavigator();
 const MainStack = createStackNavigator();
@@ -20,6 +21,8 @@ const TabNavigator = () => {
             <Tab.Screen name="Recode" component={RecodePage} />
             <Tab.Screen name="AlbumPage" component={AlbumPage} />
             <Tab.Screen name="User" component={UserPage} />
+            <Tab.Screen name="Loding" component={LoadingPage} />
+
         </Tab.Navigator>
     );
 }
