@@ -1,7 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet, FlatList } from "react-native";
+import { View, Text, StyleSheet, FlatList, Modal, TextInput, TouchableOpacity } from "react-native";
 
+import CloseIcon from '../assets/images/svg/CloseIcon.svg';
+import EditIcon from '../assets/images/svg/EditIcon.svg';
 import LetterIcon from '../assets/images/svg/letter.svg';
+import { Button } from "react-native-paper";
 
 const LetterPage = ({navigation}) => {
     const [myLetter,setMyLetter] = useState(1)
@@ -11,10 +14,11 @@ const LetterPage = ({navigation}) => {
         {"letter_id":3,"writer_id":"user2","family_id":"아이디1","letter_title":"제목3","letter_txt":"내용3","write_date":"2023-10-11","letter_state":1}
     ])
     const [modalVisible, setModalVisible] = useState(true);
-    const [titlelnputValue, setTitleInputValue] = useState('');
+    const [titleInputValue, setTitleInputValue] = useState('');
     const [contentInputValue, setContentInputValue] = useState('');
 
     const openModal = () => {
+        console.log(modalVisible)
         setModalVisible(true);
     };
 
@@ -47,7 +51,6 @@ const LetterPage = ({navigation}) => {
         //   }),
         // });
 
-        // 모달을 닫고, 입력 필드를 초기화합니다
         closeModal();
         setTitleInputValue('');
         setContentInputValue('');
@@ -55,7 +58,31 @@ const LetterPage = ({navigation}) => {
 
     return (
         <View style={styles.container}>
+            <Modal
+              style={styles.inputModal}
+              visible={modalVisible}
+              // presentationStyle={"formSheet"}
+              animationType="slide"
+              transparent={true}
+            >
 
+                <View style={styles.centeredView}>
+                    <View style={styles.modalView}>
+                        <Text>모달 화면</Text>
+                        <TouchableOpacity style={styles.closeIcon} onPress={() => closeModal()}>
+                            <CloseIcon  width={32} height={32} />
+                        </TouchableOpacity>
+                        <EditIcon style={styles.editIcon}  width={24} height={24}/>
+                        <TextInput
+                          style={styles.titleInput}
+                          value={titleInputValue} onChangeText={handleTitleInputChange} />
+                        <TextInput
+                          style={styles.contentInput}
+                          value={contentInputValue} onChangeText={handleContentInputChange} />
+                        <Button title="Submit" onPress={handleSubmit} />
+                    </View>
+                </View>
+            </Modal>
             <View style={styles.letterInfoBox}>
                 <LetterIcon style={styles.letterIcon}/>
                 <View style={styles.myLetterBox}>
@@ -71,12 +98,13 @@ const LetterPage = ({navigation}) => {
                 <Text style={styles.infoTextAlert}>
                     이번주엔 <Text style={styles.infoTextNumber}>3</Text> 개의 편지가 도착했어요
                 </Text>
-                <Text
-                  style={styles.infoTextCreate}
-                  onPress={openModal}
-                >
-                    작성하기
-                </Text>
+
+                <TouchableOpacity style={styles.infoTextCreateButton} onPress={()=>openModal()}>
+                    <Text
+                      style={styles.infoTextCreate}>
+                        작성하기 >
+                    </Text>
+                </TouchableOpacity>
 
             </View>
             <FlatList
@@ -97,10 +125,53 @@ const LetterPage = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
+    infoTextCreateButton:{
+        zIndex:10,
+    },
+    centeredView: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // 모달 외부를 반투명한 검은색으로 설정
+    },
+    closeIcon:{
+        position:"absolute",
+        right:10,
+        top:10,
+    },
+    editIcon:{
+
+    },
+    modalView:{
+        width:'80%',
+        height:'70%',
+
+        backgroundColor: 'white', // 모달 창의 배경색을 흰색으로 설정
+        borderRadius: 20, // 모달 창의 모서리를 둥글게 설정
+        padding: 35, // 모달 창 내부의 패딩 설정
+        alignItems: 'center', // 모달 창 내부의 항목들을 가운데 정렬
+        shadowColor: "#000", // 그림자 색상 설정
+        shadowOffset: { width: 0, height: 2 }, // 그림자 위치 설정
+        shadowOpacity: 0.25, // 그림자 투명도 설정
+        shadowRadius: 3.84, // 그림자 반경 설정
+        elevation: 5, // 그림자 깊이 설정 (안드로이드만 해당)
+    },
     container: {
         flex: 1,
-        justifyContent: 'start',
+        width:'100%',
         backgroundColor: '#f6f5f1', // 예시 배경색
+    },
+    inputModal: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'rgba(0, 0, 0, 0.5)', // 모달 외부를 반투명한 검은색으로 설정
+    },
+    titleInput:{
+
+    },
+    contentInput:{
+
     },
     letterInfoBox:{
         flexDirection:'row',

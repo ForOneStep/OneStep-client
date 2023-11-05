@@ -2,6 +2,9 @@ import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
 const AlbumPage = () => {
+    const [potoItem,setPotoItem] = useState([{
+
+    }])
     return (
         <View style={styles.container}>
             <Text style={styles.text}>AlbumPage</Text>
