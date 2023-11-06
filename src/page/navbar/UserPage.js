@@ -12,6 +12,7 @@ import { Button } from "react-native-paper";
 
 const UserPage = () => {
     const [user,setUser] = useState([])
+    const imgurl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Bbami_torty_cat.jpg/525px-Bbami_torty_cat.jpg'
     return (
         <View style={styles.container}>
             <View style={styles.groupInfo}>
@@ -40,11 +41,16 @@ const UserPage = () => {
             </View>
 
             <View style={styles.userInfo}>
-                {/*<Image source={{ uri: ''}}></Image>*/}
-                <Text>김가네 막둥이</Text>
-                <BirthdayCakeIcon/>
-                <Text>s.09.27</Text>
+                <Image source={{ uri: imgurl }} style={styles.userImage}  />
+                <View>
+                    <Text style={styles.name}>김가네 막둥이</Text>
+                    <View style={styles.birthdayContainer}>
+                        <BirthdayCakeIcon style={styles.birthdayIcon}/>
+                        <Text style={styles.birthdayText}>2001.09.27</Text>
+                    </View>
+                </View>
             </View>
+
             <View style={styles.etcInfo}>
                 <View style={styles.optionItem}>
                     <EditPostIcon style={styles.icon}/>
@@ -64,6 +70,34 @@ const UserPage = () => {
 };
 
 const styles = StyleSheet.create({
+
+    userImage: {
+        width: 64,
+        height: 64,
+        borderRadius: 50,
+        borderWidth:1,
+        borderColor:'black',
+        marginRight: 10,
+    },
+    name: {
+        fontWeight: 'bold',
+        fontSize: 18,
+        marginBottom:10,
+        marginLeft:10,
+        color:'black',
+    },
+
+    birthdayContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+    },
+    birthdayIcon: {
+        marginRight: 5,
+    },
+    birthdayText: {
+        marginLeft:10,
+        fontSize: 16,
+    },
     optionItem: {
         flexDirection: 'row',
         alignItems: 'center',
@@ -109,9 +143,11 @@ const styles = StyleSheet.create({
     titleName: {
             fontSize: 28,
             fontWeight: 'bold',
+            color:'black',
         },
     title: {
             fontSize: 16,
+            color:'black',
             marginLeft: 5,
             marginBottom:10,
         },
@@ -169,6 +205,10 @@ const styles = StyleSheet.create({
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
 
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent:'start',
+        paddingLeft:40,
         shadowColor: '#000', // 그림자 색상
         shadowOffset: {
             width: 0, // 좌우 그림자 위치
