@@ -35,7 +35,7 @@ const MainPage = ({ navigation }) => {
                 <View style={styles.islandBackground}>
                     <View style={styles.dDayText}>
                         <Text style={styles.dDayTextDate}>D-39</Text>
-                        <Text style={styles.dDayTextName}>"이름"님 생일</Text>
+                        <Text style={styles.dDayTextName}>"김가네 막둥이"님 생일</Text>
                     </View>
                     <View style={styles.letterText}>
                         <LetterIcon
@@ -43,7 +43,7 @@ const MainPage = ({ navigation }) => {
                             width={40} height={40} />
                     </View>
                     <Image source={islands[`island${level}`]} style={styles.islandImg} />
-                    <Text  style={styles.famliyName}>000가족의 섬</Text>
+                    <Text  style={styles.famliyName}>송도 김가네 가족 섬</Text>
                 </View>
                 <View  style={styles.questionBlock}>
                     <LoudSpeaker style={styles.loudSpeaker}/>
