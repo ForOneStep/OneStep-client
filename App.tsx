@@ -9,9 +9,11 @@ import AlbumPage from "./src/page/navbar/AlbumPage";
 import QuestionPage from "./src/page/navbar/QuestionPage";
 import LetterPage from "./src/page/LetterPage";
 import LoadingPage from "./src/page/LoadingPage";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 const MainStack = createStackNavigator();
+const UserContext = React.createContext();
 
 const TabNavigator = () => {
     return (
@@ -27,13 +29,21 @@ const TabNavigator = () => {
 
 const App = () => {
     const [isLoading, setIsLoading] = useState(true);
+    const [userId, setUserId] = useState('');
+    const [familyId, setFamilyId] = useState('');
 
     useEffect(() => {
         const loadInitialData = async () => {
-            // 필요한 정보를 로딩하는 코드...
-            // setIsLoading(false);  // 로딩 완료
+            const storedUserId = 'user1'
+            const storedFamilyId = 'family1'
+            if (!storedUserId || !storedFamilyId) {
+                //로그인 페이지
+            } else {
+                setUserId(storedUserId);
+                setFamilyId(storedFamilyId);
+            }
+            setIsLoading(false);  // 로딩 완료
         };
-
         loadInitialData();
     }, []);
 
@@ -42,12 +52,14 @@ const App = () => {
     }
 
     return (
-        <NavigationContainer>
-            <MainStack.Navigator screenOptions={{ presentation: 'modal' }}>
-                <MainStack.Screen options={{ headerShown: false }} name="Tab" component={TabNavigator} />
-                <MainStack.Screen options={{ headerShown: true }} name="Letter" component={LetterPage} />
-            </MainStack.Navigator>
-        </NavigationContainer>
+        <UserContext.Provider value={{ userId, familyId }}>
+            <NavigationContainer>
+                <MainStack.Navigator screenOptions={{ presentation: 'modal' }}>
+                    <MainStack.Screen options={{ headerShown: false }} name="Tab" component={TabNavigator} />
+                    <MainStack.Screen options={{ headerShown: true }} name="Letter" component={LetterPage} />
+                </MainStack.Navigator>
+            </NavigationContainer>
+        </UserContext.Provider>
     );
 }
 

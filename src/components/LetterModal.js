@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Modal, View, TextInput, Button, Text, TouchableOpacity, StyleSheet } from "react-native";
 import CloseIcon from '../assets/images/svg/CloseIcon.svg';
-
+import axios from 'axios';
 const LetterModal = ({ modalVisible, closeModal }) => {
     const [titleInputValue, setTitleInputValue] = useState('');
     const [contentInputValue, setContentInputValue] = useState('');
@@ -17,7 +17,7 @@ const LetterModal = ({ modalVisible, closeModal }) => {
     };
 
     // 버튼을 누르면 타이틀 값과 컨텐츠 값을 백엔드로 보내는 함수
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         // 오늘 날짜를 가져와서 yyyy-mm-dd 형식으로 변환
         const today = new Date();
         const date = `${today.getFullYear()}-${('0' + (today.getMonth() + 1)).slice(-2)}-${('0' + today.getDate()).slice(-2)}`;
