@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
@@ -21,13 +21,26 @@ const TabNavigator = () => {
             <Tab.Screen name="Recode" component={RecodePage} />
             <Tab.Screen name="AlbumPage" component={AlbumPage} />
             <Tab.Screen name="User" component={UserPage} />
-            <Tab.Screen name="Loding" component={LoadingPage} />
-
         </Tab.Navigator>
     );
 }
 
 const App = () => {
+    const [isLoading, setIsLoading] = useState(true);
+
+    useEffect(() => {
+        const loadInitialData = async () => {
+            // 필요한 정보를 로딩하는 코드...
+            // setIsLoading(false);  // 로딩 완료
+        };
+
+        loadInitialData();
+    }, []);
+
+    if (isLoading) {
+        return <LoadingPage />;  // 로딩 중일 때는 로딩 페이지를 표시
+    }
+
     return (
         <NavigationContainer>
             <MainStack.Navigator screenOptions={{ presentation: 'modal' }}>

@@ -5,17 +5,63 @@ import CloseIcon from '../assets/images/svg/CloseIcon.svg';
 import EditIcon from '../assets/images/svg/EditIcon.svg';
 import LetterIcon from '../assets/images/svg/letter.svg';
 import { Button } from "react-native-paper";
+import LetterModal from "../components/LetterModal";
 
 const LetterPage = ({navigation}) => {
-    const [myLetter,setMyLetter] = useState(1)
-    const [familyLetter,setFamilyLetter] = useState(1)
-    const [lettersData,setLettersData] = useState([
+    const [weeklyLetters,setWeeklyLetters] = useState([
         {"letter_id":2,"writer_id":"user1","family_id":"아이디1","letter_title":"제목1","letter_txt":"내용1","write_date":"2023-10-11","letter_state":1},
         {"letter_id":3,"writer_id":"user2","family_id":"아이디1","letter_title":"제목3","letter_txt":"내용3","write_date":"2023-10-11","letter_state":1}
     ])
-    const [modalVisible, setModalVisible] = useState(true);
-    const [titleInputValue, setTitleInputValue] = useState('');
-    const [contentInputValue, setContentInputValue] = useState('');
+
+    const [modalVisible, setModalVisible] = useState(false);
+    const [title, setTitle] = useState(''); // 쪽지 제목
+    const [content, setContent] = useState(''); // 쪽지 내용
+    // const [userLetters, setUserLetters] = useState([]); // 사용자가 작성한 쪽지
+    // const [familyLetters, setFamilyLetters] = useState([]); // 가족의 쪽지
+    // const [weeklyLetters, setWeeklyLetters] = useState([
+    //     {"letter_id":2,"writer_id":"user1","family_id":"아이디1","letter_title":"제목1","letter_txt":"내용1","write_date":"2023-10-11","letter_state":1},
+    //     {"letter_id":3,"writer_id":"user2","family_id":"아이디1","letter_title":"제목3","letter_txt":"내용3","write_date":"2023-10-11","letter_state":1}
+    // ]); // 이번주 공개된 쪽지
+
+    // 컴포넌트가 마운트되면 데이터 불러오기
+    //     useEffect(() => {
+    //         loadUserLetters();
+    //         loadFamilyLetters();
+    //         loadWeeklyLetters();
+    //     }, []);
+
+    // 쪽지 작성
+
+
+    // 사용자가 작성한 쪽지 불러오기
+    // const loadUserLetters = async () => {
+    //     try {
+    //         const response = await axios.get(`http://52.79.97.196:8080/letter/byUser/${userId}`);
+    //         setUserLetters(response.data);
+    //     } catch (error) {
+    //         // 에러 처리
+    //     }
+    // };
+
+    // 가족의 쪽지 불러오기
+    // const loadFamilyLetters = async () => {
+    //     try {
+    //         const response = await axios.get(`http://52.79.97.196:8080/letter/byFamily/${familyId}`);
+    //         setFamilyLetters(response.data);
+    //     } catch (error) {
+    //         // 에러 처리
+    //     }
+    // };
+
+    // 이번주 공개된 쪽지 불러오기
+    const loadWeeklyLetters = async () => {
+        try {
+            const response = await axios.get(`http://52.79.97.196:8080/letter/weekly/${familyId}`);
+            setWeeklyLetters(response.data);
+        } catch (error) {
+            // 에러 처리
+        }
+    };
 
     const openModal = () => {
         console.log(modalVisible)
@@ -27,71 +73,10 @@ const LetterPage = ({navigation}) => {
         setModalVisible(false);
     };
 
-    // 타이틀 인풋 값이 바뀌면 타이틀 값을 바꾸는 함수
-    const handleTitleInputChange = (text) => {
-        setTitleInputValue(text);
-    };
-
-    // 컨텐츠 인풋 값이 바뀌면 컨텐츠 값을 바꾸는 함수
-    const handleContentInputChange = (text) => {
-        setContentInputValue(text);
-    };
-
-    // 버튼을 누르면 타이틀 값과 컨텐츠 값을 백엔드로 보내는 함수
-    const handleSubmit = () => {
-        // 서버로 데이터를 보내는 코드는 주석으로만 표시합니다
-        // fetch('/api/submit', {
-        //   method: 'POST',
-        //   headers: {
-        //     'Content-Type': 'application/json',
-        //   },
-        //   body: JSON.stringify({
-        //     title: titleInputValue,
-        //     content: contentInputValue,
-        //   }),
-        // });
-
-        closeModal();
-        setTitleInputValue('');
-        setContentInputValue('');
-    };
-
     return (
+
         <View style={styles.container}>
-            <Modal
-              style={styles.inputModal}
-              visible={modalVisible}
-              // presentationStyle={"formSheet"}
-              animationType="slide"
-              transparent={true}
-            >
-                <View style={styles.centeredView}>
-                    <View style={styles.modalView}>
-                        <View style={styles.header}>
-                            <Text style={styles.title}>편지 작성</Text>
-                            <TouchableOpacity style={styles.closeIcon} onPress={() => closeModal()}>
-                                <CloseIcon width={32} height={32} />
-                            </TouchableOpacity>
-                        </View>
-                        <TextInput
-                          style={styles.titleInput}
-                          value={titleInputValue}
-                          onChangeText={handleTitleInputChange}
-                          placeholder="제목을 입력해주세요"
-                        />
-                        <TextInput
-                          style={styles.contentInput}
-                          value={contentInputValue}
-                          onChangeText={handleContentInputChange}
-                          placeholder="내용을 입력해주세요"
-                          multiline
-                        />
-                        <Button style={styles.submitButton} title="Submit" onPress={handleSubmit} >
-                            제출 하기
-                        </Button>
-                    </View>
-                </View>
-            </Modal>
+            <LetterModal modalVisible={modalVisible} closeModal={closeModal} />
             <View style={styles.letterInfoBox}>
                 <LetterIcon style={styles.letterIcon}/>
                 <View style={styles.myLetterBox}>
@@ -119,7 +104,7 @@ const LetterPage = ({navigation}) => {
             <FlatList
                 horizontal={false}
                 contentContainerStyle={styles.letterFlatList}
-                data={lettersData}
+                data={weeklyLetters}
                 keyExtractor={item => item.letter_id.toString()}
                 renderItem={({ item }) => (
                     <View style={styles.letterContainer}>
@@ -136,62 +121,6 @@ const LetterPage = ({navigation}) => {
 const styles = StyleSheet.create({
     infoTextCreateButton:{
         zIndex:10,
-    },
-    centeredView: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-        backgroundColor: 'rgba(0, 0, 0, 0.5)', // 모달 외부를 반투명한 검은색으로 설정
-    },
-    submitButton:{
-        backgroundColor:'#fbe6e1',
-    },
-    closeIcon:{
-        position:"absolute",
-        right:0,
-        top:0,
-    },
-
-    header: {
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        width: '100%',
-    },
-    title: {
-        fontSize: 18,
-        textAlign: 'center',
-        flex: 1,
-    },
-
-    editIcon: {
-        position: "absolute",
-        left: 10,
-        top: 10,
-    },
-    modalView: {
-        width: '80%',
-        height: '70%',
-        backgroundColor: 'white', // 모달 창의 배경색을 흰색으로 설정
-        borderRadius: 20, // 모달 창의 모서리를 둥글게 설정
-        padding: 35, // 모달 창 내부의 패딩 설정
-        shadowColor: "#000", // 그림자 색상 설정
-        shadowOffset: { width: 0, height: 2 }, // 그림자 위치 설정
-        shadowOpacity: 0.25, // 그림자 투명도 설정
-        shadowRadius: 3.84, // 그림자 반경 설정
-        elevation: 5, // 그림자 깊이 설정 (안드로이드만 해당)
-    },
-    titleInput: {
-        width: '100%',
-        borderBottomWidth: 1,
-        borderBottomColor: '#ccc',
-        paddingBottom: 10,
-        marginBottom: 20,
-    },
-    contentInput: {
-        flex: 1,
-        width: '100%',
-        textAlignVertical: 'top', // 안드로이드에서 텍스트를 상단에 정렬
     },
     container: {
         flex: 1,
