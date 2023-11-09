@@ -10,10 +10,12 @@ import island5 from '../../assets/images/png/island5.png';
 import island6 from '../../assets/images/png/island6.png';
 import island7 from '../../assets/images/png/island7.png';
 import island8 from '../../assets/images/png/island8.png';
+import { UserContext } from '../../../App';
 
 
 
 const MainPage = ({ navigation }) => {
+    const { userId, familyId } = React.useContext(UserContext);
     const [dDay,setDDay] = useState()
     const [letterAlert,setLetterAlert] = useState()
     const [question,setQuestion] = useState()
@@ -43,7 +45,7 @@ const MainPage = ({ navigation }) => {
                             width={40} height={40} />
                     </View>
                     <Image source={islands[`island${level}`]} style={styles.islandImg} />
-                    <Text  style={styles.famliyName}>송도 김가네 가족 섬</Text>
+                    <Text  style={styles.famliyName}> 송도 김가네 가족 섬</Text>
                 </View>
                 <View  style={styles.questionBlock}>
                     <LoudSpeaker style={styles.loudSpeaker}/>

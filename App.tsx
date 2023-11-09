@@ -13,7 +13,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Tab = createBottomTabNavigator();
 const MainStack = createStackNavigator();
-const UserContext = React.createContext();
+export const UserContext = React.createContext({ userId: '', familyId: '' });
 
 const TabNavigator = () => {
     return (
@@ -62,5 +62,4 @@ const App = () => {
         </UserContext.Provider>
     );
 }
-
 export default App;
