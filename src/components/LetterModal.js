@@ -20,18 +20,17 @@ const LetterModal = ({ modalVisible, closeModal }) => {
     const handleSubmit = async () => {
         // 오늘 날짜를 가져와서 yyyy-mm-dd 형식으로 변환
         const today = new Date();
-        const date = `${today.getFullYear()}-${('0' + (today.getMonth() + 1)).slice(-2)}-${('0' + today.getDate()).slice(-2)}`;
-
         try {
             const response = await axios.post('http://52.79.97.196:8080/letter/write', {
                 "user_id":"user1",
                 "letter_title":titleInputValue,
                 "letter_txt": contentInputValue,
-                "write_date":date
+                "write_date":today
             });
 
             if (response.status === 200) {
                 // 쪽지 작성 성공
+                console.log("성공")
             } else {
                 // 쪽지 작성 실패
             }

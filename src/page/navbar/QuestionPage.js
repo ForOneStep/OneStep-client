@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet } from 'react-native';
-import AnswerBlock from "../../components/answerBlock";
-import answerBlock from "../../components/answerBlock";
+import axios from 'axios';
 import { Button, Card } from "react-native-paper";
 import LetterIcon from '../../assets/images/svg/letter.svg';
 
@@ -13,95 +12,41 @@ const AnswerItem = ({ item }) => (
         <Text style={styles.like}>{item.like.length}</Text>
     </View>
 );
+
 const QuestionItem = ({ question }) => (
     <View style={styles.questionItem}>
         <LetterIcon style={styles.letterIcon}/>
-        <Text style={styles.questionId}>#{question.question_id} 번째 질문</Text>
+        <Text style={styles.questionDate}>#{question.question_date} 번째 질문</Text>
         <Text style={styles.questionContent}>{question.question_txt}</Text>
     </View>
 );
 
 const QuestionPage = () => {
-  const [answerBlockList,setAnswerBlockList] = useState([
-      {
-          "answer_id": 7,
-          "question_id": 1,
-          "user_id": "user1",
-          "user_nickname": "닉네임1",
-          "profile_path": "",
-          "answer_txt": "ABc",
-          "answer_img": null,
-          "write_date": "2023-10-17",
-          "like": []
-      },
-      {
-          "answer_id": 8,
-          "question_id": 1,
-          "user_id": "user2",
-          "user_nickname": "닉네임2",
-          "profile_path": "",
-          "answer_txt": "aaa",
-          "answer_img": null,
-          "write_date": "2023-10-10",
-          "like": [
-              {
-                  "likeId": {
-                      "answerId": 8,
-                      "userId": "user1"
-                  }
-              },
-              {
-                  "likeId": {
-                      "answerId": 8,
-                      "userId": "user2"
-                  }
-              },
-              {
-                  "likeId": {
-                      "answerId": 8,
-                      "userId": "user3"
-                  }
-              }
-          ]
-      },
-      {
-          "answer_id": 9,
-          "question_id": 1,
-          "user_id": "user3",
-          "user_nickname": "닉네임3",
-          "profile_path": "",
-          "answer_txt": "aaa",
-          "answer_img": null,
-          "write_date": "2023-10-10",
-          "like": []
-      },{
-          "answer_id": 10,
-          "question_id": 1,
-          "user_id": "user1",
-          "user_nickname": "닉네임1",
-          "profile_path": "",
-          "answer_txt": "ABc",
-          "answer_img": null,
-          "write_date": "2023-10-17",
-          "like": []
-      },{
-          "answer_id": 11,
-          "question_id": 1,
-          "user_id": "user1",
-          "user_nickname": "닉네임1",
-          "profile_path": "",
-          "answer_txt": "ABc",
-          "answer_img": null,
-          "write_date": "2023-10-17",
-          "like": []
-      },
-  ])
-  useEffect(() => {
+    const [question, setQuestion] = useState({"question_date":"2023-10-1","question_txt":"질문1"});
+    const [answerBlockList, setAnswerBlockList] = useState([]);
+    const [familyId, setFamilyId] = useState(null); // 로컬 스토리지에서 가져온 family_id
 
-  }, []);
+    // useEffect(() => {
+        // const fetchQuestionAndAnswerBlocks = async () => {
+        //     // 오늘 날짜를 yyyy-mm-dd 형태로 만들기
+        //     const today = new Date();
+        //     const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
+        //
+        //     // question 불러오기
+        //     const questionResponse = await axios.get(`http://52.79.97.196:8080/question/${date}`);
+        //     setQuestion(questionResponse.data);
+        //
+        //     // answerBlockList 불러오기
+        //     const answerBlockListResponse = await axios.get(`http://52.79.97.196:8080/answer/read/${date}/${familyId}`);
+        //     setAnswerBlockList(answerBlockListResponse.data);
+        // }
+
+    //     fetchQuestionAndAnswerBlocks();
+    // }, [familyId]);
+
     return (
       <View style={styles.container}>
-          <QuestionItem question={{ question_id: 1, question_txt: '가장 기억에 남는 가족 여행은?' }} />
+          <QuestionItem question={question} />
           <FlatList
                 contentContainerStyle={styles.answerFlatList}
                 data={answerBlockList}
@@ -144,7 +89,7 @@ const styles = StyleSheet.create({
         textAlign: 'left', // 텍스트를 왼쪽 정렬
         marginVertical:15,
     },
-    questionId: {
+    questionDate: {
         color: '#f7b599',
         position: 'absolute',
         top: 10,

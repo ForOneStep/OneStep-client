@@ -10,11 +10,10 @@ import QuestionPage from "./src/page/navbar/QuestionPage";
 import LetterPage from "./src/page/LetterPage";
 import LoadingPage from "./src/page/LoadingPage";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { UserContext } from './src/contexts/UserContext';
 
 const Tab = createBottomTabNavigator();
 const MainStack = createStackNavigator();
-export const UserContext = React.createContext({ userId: '', familyId: '' });
-
 const TabNavigator = () => {
     return (
         <Tab.Navigator screenOptions={{ headerShown: false }}>
@@ -34,13 +33,15 @@ const App = () => {
 
     useEffect(() => {
         const loadInitialData = async () => {
+            //스테이스에서 가져옴
             const storedUserId = 'user1'
             const storedFamilyId = 'family1'
             if (!storedUserId || !storedFamilyId) {
-                //로그인 페이지
+                //로그인 페이지 실행
             } else {
                 setUserId(storedUserId);
                 setFamilyId(storedFamilyId);
+
             }
             setIsLoading(false);  // 로딩 완료
         };

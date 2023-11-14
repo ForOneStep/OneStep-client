@@ -14,7 +14,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
         alignItems: 'center',
-        backgroundColor: '#F5FCFF', // 예시 배경색
+        backgroundColor: '#F5FCFF', // 예시 배경색n
     },
     text: {
         fontSize: 20,

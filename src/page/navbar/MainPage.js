@@ -10,12 +10,9 @@ import island5 from '../../assets/images/png/island5.png';
 import island6 from '../../assets/images/png/island6.png';
 import island7 from '../../assets/images/png/island7.png';
 import island8 from '../../assets/images/png/island8.png';
-import { UserContext } from '../../../App';
-
-
-
+import { UserContext } from '../../contexts/UserContext.js';
 const MainPage = ({ navigation }) => {
-    const { userId, familyId } = React.useContext(UserContext);
+    const {userId, familyId } = React.useContext(UserContext);
     const [dDay,setDDay] = useState()
     const [letterAlert,setLetterAlert] = useState()
     const [question,setQuestion] = useState()

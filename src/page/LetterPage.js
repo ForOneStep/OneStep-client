@@ -6,55 +6,59 @@ import EditIcon from '../assets/images/svg/EditIcon.svg';
 import LetterIcon from '../assets/images/svg/letter.svg';
 import { Button } from "react-native-paper";
 import LetterModal from "../components/LetterModal";
+import axios from "axios";
+
+const LetterItem = ({ item }) => (
+  <View style={styles.letterContainer}>
+      <Text style={styles.titleText}>{item.letter_title}</Text>
+      <Text style={styles.contentText}>{item.letter_txt}</Text>
+      <Text style={styles.dateText}>{item.write_date}</Text>
+  </View>
+);
 
 const LetterPage = ({navigation}) => {
-    const [weeklyLetters,setWeeklyLetters] = useState([
-        {"letter_id":2,"writer_id":"user1","family_id":"아이디1","letter_title":"제목1","letter_txt":"내용1","write_date":"2023-10-11","letter_state":1},
-        {"letter_id":3,"writer_id":"user2","family_id":"아이디1","letter_title":"제목3","letter_txt":"내용3","write_date":"2023-10-11","letter_state":1}
-    ])
-
     const [modalVisible, setModalVisible] = useState(false);
-    const [title, setTitle] = useState(''); // 쪽지 제목
-    const [content, setContent] = useState(''); // 쪽지 내용
-    // const [userLetters, setUserLetters] = useState([]); // 사용자가 작성한 쪽지
-    // const [familyLetters, setFamilyLetters] = useState([]); // 가족의 쪽지
-    // const [weeklyLetters, setWeeklyLetters] = useState([
-    //     {"letter_id":2,"writer_id":"user1","family_id":"아이디1","letter_title":"제목1","letter_txt":"내용1","write_date":"2023-10-11","letter_state":1},
-    //     {"letter_id":3,"writer_id":"user2","family_id":"아이디1","letter_title":"제목3","letter_txt":"내용3","write_date":"2023-10-11","letter_state":1}
-    // ]); // 이번주 공개된 쪽지
+    const [weeklyLetters,setWeeklyLetters] = useState([])
+    const [userLetters, setUserLetters] = useState([]); // 사용자가 작성한 쪽지
+    const [familyLetters, setFamilyLetters] = useState([]); // 가족의 쪽지
+    const [userId, setUserId] = useState('user1'); // 로컬 스토리지에서 가져온 family_id
+    const [familyId, setFamilyId] = useState('아이디1'); // 로컬 스토리지에서 가져온 family_id
+
 
     // 컴포넌트가 마운트되면 데이터 불러오기
-    //     useEffect(() => {
-    //         loadUserLetters();
-    //         loadFamilyLetters();
-    //         loadWeeklyLetters();
-    //     }, []);
+        useEffect(() => {
+            // loadUserLetters(userId);
+            // loadFamilyLetters(familyId);
+            // loadWeeklyLetters(familyId);
+            // console.log(weeklyLetters)
+            // console.log(userLetters)
+            // console.log(familyLetters)
+        }, []);
 
     // 쪽지 작성
 
-
     // 사용자가 작성한 쪽지 불러오기
-    // const loadUserLetters = async () => {
-    //     try {
-    //         const response = await axios.get(`http://52.79.97.196:8080/letter/byUser/${userId}`);
-    //         setUserLetters(response.data);
-    //     } catch (error) {
-    //         // 에러 처리
-    //     }
-    // };
+    const loadUserLetters = async (userId) => {
+        try {
+            const response = await axios.get(`http://52.79.97.196:8080/letter/byUser/${userId}`);
+            setUserLetters(response.data);
+        } catch (error) {
+            // 에러 처리
+        }
+    };
 
     // 가족의 쪽지 불러오기
-    // const loadFamilyLetters = async () => {
-    //     try {
-    //         const response = await axios.get(`http://52.79.97.196:8080/letter/byFamily/${familyId}`);
-    //         setFamilyLetters(response.data);
-    //     } catch (error) {
-    //         // 에러 처리
-    //     }
-    // };
+    const loadFamilyLetters = async (familyId) => {
+        try {
+            const response = await axios.get(`http://52.79.97.196:8080/letter/byFamily/${familyId}`);
+            setFamilyLetters(response.data);
+        } catch (error) {
+            // 에러 처리
+        }
+    };
 
     // 이번주 공개된 쪽지 불러오기
-    const loadWeeklyLetters = async () => {
+    const loadWeeklyLetters = async (familyId) => {
         try {
             const response = await axios.get(`http://52.79.97.196:8080/letter/weekly/${familyId}`);
             setWeeklyLetters(response.data);
@@ -74,47 +78,49 @@ const LetterPage = ({navigation}) => {
     };
 
     return (
-
-        <View style={styles.container}>
-            <LetterModal modalVisible={modalVisible} closeModal={closeModal} />
-            <View style={styles.letterInfoBox}>
-                <LetterIcon style={styles.letterIcon}/>
-                <View style={styles.myLetterBox}>
-                    <Text style={styles.myLetterText}>우리집 익명 편지함</Text>
-                    <Text style={styles.myLetterNumber}>43</Text>
-                </View>
-                <View style={styles.familyLetterBox}>
-                    <Text style={styles.familyLetterText}>내가 작성한 편지</Text>
-                    <Text style={styles.familyLetterNumber}>3</Text>
-                </View>
-            </View>
-            <View style={styles.infoTextView}>
-                <Text style={styles.infoTextAlert}>
-                    이번주엔 <Text style={styles.infoTextNumber}>3</Text> 개의 편지가 도착했어요
-                </Text>
-
-                <TouchableOpacity style={styles.infoTextCreateButton} onPress={()=>openModal()}>
-                    <Text
-                      style={styles.infoTextCreate}>
-                        작성하기 >
-                    </Text>
-                </TouchableOpacity>
-
-            </View>
-            <FlatList
-                horizontal={false}
-                contentContainerStyle={styles.letterFlatList}
-                data={weeklyLetters}
-                keyExtractor={item => item.letter_id.toString()}
-                renderItem={({ item }) => (
-                    <View style={styles.letterContainer}>
-                        <Text style={styles.titleText}>{item.letter_title}</Text>
-                        <Text style={styles.contentText}>{item.letter_txt}</Text>
-                        <Text style={styles.dateText}>{item.write_date}</Text>
-                    </View>
-                )}
-            />
-        </View>
+      <View style={styles.container}>
+          <LetterModal modalVisible={modalVisible} closeModal={closeModal} />
+          <View style={styles.letterInfoBox}>
+              <LetterIcon style={styles.letterIcon}/>
+              <View style={styles.myLetterBox}>
+                  <Text style={styles.myLetterText}>우리집 익명 편지함</Text>
+                  <Text style={styles.myLetterNumber}>43</Text>
+              </View>
+              <View style={styles.familyLetterBox}>
+                  <Text style={styles.familyLetterText}>내가 작성한 편지</Text>
+                  <Text style={styles.familyLetterNumber}>3</Text>
+              </View>
+          </View>
+          <View style={styles.infoTextView}>
+              <Text style={styles.infoTextAlert}>
+                  이번주엔 <Text style={styles.infoTextNumber}>{weeklyLetters.length}</Text> 개의 편지가 도착했어요
+              </Text>
+              <TouchableOpacity style={styles.infoTextCreateButton} onPress={()=>openModal()}>
+                  <Text style={styles.infoTextCreate}>작성하기 ></Text>
+              </TouchableOpacity>
+          </View>
+          <FlatList
+            horizontal={false}
+            contentContainerStyle={styles.letterFlatList}
+            data={weeklyLetters}
+            keyExtractor={item => item.letter_id.toString()}
+            renderItem={({ item }) => <LetterItem item={item} />}
+          />
+          <FlatList
+            horizontal={false}
+            contentContainerStyle={styles.letterFlatList}
+            data={familyLetters}
+            keyExtractor={item => item.letter_id.toString()}
+            renderItem={({ item }) => <LetterItem item={item} />}
+          />
+          <FlatList
+            horizontal={false}
+            contentContainerStyle={styles.letterFlatList}
+            data={userLetters}
+            keyExtractor={item => item.letter_id.toString()}
+            renderItem={({ item }) => <LetterItem item={item} />}
+          />
+      </View>
     );
 };
 
