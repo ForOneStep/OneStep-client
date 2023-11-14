@@ -13,7 +13,7 @@ const Comment = ({ comment }) => {
 
 const Post = ({ item, navigation }) => {
     return (
-      <TouchableOpacity onPress={() => navigation.navigate('AlbumDetailPage', { item })}>
+      <TouchableOpacity onPress={() => navigation.navigate('AlbumDetail', { item })}>
           <View style={styles.post}>
               <View style={styles.headerContainer}>
                   <Image source={{ uri: item.profile_path }} style={styles.profileImage} />
