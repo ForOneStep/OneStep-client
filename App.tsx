@@ -9,20 +9,35 @@ import AlbumPage from "./src/page/navbar/AlbumPage";
 import QuestionPage from "./src/page/navbar/QuestionPage";
 import LetterPage from "./src/page/LetterPage";
 import LoadingPage from "./src/page/LoadingPage";
+import DetailPage from "./src/page/AlbumDedetailPage";
+
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserContext } from './src/contexts/UserContext';
 
 const Tab = createBottomTabNavigator();
 const MainStack = createStackNavigator();
+const AlbumStack = createStackNavigator();
+
+const AlbumStackScreen = () => {
+    return (
+      <AlbumStack.Navigator>
+          <AlbumStack.Screen name="AlbumPage" component={AlbumPage} />
+          <AlbumStack.Screen name="Detail" component={DetailPage} />
+      </AlbumStack.Navigator>
+    );
+};
+
+
+
 const TabNavigator = () => {
     return (
-        <Tab.Navigator screenOptions={{ headerShown: false }}>
-            <Tab.Screen name="Main" component={MainPage} />
-            <Tab.Screen name="Question" component={QuestionPage} />
-            <Tab.Screen name="Recode" component={RecodePage} />
-            <Tab.Screen name="AlbumPage" component={AlbumPage} />
-            <Tab.Screen name="User" component={UserPage} />
-        </Tab.Navigator>
+      <Tab.Navigator screenOptions={{ headerShown: false }}>
+          <Tab.Screen name="Main" component={MainPage} />
+          <Tab.Screen name="Question" component={QuestionPage} />
+          <Tab.Screen name="Recode" component={RecodePage} />
+          <Tab.Screen name="AlbumPage" component={AlbumStackScreen} />
+          <Tab.Screen name="User" component={UserPage} />
+      </Tab.Navigator>
     );
 }
 

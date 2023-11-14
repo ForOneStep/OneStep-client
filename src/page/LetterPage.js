@@ -30,9 +30,6 @@ const LetterPage = ({navigation}) => {
             // loadUserLetters(userId);
             // loadFamilyLetters(familyId);
             // loadWeeklyLetters(familyId);
-            // console.log(weeklyLetters)
-            // console.log(userLetters)
-            // console.log(familyLetters)
         }, []);
 
     // 쪽지 작성

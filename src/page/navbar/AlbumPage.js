@@ -1,37 +1,94 @@
 import React, { useState } from 'react';
-import { View, Text, Image, FlatList, StyleSheet } from 'react-native';
+import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 
-const Post = ({ item }) => {
+const Comment = ({ comment }) => {
     return (
-      <View style={styles.post}>
-          <View style={styles.headerContainer}>
-              <Image source={{ uri: item.imgUrl }} style={styles.profileImage} />
-              <Text style={styles.username}>{item.username}</Text>
-              <View style={styles.dateContainer}>
-                  <Text style={styles.date}>{item.date}</Text>
-              </View>
-          </View>
-          <Image source={{ uri: item.imgUrl }} style={styles.image} />
-          <Text style={styles.text}>{item.text}</Text>
+      <View style={styles.commentContainer}>
+          <Text style={styles.commentUser}>{comment.user_nickname}</Text>
+          <Text style={styles.commentText}>{comment.comment_txt}</Text>
+          <Text style={styles.commentDate}>{comment.write_date}</Text>
       </View>
     );
 };
 
-const AlbumPage = () => {
+const Post = ({ item, navigation }) => {
+    return (
+      <TouchableOpacity onPress={() => navigation.navigate('Detail', { item })}>
+          <View style={styles.post}>
+              <View style={styles.headerContainer}>
+                  <Image source={{ uri: item.profile_path }} style={styles.profileImage} />
+                  <Text style={styles.username}>{item.user_nickname}</Text>
+                  <View style={styles.dateContainer}>
+                      <Text style={styles.date}>{item.write_date}</Text>
+                  </View>
+              </View>
+              <Image source={{ uri: item.photo_img }} style={styles.image} />
+              <Text style={styles.text}>{item.photo_txt}</Text>
+              {/*<FlatList*/}
+              {/*  data={item.viewPhotoBookCommentDTO}*/}
+              {/*  renderItem={({ item }) => <Comment comment={item} />}*/}
+              {/*  keyExtractor={(item, index) => index.toString()}*/}
+              {/*/>*/}
+          </View>
+      </TouchableOpacity>
+    );
+};
+
+const AlbumPage = ({navigation}) => {
     const [data, setData] = useState([
-        { id: 1, username:'엄마', imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/ChinchillaPersian.jpg', text: '오늘짜 귀여운 우리집 고양이 근황 ^^', date: '2023.11.06' },
-        { id: 2, username:'유저 2',imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Bbami_torty_cat.jpg/700px-Bbami_torty_cat.jpg', text: '텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1', date: '날짜2' },
-        { id: 3, username:'유저 1',imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/f/f5/ChinchillaPersian.jpg', text: '텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1', date: '날짜1' },
-        { id: 4, username:'유저 1',imgUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Bbami_torty_cat.jpg/700px-Bbami_torty_cat.jpg', text: '텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1텍스트1', date: '날짜2' },
-        // 추가 데이터...
+        {
+            "photo_id": 9,
+            "user_nickname": "닉네임1",
+            "profile_path": "",
+            "photo_img": "https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/photoBook/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-10-22%20225453.png",
+            "photo_txt": "안녕~!",
+            "write_date": "2023-11-07",
+            "viewPhotoBookCommentDTO": [
+                {
+                    "user_nickname": "닉네임2",
+                    "profile_path": "",
+                    "root_comment_id": null,
+                    "comment_txt": "대댓글작성테스트대댓글작성테스트",
+                    "write_date": "2023-11-07"
+                },
+                {
+                    "user_nickname": "닉네임2",
+                    "profile_path": "",
+                    "root_comment_id": 10,
+                    "comment_txt": "대댓글작성테스트대댓글작성테스트",
+                    "write_date": "2023-11-07"
+                },
+                {
+                    "user_nickname": "닉네임3",
+                    "profile_path": "",
+                    "root_comment_id": null,
+                    "comment_txt": "테스트 12312",
+                    "write_date": "2023-11-07"
+                },
+                {
+                    "user_nickname": "닉네임4",
+                    "profile_path": "",
+                    "root_comment_id": null,
+                    "comment_txt": "테스트13 123212",
+                    "write_date": "2023-11-07"
+                },
+                {
+                    "user_nickname": "닉네임4",
+                    "profile_path": "",
+                    "root_comment_id": 12,
+                    "comment_txt": "대댓글 1111",
+                    "write_date": "2023-11-07"
+                }
+            ]
+        }
     ]);
 
     return (
       <View style={styles.container}>
           <FlatList
             data={data}
-            renderItem={({ item }) => <Post item={item} />}
-            keyExtractor={item => item.id.toString()}
+            renderItem={({ item }) => <Post item={item} navigation={navigation} />}
+            keyExtractor={item => item.photo_id.toString()}
           />
       </View>
     );
