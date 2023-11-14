@@ -9,7 +9,7 @@ import AlbumPage from "./src/page/navbar/AlbumPage";
 import QuestionPage from "./src/page/navbar/QuestionPage";
 import LetterPage from "./src/page/LetterPage";
 import LoadingPage from "./src/page/LoadingPage";
-import DetailPage from "./src/page/AlbumDedetailPage";
+import AlbumDetailPage from "./src/page/AlbumDedetailPage";
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserContext } from './src/contexts/UserContext';
@@ -22,12 +22,10 @@ const AlbumStackScreen = () => {
     return (
       <AlbumStack.Navigator>
           <AlbumStack.Screen name="AlbumPage" component={AlbumPage} />
-          <AlbumStack.Screen name="Detail" component={DetailPage} />
+          <AlbumStack.Screen name="AlbumDetailPage" component={AlbumDetailPage} />
       </AlbumStack.Navigator>
     );
 };
-
-
 
 const TabNavigator = () => {
     return (
@@ -39,8 +37,7 @@ const TabNavigator = () => {
           <Tab.Screen name="User" component={UserPage} />
       </Tab.Navigator>
     );
-}
-
+};
 const App = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [userId, setUserId] = useState('');
@@ -68,14 +65,15 @@ const App = () => {
     }
 
     return (
-        <UserContext.Provider value={{ userId, familyId }}>
-            <NavigationContainer>
-                <MainStack.Navigator screenOptions={{ presentation: 'modal' }}>
-                    <MainStack.Screen options={{ headerShown: false }} name="Tab" component={TabNavigator} />
-                    <MainStack.Screen options={{ headerShown: true }} name="Letter" component={LetterPage} />
-                </MainStack.Navigator>
-            </NavigationContainer>
-        </UserContext.Provider>
+      <UserContext.Provider value={{ userId, familyId }}>
+        <NavigationContainer>
+          <MainStack.Navigator screenOptions={{ presentation: 'modal' }}>
+            <MainStack.Screen options={{ headerShown: false }} name="Tab" component={TabNavigator} />
+            <MainStack.Screen options={{ headerShown: false }} name="AlbumStack" component={AlbumStackScreen} />
+            <MainStack.Screen options={{ headerShown: true }} name="Letter" component={LetterPage} />
+          </MainStack.Navigator>
+        </NavigationContainer>
+      </UserContext.Provider>
     );
 }
 export default App;
