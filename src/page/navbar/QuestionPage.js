@@ -3,6 +3,7 @@ import { View, Text, FlatList, StyleSheet } from 'react-native';
 import axios from 'axios';
 import { Button, Card } from "react-native-paper";
 import LetterIcon from '../../assets/images/svg/letter.svg';
+import { UserContext } from "../../contexts/UserContext";
 
 const AnswerItem = ({ item }) => (
     <View style={styles.answerItem}>
@@ -22,41 +23,49 @@ const QuestionItem = ({ question }) => (
 );
 
 const QuestionPage = () => {
+    const { userId, familyId } = React.useContext(UserContext);
     const [question, setQuestion] = useState({"question_date":"2023-10-1","question_txt":"질문1"});
     const [answerBlockList, setAnswerBlockList] = useState([]);
-    const [familyId, setFamilyId] = useState(null); // 로컬 스토리지에서 가져온 family_id
 
-    // useEffect(() => {
-        // const fetchQuestionAndAnswerBlocks = async () => {
-        //     // 오늘 날짜를 yyyy-mm-dd 형태로 만들기
-        //     const today = new Date();
-        //     const date = `${today.getFullYear()}-${today.getMonth() + 1}-${today.getDate()}`;
-        //
-        //     // question 불러오기
-        //     const questionResponse = await axios.get(`http://52.79.97.196:8080/question/${date}`);
-        //     setQuestion(questionResponse.data);
-        //
-        //     // answerBlockList 불러오기
-        //     const answerBlockListResponse = await axios.get(`http://52.79.97.196:8080/answer/read/${date}/${familyId}`);
-        //     setAnswerBlockList(answerBlockListResponse.data);
-        // }
+    useEffect(() => {
+        const fetchQuestionData = async () => {
+            try {
+                console.log('userId:', userId);
+                console.log('familyId:', familyId);
 
-    //     fetchQuestionAndAnswerBlocks();
-    // }, [familyId]);
+                // 질문 데이터 가져오기
+                // const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${familyId}`);
+                // const questionData = await questionResponse.json();
+                // setQuestion(questionData);
+                //
+                // // 답변 데이터 가져오기
+                // consst answerResponse = await fetch(`http://52.79.97.196:8080/answer/read/${questionData.question_id}/${familyId}`);
+                // const answerData = await answerResponse.json();
+                // setAnswerBlockList(answerData);
+                //
 
+                // console.log('질문:', questionData);
+                // console.log('답변:',estionData);
+
+            } catch (error) {
+                console.error('데이터 가져오기 오류:', error);
+            }
+        };
+
+        fetchQuestionData();
+    }, [familyId]);
     return (
       <View style={styles.container}>
           <QuestionItem question={question} />
           <FlatList
-                contentContainerStyle={styles.answerFlatList}
-                data={answerBlockList}
-                keyExtractor={item => item.answer_id.toString()}
-                renderItem={({ item }) => <AnswerItem item={item} />}
+            contentContainerStyle={styles.answerFlatList}
+            data={answerBlockList}
+            keyExtractor={item => item.answer_id.toString()}
+            renderItem={({ item }) => <AnswerItem item={item} />}
           />
           <Button style={styles.creatAnswerButton}>
               <Text style={styles.answerButtonText}>내 대답 작성하기</Text>
           </Button>
-
       </View>
     );
 };

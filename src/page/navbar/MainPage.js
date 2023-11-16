@@ -1,4 +1,4 @@
-import React,{useState} from 'react';
+import React, { useEffect, useState } from "react";
 import { View, StyleSheet, Text, Image } from "react-native";
 import LetterIcon from '../../assets/images/svg/letter.svg';
 import LoudSpeaker from '../../assets/images/svg/loudSpeaker.svg';
@@ -11,13 +11,131 @@ import island6 from '../../assets/images/png/island6.png';
 import island7 from '../../assets/images/png/island7.png';
 import island8 from '../../assets/images/png/island8.png';
 import { UserContext } from '../../contexts/UserContext.js';
-const MainPage = ({ navigation }) => {
-    const {userId, familyId } = React.useContext(UserContext);
-    const [dDay,setDDay] = useState()
-    const [letterAlert,setLetterAlert] = useState()
-    const [question,setQuestion] = useState()
-    const [level,setLevel] = useState(8)
 
+
+const ClosestBirth = ({ members }) => {
+
+    const today = new Date();
+    let closestBirthday = null;
+
+    members.forEach(member => {
+            const birthDate = new Date(member.user_birth);
+            birthDate.setFullYear(today.getFullYear());
+
+            // If the birthday has already occurred this year, set it to next year
+            if (today > birthDate) {
+                birthDate.setFullYear(today.getFullYear() + 1);
+            }
+
+            const timeDifference = birthDate.getTime() - today.getTime();
+            const daysRemaining = Math.ceil(timeDifference / (1000 * 60 * 60 * 24));
+
+            if (!closestBirthday || daysRemaining < closestBirthday.daysRemaining) {
+                closestBirthday = {
+                    name: member.user_name,
+                    daysRemaining: daysRemaining
+                };
+            }
+    })
+
+    return (
+      <View style={styles.dDayText}>
+          <Text style={styles.dDayTextDate}>{`D-${closestBirthday.daysRemaining}`}</Text>
+          <Text style={styles.dDayTextName}>{`${closestBirthday.name}님 생일`}</Text>
+      </View>
+    );
+};
+
+
+const MainPage = ({ navigation }) => {
+    const { userId, familyId } = React.useContext(UserContext);
+    const [question, setQuestion] = useState({"question_id":34,"date":"2023-11-14","question_txt":"우리 가족은 서로에게 어떤 점에서 칭찬할 만한 가치가 있을까요?"});
+    const [familyMembers, setFamilyMembers] = useState([
+        {
+            "user_id": "user1",
+            "user_name": "김이름",
+            "user_nickname": "닉네임1",
+            "user_role": "",
+            "user_phone_number": "",
+            "user_birth": "2001-01-01",
+            "profile_path": null
+        },
+        {
+            "user_id": "user2",
+            "user_name": "김이름22",
+            "user_nickname": "닉네임2",
+            "user_role": "",
+            "user_phone_number": "",
+            "user_birth": "2000-01-06",
+            "profile_path": null
+        },
+        {
+            "user_id": "user3",
+            "user_name": "김이름333",
+            "user_nickname": "닉네임3",
+            "user_role": "",
+            "user_phone_number": "",
+            "user_birth": "2004-01-09",
+            "profile_path": null
+        },
+        {
+            "user_id": "user4",
+            "user_name": "김이름444",
+            "user_nickname": "닉네임4",
+            "user_role": "",
+            "user_phone_number": "",
+            "user_birth": "2002-01-01",
+            "profile_path": null
+        }
+    ]);
+    const [userData, setUserData] = useState({
+        "user_id": "user1",
+        "family": {
+            "fam_id": "아이디1",
+            "fam_nickname": "닉네임1",
+            "level": 5,
+            "is_valid": true,
+            "fam_number": 0,
+            "fam_anniversary": "1991-01-01"
+        },
+        "user_name": "김이름",
+        "user_nickname": "닉네임1",
+        "user_role": "",
+        "user_phone_number": "",
+        "user_birth": "2000-01-01",
+        "token": "",
+        "profile_path": ""
+    });
+
+    useEffect(() => {
+        // Fetch today's question
+        // fetch(`http://52.79.97.196:8080/question/daily/${familyId}`)
+        //   .then((response) => response.json())
+        //   .then((data) => {
+        //       setQuestion(data);
+        //   })
+        //   .catch((error) => console.error('Error fetching question:', error));
+
+        // Fetch family members
+        // fetch(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`)
+        //   .then((response) => response.json())
+        //   .then((data) => {
+        //       setFamilyMembers(data);
+        //   })
+        //   .catch((error) => console.error('Error fetching family members:', error));
+        //
+        // // Fetch user information
+        // fetch(`http://52.79.97.196:8080/user/${userId}`)
+        //   .then((response) => response.json())
+        //   .then((data) => {r
+        //       setUserData(data)
+        //   })
+        //   .catch((error) => console.error('Error fetching user information:', error));
+
+        // console.log(question)
+        // You can add more API calls as needed
+
+    }, []); // Empt
     const islands = {
         island1,
         island2,
@@ -30,28 +148,25 @@ const MainPage = ({ navigation }) => {
     };
 
     return (
-            <View style={styles.pageBackground}>
-                <View style={styles.islandBackground}>
-                    <View style={styles.dDayText}>
-                        <Text style={styles.dDayTextDate}>D-39</Text>
-                        <Text style={styles.dDayTextName}>"김가네 막둥이"님 생일</Text>
-                    </View>
-                    <View style={styles.letterText}>
-                        <LetterIcon
-                            onPress={() => navigation.navigate('Letter')}
-                            width={40} height={40} />
-                    </View>
-                    <Image source={islands[`island${level}`]} style={styles.islandImg} />
-                    <Text  style={styles.famliyName}> 송도 김가네 가족 섬</Text>
-                </View>
-                <View  style={styles.questionBlock}>
-                    <LoudSpeaker style={styles.loudSpeaker}/>
-                    <Text style={styles.questionText}> 가장 기억에 남는 가족 여행은? </Text>
-                </View>
-                <Text
-                    onPress={() => navigation.navigate('Question')}
-                    style={styles.goToAnwser}>답변하러 가기 ></Text>
-            </View>
+      <View style={styles.pageBackground}>
+          <View style={styles.islandBackground}>
+              <ClosestBirth members={familyMembers} />
+              <View style={styles.letterText}>
+                  <LetterIcon
+                    onPress={() => navigation.navigate('Letter')}
+                    width={40} height={40} />
+              </View>
+              <Image source={islands[`island${userData.family.level}`] || islands.island1} style={styles.islandImg} />
+              <Text style={styles.famliyName}>{`${userData.family.fam_nickname} 가족 섬`}</Text>
+          </View>
+          <View  style={styles.questionBlock}>
+              <LoudSpeaker style={styles.loudSpeaker}/>
+              <Text style={styles.questionText}> {question.question_txt} </Text>
+          </View>
+          <Text
+            onPress={() => navigation.navigate('Question')}
+            style={styles.goToAnwser}>답변하러 가기 ></Text>
+      </View>
     );
 };
 

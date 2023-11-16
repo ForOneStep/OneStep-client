@@ -15,20 +15,17 @@ const Post = ({ item, navigation }) => {
     return (
       <TouchableOpacity onPress={() => navigation.navigate('AlbumDetail', { item })}>
           <View style={styles.post}>
-              <View style={styles.headerContainer}>
+              <Image source={{ uri: item.photo_img }} style={styles.image} />
+              <View style={styles.contentContainer}>
+<View style={styles.userContainer}>
                   <Image source={{ uri: item.profile_path }} style={styles.profileImage} />
                   <Text style={styles.username}>{item.user_nickname}</Text>
-                  <View style={styles.dateContainer}>
-                      <Text style={styles.date}>{item.write_date}</Text>
-                  </View>
+</View>
+                  <Text style={styles.text}>{item.photo_txt}</Text>
               </View>
-              <Image source={{ uri: item.photo_img }} style={styles.image} />
-              <Text style={styles.text}>{item.photo_txt}</Text>
-              {/*<FlatList*/}
-              {/*  data={item.viewPhotoBookCommentDTO}*/}
-              {/*  renderItem={({ item }) => <Comment comment={item} />}*/}
-              {/*  keyExtractor={(item, index) => index.toString()}*/}
-              {/*/>*/}
+              <View style={styles.dateContainer}>
+                  <Text style={styles.date}>{item.write_date}</Text>
+              </View>
           </View>
       </TouchableOpacity>
     );
@@ -39,9 +36,9 @@ const AlbumPage = ({navigation}) => {
         {
             "photo_id": 9,
             "user_nickname": "닉네임1",
-            "profile_path": "",
+            "profile_path": "https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/photoBook/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-10-22%20225453.png",
             "photo_img": "https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/photoBook/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-10-22%20225453.png",
-            "photo_txt": "안녕~!",
+            "photo_txt": "안녕~!안녕~!안녕~!안녕~!안녕~!안녕~!안녕~!",
             "write_date": "2023-11-07",
             "viewPhotoBookCommentDTO": [
                 {
@@ -85,6 +82,7 @@ const AlbumPage = ({navigation}) => {
 
     return (
       <View style={styles.container}>
+          <Text style={styles.title}>가족엘범</Text>
           <FlatList
             data={data}
             renderItem={({ item }) => <Post item={item} navigation={navigation} />}
@@ -104,9 +102,10 @@ const styles = StyleSheet.create({
         borderColor: '#ddd',
         borderWidth: 1,
         borderRadius: 10,
-        padding: 10,
+        padding: 5,
         backgroundColor:'#fff',
-
+        display:'flex',
+        flexDirection:'row',
         shadowColor: '#000', // 그림자 색상
         shadowOffset: {
             width: 0, // 좌우 그림자 위치
@@ -117,14 +116,29 @@ const styles = StyleSheet.create({
 
         elevation: 5, // Android에만 적용되는 그림자 깊이
     },
-    headerContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
+    title: {
+        fontSize: 24,
+        fontWeight: 'bold',
+        textAlign: 'center',
+        marginBottom:20,
+        marginTop: 20,
+    },
+    contentContainer: {
+        flexDirection: 'column',
+        flex:1,
+        alignItems: 'start',
+        justifyContent:'flex-start',
         marginBottom: 10,
     },
+    userContainer:{
+
+        flexDirection: 'row',
+        justifyContent:'center',
+        alignItems:'center',
+    },
     profileImage: {
-        width: 40,
-        height: 40,
+        width: 20,
+        height: 20,
         borderRadius: 20,
         marginRight: 10,
     },
@@ -133,16 +147,18 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     dateContainer: {
-        alignItems: 'flex-end',
+        justifyContent: 'flex-end',
+
     },
     date: {
         fontSize: 12,
         color: 'gray',
     },
     image: {
-        width: '100%',
-        height: 300,
+        width: 100,
+        height: 100,
 
+        borderRadius: 1,
         borderColor: '#ddd',
         borderWidth: 1,
     },
