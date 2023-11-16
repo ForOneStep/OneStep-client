@@ -1,15 +1,5 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from "react-native";
-
-const Comment = ({ comment }) => {
-    return (
-      <View style={styles.commentContainer}>
-          <Text style={styles.commentUser}>{comment.user_nickname}</Text>
-          <Text style={styles.commentText}>{comment.comment_txt}</Text>
-          <Text style={styles.commentDate}>{comment.write_date}</Text>
-      </View>
-    );
-};
 
 const Post = ({ item, navigation }) => {
     return (
@@ -32,54 +22,23 @@ const Post = ({ item, navigation }) => {
 };
 
 const AlbumPage = ({navigation}) => {
-    const [data, setData] = useState([
-        {
-            "photo_id": 9,
-            "user_nickname": "닉네임1",
-            "profile_path": "https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/photoBook/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-10-22%20225453.png",
-            "photo_img": "https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/photoBook/%EC%8A%A4%ED%81%AC%EB%A6%B0%EC%83%B7%202023-10-22%20225453.png",
-            "photo_txt": "안녕~!안녕~!안녕~!안녕~!안녕~!안녕~!안녕~!",
-            "write_date": "2023-11-07",
-            "viewPhotoBookCommentDTO": [
-                {
-                    "user_nickname": "닉네임2",
-                    "profile_path": "",
-                    "root_comment_id": null,
-                    "comment_txt": "대댓글작성테스트대댓글작성테스트",
-                    "write_date": "2023-11-07"
-                },
-                {
-                    "user_nickname": "닉네임2",
-                    "profile_path": "",
-                    "root_comment_id": 10,
-                    "comment_txt": "대댓글작성테스트대댓글작성테스트",
-                    "write_date": "2023-11-07"
-                },
-                {
-                    "user_nickname": "닉네임3",
-                    "profile_path": "",
-                    "root_comment_id": null,
-                    "comment_txt": "테스트 12312",
-                    "write_date": "2023-11-07"
-                },
-                {
-                    "user_nickname": "닉네임4",
-                    "profile_path": "",
-                    "root_comment_id": null,
-                    "comment_txt": "테스트13 123212",
-                    "write_date": "2023-11-07"
-                },
-                {
-                    "user_nickname": "닉네임4",
-                    "profile_path": "",
-                    "root_comment_id": 12,
-                    "comment_txt": "대댓글 1111",
-                    "write_date": "2023-11-07"
-                }
-            ]
-        }
-    ]);
+    // const { familyId } = useContext(UserContext);
+    const familyId = 'A1B5E6'
+    const [data, setData] = useState([]);
 
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://52.79.97.196:8080/photobook/read/${familyId}`);
+                const data = await response.json();
+                setData(data);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+
+        fetchData();
+    }, [familyId]);
     return (
       <View style={styles.container}>
           <Text style={styles.title}>가족엘범</Text>

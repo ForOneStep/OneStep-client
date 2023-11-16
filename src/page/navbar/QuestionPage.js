@@ -23,29 +23,30 @@ const QuestionItem = ({ question }) => (
 );
 
 const QuestionPage = () => {
-    const { userId, familyId } = React.useContext(UserContext);
+    // const { userId, familyId } = React.useContext(UserContext);
     const [question, setQuestion] = useState({"question_date":"2023-10-1","question_txt":"질문1"});
     const [answerBlockList, setAnswerBlockList] = useState([]);
+    const userId = 'user1'
+    const familyId = 'A1B5E6'
 
     useEffect(() => {
         const fetchQuestionData = async () => {
             try {
-                console.log('userId:', userId);
-                console.log('familyId:', familyId);
+
 
                 // 질문 데이터 가져오기
-                // const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${familyId}`);
-                // const questionData = await questionResponse.json();
-                // setQuestion(questionData);
-                //
+                const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${familyId}`);
+                const questionData = await questionResponse.json();
+                setQuestion(questionData);
+
                 // // 답변 데이터 가져오기
-                // consst answerResponse = await fetch(`http://52.79.97.196:8080/answer/read/${questionData.question_id}/${familyId}`);
+                // const answerResponse = await fetch(`http://52.79.97.196:8080/answer/read/${questionData.question_id}/${familyId}`);
                 // const answerData = await answerResponse.json();
                 // setAnswerBlockList(answerData);
-                //
 
-                // console.log('질문:', questionData);
-                // console.log('답변:',estionData);
+
+                console.log('질문:', questionData);
+                console.log('답변:',estionData);
 
             } catch (error) {
                 console.error('데이터 가져오기 오류:', error);
@@ -151,16 +152,14 @@ const styles = StyleSheet.create({
     },
     creatAnswerButton:{
         position:'absolute',
-        backgroundColor:'#fbe6e1',
-        height: 60,
-        borderRadius:15,
+        backgroundColor:'#F7B599',
+        height: 40,
+        borderRadius:10,
         bottom:10,
         left:10,
         right:10,
         justifyContent:'center',
         alignItems:'center',
-        borderColor:'#00000077',
-        borderWidth:1,
     },
     answerButtonText:{
     color:'black',

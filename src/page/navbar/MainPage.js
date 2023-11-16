@@ -11,7 +11,7 @@ import island6 from '../../assets/images/png/island6.png';
 import island7 from '../../assets/images/png/island7.png';
 import island8 from '../../assets/images/png/island8.png';
 import { UserContext } from '../../contexts/UserContext.js';
-
+import LoadingPage  from "../LoadingPage";
 
 const ClosestBirth = ({ members }) => {
 
@@ -48,94 +48,43 @@ const ClosestBirth = ({ members }) => {
 
 
 const MainPage = ({ navigation }) => {
-    const { userId, familyId } = React.useContext(UserContext);
-    const [question, setQuestion] = useState({"question_id":34,"date":"2023-11-14","question_txt":"우리 가족은 서로에게 어떤 점에서 칭찬할 만한 가치가 있을까요?"});
-    const [familyMembers, setFamilyMembers] = useState([
-        {
-            "user_id": "user1",
-            "user_name": "김이름",
-            "user_nickname": "닉네임1",
-            "user_role": "",
-            "user_phone_number": "",
-            "user_birth": "2001-01-01",
-            "profile_path": null
-        },
-        {
-            "user_id": "user2",
-            "user_name": "김이름22",
-            "user_nickname": "닉네임2",
-            "user_role": "",
-            "user_phone_number": "",
-            "user_birth": "2000-01-06",
-            "profile_path": null
-        },
-        {
-            "user_id": "user3",
-            "user_name": "김이름333",
-            "user_nickname": "닉네임3",
-            "user_role": "",
-            "user_phone_number": "",
-            "user_birth": "2004-01-09",
-            "profile_path": null
-        },
-        {
-            "user_id": "user4",
-            "user_name": "김이름444",
-            "user_nickname": "닉네임4",
-            "user_role": "",
-            "user_phone_number": "",
-            "user_birth": "2002-01-01",
-            "profile_path": null
-        }
-    ]);
-    const [userData, setUserData] = useState({
-        "user_id": "user1",
-        "family": {
-            "fam_id": "아이디1",
-            "fam_nickname": "닉네임1",
-            "level": 5,
-            "is_valid": true,
-            "fam_number": 0,
-            "fam_anniversary": "1991-01-01"
-        },
-        "user_name": "김이름",
-        "user_nickname": "닉네임1",
-        "user_role": "",
-        "user_phone_number": "",
-        "user_birth": "2000-01-01",
-        "token": "",
-        "profile_path": ""
-    });
+    // const { userId, familyId } = React.useContext(UserContext);
+    const userId= 'user1'
+    const familyId= 'A1B5E6'
+    const [question, setQuestion] = useState();
+    const [familyMembers, setFamilyMembers] = useState();
+    const [userData, setUserData] = useState();
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
-        // Fetch today's question
-        // fetch(`http://52.79.97.196:8080/question/daily/${familyId}`)
-        //   .then((response) => response.json())
-        //   .then((data) => {
-        //       setQuestion(data);
-        //   })
-        //   .catch((error) => console.error('Error fetching question:', error));
+        const fetchData = async () => {
+            try {
+                console.log("User Data:", userId);
+                console.log("User Data:", familyId);
 
-        // Fetch family members
-        // fetch(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`)
-        //   .then((response) => response.json())
-        //   .then((data) => {
-        //       setFamilyMembers(data);
-        //   })
-        //   .catch((error) => console.error('Error fetching family members:', error));
-        //
-        // // Fetch user information
-        // fetch(`http://52.79.97.196:8080/user/${userId}`)
-        //   .then((response) => response.json())
-        //   .then((data) => {r
-        //       setUserData(data)
-        //   })
-        //   .catch((error) => console.error('Error fetching user information:', error));
+                const userResponse = await fetch(`http://52.79.97.196:8080/user/${userId}`);
+                const userData = await userResponse.json();
+                setUserData(userData);
+                console.log("User Data:", userData);
 
-        // console.log(question)
-        // You can add more API calls as needed
+                const familyResponse = await fetch(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`);
+                const familyData = await familyResponse.json();
+                setFamilyMembers(familyData);
+                console.log("Family Members:", familyData);
 
-    }, []); // Empt
+                const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`);
+                const questionData = await questionResponse.json();
+                setQuestion(questionData);
+                console.log("Question Data:", questionData);
+
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
+    }, []);
     const islands = {
         island1,
         island2,
@@ -146,7 +95,9 @@ const MainPage = ({ navigation }) => {
         island7,
         island8,
     };
-
+    if (isLoading) {
+        return <LoadingPage />;
+    }
     return (
       <View style={styles.pageBackground}>
           <View style={styles.islandBackground}>

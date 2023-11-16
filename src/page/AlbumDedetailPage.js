@@ -3,6 +3,7 @@ import { View, Text, Image, StyleSheet, ScrollView, TextInput, TouchableOpacity 
 import axios from 'axios';
 
 const AlbumDetailPage = ({ route, navigation }) => {
+  const userId= 'user1'
   const { item } = route.params;
   console.log(item);
   if (!item) {
@@ -16,11 +17,12 @@ const AlbumDetailPage = ({ route, navigation }) => {
   };
 
   const handleCommentSubmit = () => {
+    console.log(comment)
     // 댓글 전송하는 로직
     const commentData = {
-      photoBook_id: 9,
+      photoBook_id: item.photo_id,
       root_comment_id: null,
-      writer_id: 'user2',
+      writer_id: userId,
       comment_txt: comment,
     };
 
@@ -39,42 +41,43 @@ const AlbumDetailPage = ({ route, navigation }) => {
   };
 
   return (
-    <View style={styles.container}>
-      <ScrollView>
-        <Image source={{ uri: item.photo_img }} style={styles.image} />
-        <View style={styles.contentContainer}>
-          <View style={styles.headerContainer}>
-            <Image source={{ uri: item.profile_path }} style={styles.profileImage} />
-            <View style={styles.userInfoContainer}>
-              <Text style={styles.username}>{item.user_nickname}</Text>
-              <Text style={styles.date}>{item.write_date}</Text>
+      <View style={styles.container}>
+        <ScrollView>
+          <Image source={{ uri: item.photo_img }} style={styles.image} />
+          <View style={styles.contentContainer}>
+            <View style={styles.headerContainer}>
+              <Image source={{ uri: item.profile_path }} style={styles.profileImage} />
+              <View style={styles.userInfoContainer}>
+                <Text style={styles.username}>{item.user_nickname}</Text>
+                <Text style={styles.date}>{item.write_date}</Text>
+              </View>
             </View>
+            <Text style={styles.text}>{item.photo_txt}</Text>
           </View>
-          <Text style={styles.text}>{item.photo_txt}</Text>
+          <View style={styles.separator} />
+          {item.viewPhotoBookCommentDTO.map((comment, index) => (
+              <View style={styles.commentContainer} key={index}>
+                <Image source={{ uri: comment.profile_path }} style={styles.commentProfileImage} />
+                <View style={styles.commentContentContainer}>
+                  <Text style={styles.commentUsername}>{comment.user_nickname}</Text>
+                  <Text style={styles.commentText}>{comment.comment_txt}</Text>
+                  <Text style={styles.commentDate}>{comment.write_date}</Text>
+                </View>
+              </View>
+          ))}
+        </ScrollView>
+        <View style={styles.commentInputContainer}>
+          <TextInput
+              style={styles.commentInput}
+              placeholder="댓글을 입력하세요..."
+              value={comment}
+              onChangeText={handleCommentChange}
+          />
+          <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>
+            <Text style={styles.commentButtonText}>전송</Text>
+          </TouchableOpacity>
         </View>
-        {item.viewPhotoBookCommentDTO.map((comment, index) => (
-          <View style={styles.commentContainer} key={index}>
-            <Image source={{ uri: comment.profile_path }} style={styles.commentProfileImage} />
-            <View style={styles.commentContentContainer}>
-              <Text style={styles.commentUsername}>{comment.user_nickname}</Text>
-              <Text style={styles.commentText}>{comment.comment_txt}</Text>
-              <Text style={styles.commentDate}>{comment.write_date}</Text>
-            </View>
-          </View>
-        ))}
-      </ScrollView>
-      <View style={styles.commentInputContainer}>
-        <TextInput
-          style={styles.commentInput}
-          placeholder="댓글을 입력하세요..."
-          value={comment}
-          onChangeText={handleCommentChange}
-        />
-        <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>
-          <Text style={styles.commentButtonText}>전송</Text>
-        </TouchableOpacity>
       </View>
-    </View>
   );
 };
 
@@ -143,6 +146,11 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: 'gray',
   },
+  separator: {
+    height: 1,
+    backgroundColor: '#ddd',
+    marginVertical: 10,
+  },
   commentInputContainer: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -160,7 +168,7 @@ const styles = StyleSheet.create({
     marginRight: 10,
   },
   commentButton: {
-    backgroundColor: '#007AFF',
+    backgroundColor: '#F7B599',
     paddingHorizontal: 15,
     paddingVertical: 8,
     borderRadius: 4,
