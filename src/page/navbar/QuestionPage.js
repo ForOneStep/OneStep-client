@@ -17,44 +17,42 @@ const AnswerItem = ({ item }) => (
 const QuestionItem = ({ question }) => (
     <View style={styles.questionItem}>
         <LetterIcon style={styles.letterIcon}/>
-        <Text style={styles.questionDate}>#{question.question_date} 번째 질문</Text>
+        <Text style={styles.questionDate}>#{question.date}일 질문</Text>
         <Text style={styles.questionContent}>{question.question_txt}</Text>
     </View>
 );
 
 const QuestionPage = () => {
     // const { userId, familyId } = React.useContext(UserContext);
-    const [question, setQuestion] = useState({"question_date":"2023-10-1","question_txt":"질문1"});
+    const [question, setQuestion] = useState();
     const [answerBlockList, setAnswerBlockList] = useState([]);
+    const [userData, setUserData] = useState();
     const userId = 'user1'
     const familyId = 'A1B5E6'
 
     useEffect(() => {
         const fetchQuestionData = async () => {
             try {
+                const userResponse = await fetch(`http://52.79.97.196:8080/user/${userId}`);
+                const userData = await userResponse.json();
+                setUserData(userData);
 
-
-                // 질문 데이터 가져오기
-                const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${familyId}`);
+                const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`);
                 const questionData = await questionResponse.json();
                 setQuestion(questionData);
 
-                // // 답변 데이터 가져오기
-                // const answerResponse = await fetch(`http://52.79.97.196:8080/answer/read/${questionData.question_id}/${familyId}`);
-                // const answerData = await answerResponse.json();
-                // setAnswerBlockList(answerData);
-
-
-                console.log('질문:', questionData);
-                console.log('답변:',estionData);
-
+                const answerResponse = await fetch(`http://52.79.97.196:8080/answer/read/${questionData.question_id}/${familyId}`);
+                const answerData = await answerResponse.json();
+                setAnswerBlockList(answerData);
+                // console.log(`http://52.79.97.196:8080/answer/read/${questionData.question_id}/${familyId}`)
+                // console.log("answerData:", answerData)
             } catch (error) {
                 console.error('데이터 가져오기 오류:', error);
             }
         };
 
         fetchQuestionData();
-    }, [familyId]);
+    }, []);
     return (
       <View style={styles.container}>
           <QuestionItem question={question} />

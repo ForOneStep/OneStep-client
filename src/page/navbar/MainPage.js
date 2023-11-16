@@ -59,23 +59,19 @@ const MainPage = ({ navigation }) => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                console.log("User Data:", userId);
-                console.log("User Data:", familyId);
 
-                const userResponse = await fetch(`http://52.79.97.196:8080/user/${userId}`);
+                const userResponse = await fetch(`http:/52.79.97.196:8080/user/${userId}`);
                 const userData = await userResponse.json();
                 setUserData(userData);
-                console.log("User Data:", userData);
-
-                const familyResponse = await fetch(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`);
-                const familyData = await familyResponse.json();
-                setFamilyMembers(familyData);
-                console.log("Family Members:", familyData);
 
                 const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`);
                 const questionData = await questionResponse.json();
                 setQuestion(questionData);
-                console.log("Question Data:", questionData);
+
+                const familyResponse = await fetch(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`);
+                const familyData = await familyResponse.json();
+                setFamilyMembers(familyData);
+
 
                 setIsLoading(false);
             } catch (error) {

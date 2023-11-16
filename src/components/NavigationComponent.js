@@ -77,22 +77,6 @@ const NavigationComponent = () => {
   const [familyId, setFamilyId] = useState('');
   const [focusedDetailPage, setFocusedDetailPage] = useState(false);
 
-  useEffect(() => {
-    const loadInitialData = async () => {
-      // 스테이트에서 가져옴
-      const storedUserId = 'user1';
-      const storedFamilyId = 'family1';
-      if (!storedUserId || !storedFamilyId) {
-        // 로그인 페이지 실행
-      } else {
-        setUserId(storedUserId);
-        setFamilyId(storedFamilyId);
-      }
-      setIsLoading(false);  // 로딩 완료
-    };
-    loadInitialData();
-  }, []);
-
   const handleTabVisibilityChangeOn = () => {
     setFocusedDetailPage(true);
   };
@@ -100,10 +84,6 @@ const NavigationComponent = () => {
   const handleTabVisibilityChangeOff = () => {
     setFocusedDetailPage(false);
   };
-
-  if (isLoading) {
-    return <LoadingPage />;  // 로딩 중일 때는 로딩 페이지를 표시
-  }
 
   return (
     <UserContext.Provider value={{ userId, familyId }}>
@@ -114,15 +94,15 @@ const NavigationComponent = () => {
             tabBarIcon: ({ focused, color, size }) => {
               let iconComponent;
               let iconColor = focused ? '#F7B599' : 'gray';
-              if (route.name === 'Main') {
+              if (route.name === 'MainTab') {
                 iconComponent = <MainIcon  />;
-              } else if (route.name === 'Question') {
+              } else if (route.name === 'QuestionTab') {
                 iconComponent = <QuestionIcon  />;
-              } else if (route.name === 'Recode') {
+              } else if (route.name === 'RecodeTab') {
                 iconComponent = <RecodeIcon  />;
-              } else if (route.name === 'Album') {
+              } else if (route.name === 'AlbumTab') {
                 iconComponent = <AlbumIcon  />;
-              } else if (route.name === 'User') {
+              } else if (route.name === 'UserTab') {
                 iconComponent = <UserIcon  />;
               }
               return iconComponent;
@@ -133,7 +113,7 @@ const NavigationComponent = () => {
           })}
         >
           <Tab.Screen
-            name="Main"
+            name="MainTab"
             options={{
               tabBarStyle: { display: focusedDetailPage ? "none" : "flex" },
             }}
@@ -146,10 +126,10 @@ const NavigationComponent = () => {
               />
             )}
           </Tab.Screen>
-          <Tab.Screen name="Question" component={QuestionPage} />
-          <Tab.Screen name="Recode" component={RecodePage} />
+          <Tab.Screen name="QuestionTab" component={QuestionPage} />
+          <Tab.Screen name="RecodeTab" component={RecodePage} />
           <Tab.Screen
-            name="Album"
+            name="AlbumTab"
             options={{
               tabBarStyle: { display: focusedDetailPage ? "none" : "flex" },
             }}
@@ -162,7 +142,7 @@ const NavigationComponent = () => {
               />
             )}
           </Tab.Screen>
-          <Tab.Screen name="User" component={UserPage} />
+          <Tab.Screen name="UserTab" component={UserPage} />
         </Tab.Navigator>
       </NavigationContainer>
     </UserContext.Provider>
