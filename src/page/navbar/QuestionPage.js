@@ -1,56 +1,96 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet } from 'react-native';
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import axios from 'axios';
-import { Button, Card } from "react-native-paper";
+import FormData from 'form-data'; // 수정된 부분
+
 import LetterIcon from '../../assets/images/svg/letter.svg';
 import { UserContext } from "../../contexts/UserContext";
-
-const AnswerItem = ({ item }) => (
+import IslandPng from '../../assets/images/png/island1.png'
+const AnswerItem = ({ item }) => {
+  console.log(item)
+  return(
     <View style={styles.answerItem}>
         <Text style={styles.user_nickname}>{item.user_nickname}</Text>
         <Text style={styles.answer_txt}>{item.answer_txt}</Text>
         <Text style={styles.write_date}>{item.write_date}</Text>
         <Text style={styles.like}>{item.like.length}</Text>
-    </View>
-);
+    </View>)
+};
 
-const QuestionItem = ({ question }) => (
-    <View style={styles.questionItem}>
-        <LetterIcon style={styles.letterIcon}/>
-        <Text style={styles.questionDate}>#{question.date}일 질문</Text>
-        <Text style={styles.questionContent}>{question.question_txt}</Text>
-    </View>
-);
+const QuestionItem = ({ question }) => {
+    if (!question) {
+        return (
+            <View style={styles.questionItem}>
+                <Text>로딩 중...</Text>
+            </View>
+        );
+    }
 
+    return (
+        <View style={styles.questionItem}>
+            <LetterIcon style={styles.letterIcon} />
+            <Text style={styles.questionDate}>#{question.date}일 질문</Text>
+            <Text style={styles.questionContent}>{question.question_txt}</Text>
+        </View>
+    );
+};
 const QuestionPage = () => {
     // const { userId, familyId } = React.useContext(UserContext);
+    const [comment, setComment] = useState('');
     const [question, setQuestion] = useState();
-    const [answerBlockList, setAnswerBlockList] = useState([]);
+    const [answerBlockList, setAnswerBlockList] = useState({"canRead":false,"answers":[{"answer_id":158,"question_id":154,"user_id":"user1","user_nickname":"피글렛","profile_path":"https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/profile/pig.jpeg","answer_txt":"테스트용 답변2222222222222","answer_img":null,"write_date":"2023-11-17","like":[]}]});
     const [userData, setUserData] = useState();
-    const userId = 'user1'
-    const familyId = 'A1B5E6'
+    const userId = 'user1';
+    const familyId = 'A1B5E6';
 
+    const handleCommentChange = (text) => {r
+        setComment(text);
+    };
+
+    const handleCommentSubmit = async () => {
+        let data = new FormData();
+        data.append('answerTxt', '테스트용 답변');
+        // const path = RNFetchBlob.fs.dirs.DocumentDir + '/empty.txt'; // 빈 파일 경로
+        // await RNFetchBlob.fs.writeFile(path, '', 'utf8'); // 빈 파일 생성
+
+        // data.append('answerTxt', '테스트용 답변');
+        // data.append('img', {
+        //     uri: path,
+        //     type: 'text/plain',
+        //     name: 'empty.txt',
+        // });
+
+        try {
+                const response = await axios({
+                    method: 'post',
+                    url: 'http://52.79.97.196:8080/answer/create/154/user3',
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    data : data
+                });
+            console.log(response.data);
+        } catch (error) {
+            console.error(error);
+        }
+    };
     useEffect(() => {
         const fetchQuestionData = async () => {
             try {
-                const userResponse = await fetch(`http://52.79.97.196:8080/user/${userId}`);
-                const userData = await userResponse.json();
-                setUserData(userData);
+                const userResponse = await axios.get(`http://52.79.97.196:8080/user/${userId}`);
+                setUserData(userResponse.data);
 
-                const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`);
-                const questionData = await questionResponse.json();
-                setQuestion(questionData);
+                const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/${userResponse.data.family.fam_number}`);
+                setQuestion(questionResponse.data);
+                console.log()
+                const answerResponse = await axios.get(`http://52.79.97.196:8080/answer/read//${familyId}`);
+                setAnswerBlockList(answerResponse.data);
 
-                const answerResponse = await fetch(`http://52.79.97.196:8080/answer/read/${questionData.question_id}/${familyId}`);
-                const answerData = await answerResponse.json();
-                setAnswerBlockList(answerData);
-                // console.log(`http://52.79.97.196:8080/answer/read/${questionData.question_id}/${familyId}`)
-                // console.log("answerData:", answerData)
+                console.log(question)
             } catch (error) {
                 console.error('데이터 가져오기 오류:', error);
             }
         };
-
         fetchQuestionData();
     }, []);
     return (
@@ -58,52 +98,56 @@ const QuestionPage = () => {
           <QuestionItem question={question} />
           <FlatList
             contentContainerStyle={styles.answerFlatList}
-            data={answerBlockList}
+            data={answerBlockList.answers}
             keyExtractor={item => item.answer_id.toString()}
             renderItem={({ item }) => <AnswerItem item={item} />}
           />
-          <Button style={styles.creatAnswerButton}>
-              <Text style={styles.answerButtonText}>내 대답 작성하기</Text>
-          </Button>
+          <View style={styles.commentInputContainer}>
+              <TextInput
+                  style={styles.commentInput}
+                  placeholder="댓글을 입력하세요..."
+                  value={comment}
+                  onChangeText={handleCommentChange}
+              />
+              <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>
+                  <Text style={styles.commentButtonText}>전송</Text>
+              </TouchableOpacity>
+          </View>
       </View>
     );
 };
-
 const styles = StyleSheet.create({
-
-    container:{
-      flex:1,
+    container: {
+        flex: 1,
     },
-    questionItem:{
+    questionItem: {
         padding: 20,
-        backgroundColor:'#ffe6e0',
-        borderRadius:15,
-        marginTop:30,
-        marginBottom:10,
-        marginHorizontal:10,
-        shadowColor: '#000', // 그림자 색상
+        backgroundColor: '#ffe6e0',
+        borderRadius: 15,
+        marginTop: 30,
+        marginBottom: 10,
+        marginHorizontal: 10,
+        shadowColor: '#000',
         shadowOffset: {
-            width: 0, // 좌우 그림자 위치
-            height: 2, // 상하 그림자 위치
+            width: 0,
+            height: 2,
         },
-        shadowOpacity: 0.25, // 그림자 투명도
-        shadowRadius: 3.84,   // 그림자 반경
-
-        elevation: 5, // Android에만 적용되는 그림자 깊이
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
     questionContent: {
         fontSize: 18,
-        marginLeft: 20, // 왼쪽 여백 추가
-        textAlign: 'left', // 텍스트를 왼쪽 정렬
-        marginVertical:15,
+        marginLeft: 20,
+        textAlign: 'left',
+        marginVertical: 15,
     },
     questionDate: {
         color: '#f7b599',
         position: 'absolute',
         top: 10,
-        left:20,
-        fontSize: 12, // 작은 크기로 설정
-
+        left: 20,
+        fontSize: 12,
     },
     letterIcon: {
         position: 'absolute',
@@ -111,59 +155,84 @@ const styles = StyleSheet.create({
         top: -20,
         transform: [{ scaleX: -1 }],
     },
-    answerFlatList:{
+    answerFlatList: {
         paddingBottom: 100,
-        // flex: 1,
     },
-    answerItem:{
+    answerItem: {
         padding: 20,
-        backgroundColor:'#FFF',
-        borderRadius:15,
-        marginTop:20,
-        marginHorizontal:10,
-        shadowColor: '#000', // 그림자 색상
+        backgroundColor: '#FFF',
+        borderRadius: 15,
+        marginTop: 20,
+        marginHorizontal: 10,
+        shadowColor: '#000',
         shadowOffset: {
-            width: 0, // 좌우 그림자 위치
-            height: 2, // 상하 그림자 위치
+            width: 0,
+            height: 2,
         },
-        shadowOpacity: 0.25, // 그림자 투명도
-        shadowRadius: 3.84,   // 그림자 반경
-
-        elevation: 5, // Android에만 적용되는 그림자 깊이
-
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
-    user_nickname:{
-        color:'black',
-        fontSize: 18, // 크기를 크게 설정
-        fontWeight: 'bold', // 굵게 설정
-        marginBottom:10,
+    user_nickname: {
+        color: 'black',
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginBottom: 10,
     },
-    answer_txt:{
-        fontSize: 18, // 크기를 크게 설정
-
+    answer_txt: {
+        fontSize: 18,
     },
-    write_date:{
-
+    write_date: {},
+    like: {},
+    commentInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        paddingHorizontal: 10,
+        paddingVertical: 5,
+        backgroundColor: '#FFF',
+        marginHorizontal: 10,
+        marginVertical: 20,
+        marginTop: 20,
+        borderRadius: 15,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
     },
-    like:{
-
-    },
-    creatAnswerButton:{
-        position:'absolute',
-        backgroundColor:'#F7B599',
+    commentInput: {
+        flex: 1,
         height: 40,
-        borderRadius:10,
-        bottom:10,
-        left:10,
-        right:10,
-        justifyContent:'center',
-        alignItems:'center',
+        marginRight: 10,
     },
-    answerButtonText:{
-    color:'black',
-
-        fontSize: 16, // 크기를 크게 설정
-      },
+    commentButton: {
+        backgroundColor: '#F7B599',
+        borderRadius: 10,
+        paddingVertical: 5,
+        paddingHorizontal: 10,
+    },
+    commentButtonText: {
+        color: 'black',
+        fontSize: 16,
+    },
+    createAnswerButton: {
+        position: 'absolute',
+        backgroundColor: '#F7B599',
+        height: 40,
+        borderRadius: 10,
+        bottom: 10,
+        left: 10,
+        right: 10,
+        justifyContent: 'center',
+        alignItems: 'center',
+    },
+    answerButtonText: {
+        color: 'black',
+        fontSize: 16,
+    },
 });
 
 export default QuestionPage;
