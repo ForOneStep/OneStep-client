@@ -22,47 +22,52 @@ const LetterPage = ({navigation}) => {
     const [userLetters, setUserLetters] = useState([]); // 사용자가 작성한 쪽지
     const [familyLetters, setFamilyLetters] = useState([]); // 가족의 쪽지
     const [userId, setUserId] = useState('user1'); // 로컬 스토리지에서 가져온 family_id
-    const [familyId, setFamilyId] = useState('아이디1'); // 로컬 스토리지에서 가져온 family_id
+    const [familyId, setFamilyId] = useState('A1B5E6'); // 로컬 스토리지에서 가져온 family_id
 
 
     // 컴포넌트가 마운트되면 데이터 불러오기
         useEffect(() => {
-            // loadUserLetters(userId);
-            // loadFamilyLetters(familyId);
-            // loadWeeklyLetters(familyId);
+            // 사용자가 작성한 쪽지 불러오기
+            const loadUserLetters = async () => {
+                try {
+                    const response = await axios.get(`http://52.79.97.196:8080/letter/byUser/${userId}`);
+                    setUserLetters(response.data);
+                    console.log(response.data)
+                } catch (error) {
+
+                    console.log("유저 불러오기 오류",error)
+                }
+            };
+
+            // 가족의 쪽지 불러오기
+            const loadFamilyLetters = async () => {
+                try {
+                    const response = await axios.get(`http://52.79.97.196:8080/letter/byFamily/${familyId}`);
+                    setFamilyLetters(response.data);
+                    console.log(response.data)
+                } catch (error) {
+                    console.log("가족 불러오기 오류",error)
+                }
+            };
+
+            // 이번주 공개된 쪽지 불러오기
+            const loadWeeklyLetters = async () => {
+                try {
+                    const response = await axios.get(`http://52.79.97.196:8080/letter/weekly/${familyId}`);
+                    setWeeklyLetters(response.data);
+                } catch (error) {
+                    // 에러 처리
+                }
+            };
+            loadUserLetters();
+            loadFamilyLetters();
+            loadWeeklyLetters();
+
         }, []);
 
     // 쪽지 작성
 
-    // 사용자가 작성한 쪽지 불러오기
-    const loadUserLetters = async (userId) => {
-        try {
-            const response = await axios.get(`http://52.79.97.196:8080/letter/byUser/${userId}`);
-            setUserLetters(response.data);
-        } catch (error) {
-            // 에러 처리
-        }
-    };
 
-    // 가족의 쪽지 불러오기
-    const loadFamilyLetters = async (familyId) => {
-        try {
-            const response = await axios.get(`http://52.79.97.196:8080/letter/byFamily/${familyId}`);
-            setFamilyLetters(response.data);
-        } catch (error) {
-            // 에러 처리
-        }
-    };
-
-    // 이번주 공개된 쪽지 불러오기
-    const loadWeeklyLetters = async (familyId) => {
-        try {
-            const response = await axios.get(`http://52.79.97.196:8080/letter/weekly/${familyId}`);
-            setWeeklyLetters(response.data);
-        } catch (error) {
-            // 에러 처리
-        }
-    };
 
     const openModal = () => {
         console.log(modalVisible)
@@ -81,11 +86,11 @@ const LetterPage = ({navigation}) => {
               <LetterIcon style={styles.letterIcon}/>
               <View style={styles.myLetterBox}>
                   <Text style={styles.myLetterText}>우리집 익명 편지함</Text>
-                  <Text style={styles.myLetterNumber}>43</Text>
+                  <Text style={styles.myLetterNumber}>{familyLetters.length}</Text>
               </View>
               <View style={styles.familyLetterBox}>
                   <Text style={styles.familyLetterText}>내가 작성한 편지</Text>
-                  <Text style={styles.familyLetterNumber}>3</Text>
+                  <Text style={styles.familyLetterNumber}>{userLetters.length}</Text>
               </View>
           </View>
           <View style={styles.infoTextView}>
@@ -103,20 +108,20 @@ const LetterPage = ({navigation}) => {
             keyExtractor={item => item.letter_id.toString()}
             renderItem={({ item }) => <LetterItem item={item} />}
           />
-          <FlatList
-            horizontal={false}
-            contentContainerStyle={styles.letterFlatList}
-            data={familyLetters}
-            keyExtractor={item => item.letter_id.toString()}
-            renderItem={({ item }) => <LetterItem item={item} />}
-          />
-          <FlatList
-            horizontal={false}
-            contentContainerStyle={styles.letterFlatList}
-            data={userLetters}
-            keyExtractor={item => item.letter_id.toString()}
-            renderItem={({ item }) => <LetterItem item={item} />}
-          />
+          {/*<FlatList*/}
+          {/*  horizontal={false}*/}
+          {/*  contentContainerStyle={styles.letterFlatList}*/}
+          {/*  data={familyLetters}*/}
+          {/*  keyExtractor={item => item.letter_id.toString()}*/}
+          {/*  renderItem={({ item }) => <LetterItem item={item} />}*/}
+          {/*/>*/}
+          {/*<FlatList*/}
+          {/*  horizontal={false}*/}
+          {/*  contentContainerStyle={styles.letterFlatList}*/}
+          {/*  data={userLetters}*/}
+          {/*  keyExtractor={item => item.letter_id.toString()}*/}
+          {/*  renderItem={({ item }) => <LetterItem item={item} />}*/}
+          {/*/>*/}
       </View>
     );
 };

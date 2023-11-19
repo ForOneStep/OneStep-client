@@ -7,11 +7,13 @@ import MainPage from "../page/navbar/MainPage";
 import RecodePage from "../page/navbar/RecodePage";
 import UserPage from "../page/navbar/UserPage";
 import AlbumPage from "../page/navbar/AlbumPage";
+import NewPost from "./NewPost";
 
 import QuestionPage from "../page/navbar/QuestionPage";
 import LetterPage from "../page/LetterPage";
 import LoadingPage from "../page/LoadingPage";
 import AlbumDetailPage from "../page/AlbumDedetailPage";
+
 
 import AlbumIcon from "../assets/images/svg/AlbumIcon.svg";
 import RecodeIcon from "../assets/images/svg/RecodeIcon.svg";
@@ -35,7 +37,7 @@ const MainStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
   useEffect(() => {
     const currentRouteState = navigationState.routes[navigationState.index].state;
     if (currentRouteState) {
-      if (currentRouteState.index === 1) {
+      if (currentRouteState.index !== 0) {
         onTabVisibilityChange();
       } else {
         offTabVisibilityChange();
@@ -53,20 +55,24 @@ const MainStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
 
 // AlbumStack 컴포넌트
 const AlbumStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
-  useEffect(() => {
-    // AlbumStack이 마운트되면 탭을 숨깁니다.
-    offTabVisibilityChange();
+  const navigationState = useNavigationState(state => state);
 
-    // 컴포넌트가 언마운트될 때 탭을 다시 표시합니다.
-    return () => {
-      onTabVisibilityChange();
-    };
-  }, []);
+  useEffect(() => {
+    const currentRouteState = navigationState.routes[navigationState.index].state;
+    if (currentRouteState) {
+      if (currentRouteState.index !== 0) {
+        onTabVisibilityChange();
+      } else {
+        offTabVisibilityChange();
+      }
+    }
+  }, [navigationState]);
 
   return (
     <Stack.Navigator>
       <Stack.Screen name="Album" component={AlbumPage} options={{ headerShown: false }} />
       <Stack.Screen name="AlbumDetail" component={AlbumDetailPage} />
+      <Stack.Screen name="NewPost" component={NewPost} />
     </Stack.Navigator>
   );
 };

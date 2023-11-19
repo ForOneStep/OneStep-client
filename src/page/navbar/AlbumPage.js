@@ -43,10 +43,15 @@ const AlbumPage = ({navigation}) => {
       <View style={styles.container}>
           <Text style={styles.title}>가족엘범</Text>
           <FlatList
-            data={data}
+              data={data.slice().reverse()}
             renderItem={({ item }) => <Post item={item} navigation={navigation} />}
             keyExtractor={item => item.photo_id.toString()}
           />
+          <TouchableOpacity
+            style={styles.addButton}
+            onPress={() => navigation.navigate('NewPost')}>
+              <Text style={styles.addButtonText}>+</Text>
+          </TouchableOpacity>
       </View>
     );
 };
@@ -124,6 +129,30 @@ const styles = StyleSheet.create({
     text: {
         marginTop: 20,
         fontSize: 16,
+    },
+    addButton: {
+        zIndex:10,
+        backgroundColor: '#ff6200',
+        position: 'absolute',
+        width: 60,
+        height: 60,
+        borderRadius: 30,
+        alignItems: 'center',
+        justifyContent: 'center',
+        right: 10,
+        bottom: 85,
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 3,
+        },
+        shadowOpacity: 0.29,
+        shadowRadius: 4.65,
+        elevation: 7,
+    },
+    addButtonText: {
+        color: '#fff',
+        fontSize: 24,
     },
 });
 export default AlbumPage;

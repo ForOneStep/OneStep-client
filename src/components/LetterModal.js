@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { Modal, View, TextInput, Button, Text, TouchableOpacity, StyleSheet } from "react-native";
 import CloseIcon from '../assets/images/svg/CloseIcon.svg';
 import axios from 'axios';
+import { UserContext } from "../contexts/UserContext";
 const LetterModal = ({ modalVisible, closeModal }) => {
+    // const { userId, familyId } = React.useContext(UserContext);
     const [titleInputValue, setTitleInputValue] = useState('');
     const [contentInputValue, setContentInputValue] = useState('');
+    const userId = 'user1';
+    const familyId = 'A1B5E6';
 
     // 타이틀 인풋 값이 바뀌면 타이틀 값을 바꾸는 함수
     const handleTitleInputChange = (text) => {
@@ -22,20 +26,20 @@ const LetterModal = ({ modalVisible, closeModal }) => {
         const today = new Date();
         try {
             const response = await axios.post('http://52.79.97.196:8080/letter/write', {
-                "user_id":"user1",
-                "letter_title":titleInputValue,
+                "writer_id": "user1",
+                "letter_title": titleInputValue,
                 "letter_txt": contentInputValue,
-                "write_date":today
             });
 
             if (response.status === 200) {
                 // 쪽지 작성 성공
                 console.log("성공")
             } else {
-                // 쪽지 작성 실패
+                console.log("실패")
             }
         } catch (error) {
-            // 에러 처리
+
+            console.log("실패",error)
         }
         closeModal();
         setTitleInputValue('');

@@ -4,11 +4,13 @@ import NavigationComponent from "./src/components/NavigationComponent";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { UserContext } from './src/contexts/UserContext';
 import LoadingPage from "./src/page/LoadingPage";
+import { check, PERMISSIONS, RESULTS, request } from 'react-native-permissions';
 
 const App: FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [userId, setUserId] = useState<string>('');
   const [familyId, setFamilyId] = useState<string>('');
+
   useEffect(() => {
     const loadInitialData = async () => {
       try {
@@ -32,6 +34,19 @@ const App: FC = () => {
       } catch (error) {
         console.error('Error with AsyncStorage:', error);
       }
+
+      // 앨범 접근 권한 및 카메라 사용 권한 요청
+      const permissions = [PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE, PERMISSIONS.ANDROID.CAMERA];
+      for (let permission of permissions) {
+        let result = await check(permission);
+        if (result !== RESULTS.GRANTED) {
+          result = await request(permission);
+          if (result !== RESULTS.GRANTED) {
+            console.log('Permission not granted: ', permission);
+          }
+        }
+      }
+
       setIsLoading(false);  // 로딩 완료
     };
     loadInitialData();

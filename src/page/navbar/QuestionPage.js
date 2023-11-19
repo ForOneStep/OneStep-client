@@ -7,7 +7,6 @@ import LetterIcon from '../../assets/images/svg/letter.svg';
 import { UserContext } from "../../contexts/UserContext";
 import IslandPng from '../../assets/images/png/island1.png'
 const AnswerItem = ({ item }) => {
-  console.log(item)
   return(
     <View style={styles.answerItem}>
         <Text style={styles.user_nickname}>{item.user_nickname}</Text>
@@ -43,13 +42,13 @@ const QuestionPage = () => {
     const userId = 'user1';
     const familyId = 'A1B5E6';
 
-    const handleCommentChange = (text) => {r
+    const handleCommentChange = (text) => {
         setComment(text);
     };
 
     const handleCommentSubmit = async () => {
         let data = new FormData();
-        data.append('answerTxt', '테스트용 답변');
+        data.append('answerTxt', comment);
         // const path = RNFetchBlob.fs.dirs.DocumentDir + '/empty.txt'; // 빈 파일 경로
         // await RNFetchBlob.fs.writeFile(path, '', 'utf8'); // 빈 파일 생성
 
@@ -63,7 +62,7 @@ const QuestionPage = () => {
         try {
                 const response = await axios({
                     method: 'post',
-                    url: 'http://52.79.97.196:8080/answer/create/154/user3',
+                    url: `http://52.79.97.196:8080/answer/create/${question.question_id}/${userId}`,
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
@@ -79,14 +78,11 @@ const QuestionPage = () => {
             try {
                 const userResponse = await axios.get(`http://52.79.97.196:8080/user/${userId}`);
                 setUserData(userResponse.data);
-
+                console.log(userResponse.data.family.fam_number)
                 const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/${userResponse.data.family.fam_number}`);
                 setQuestion(questionResponse.data);
-                console.log()
-                const answerResponse = await axios.get(`http://52.79.97.196:8080/answer/read//${familyId}`);
+                const answerResponse = await axios.get(`http://52.79.97.196:8080/answer/read/${questionResponse.data.question_id}/${familyId}`);
                 setAnswerBlockList(answerResponse.data);
-
-                console.log(question)
             } catch (error) {
                 console.error('데이터 가져오기 오류:', error);
             }
