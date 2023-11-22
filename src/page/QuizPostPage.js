@@ -4,6 +4,7 @@ import { RadioButton } from 'react-native-paper';
 import { UserContext } from "../../App";
 
 const QuizPostPage = () => {
+  const [canCreateQuiz, setCanCreateQuiz] = useState(false);
   const [quiz_txt, setQuizTxt] = useState('');
   const [answer1, setAnswer1] = useState('');
   const [answer2, setAnswer2] = useState('');
