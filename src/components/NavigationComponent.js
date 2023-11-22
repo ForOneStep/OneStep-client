@@ -13,7 +13,6 @@ import QuestionPage from "../page/navbar/QuestionPage";
 import LetterPage from "../page/LetterPage";
 import LoadingPage from "../page/LoadingPage";
 import AlbumDetailPage from "../page/AlbumDedetailPage";
-import RecodeDetailPage from "../page/RecodeDetailPage";
 
 
 import AlbumIcon from "../assets/images/svg/AlbumIcon.svg";
@@ -78,29 +77,6 @@ const AlbumStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
   );
 };
 
-// RecodeStack 컴포넌트
-const RecodeStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
-  const navigationState = useNavigationState(state => state);
-
-  useEffect(() => {
-    const currentRouteState = navigationState.routes[navigationState.index].state;
-    if (currentRouteState) {
-      if (currentRouteState.index !== 0) {
-        onTabVisibilityChange();
-      } else {
-        offTabVisibilityChange();
-      }
-    }
-  }, [navigationState]);
-
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Recode" component={RecodePage} options={{ headerShown: false }} />
-      <Stack.Screen name="RecodeDetail" component={RecodeDetailPage} />
-    </Stack.Navigator>
-  );
-};
-
 const NavigationComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [userId, setUserId] = useState('');
@@ -157,21 +133,7 @@ const NavigationComponent = () => {
             )}
           </Tab.Screen>
           <Tab.Screen name="QuestionTab" component={QuestionPage} />
-          <Tab.Screen
-            name="RecodeTab"
-            component={RecodePage}
-            options={{
-                tabBarStyle: { display: focusedDetailPage ? "none" : "flex" },
-            }}
-          >
-            {(props) => (
-                <RecodeStack
-                    {...props}
-                    onTabVisibilityChange={handleTabVisibilityChangeOn}
-                    offTabVisibilityChange={handleTabVisibilityChangeOff}
-                />
-            )}
-          </Tab.Screen>
+          <Tab.Screen name="RecodeTab" component={RecodePage} />
           <Tab.Screen
             name="AlbumTab"
             options={{
