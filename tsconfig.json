@@ -1,5 +1,12 @@
 {
   "extends": "@tsconfig/react-native/tsconfig.json",
   "moduleResolution":"node",
-  "allowSyntheticDefaultImports":true
+  "allowSyntheticDefaultImports":true,
+  "compilerOptions": {
+    "noImplicitAny": false,
+    "noImplicitThis": false,
+    "noImplicitReturns": false,
+    "strictNullChecks": false,
+
+  }
 }

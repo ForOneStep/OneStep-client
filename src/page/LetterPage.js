@@ -171,11 +171,11 @@ const styles = StyleSheet.create({
         borderRightColor: 'white',
     },
     myLetterText: {
-        color:'#F7B599',
+        color:'#000000',
         fontSize: 16,
     },
     myLetterNumber:{
-        color:'#F7B599',
+        color:'#000000',
         fontSize: 28,
     },
     familyLetterBox:{
@@ -184,11 +184,11 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     familyLetterText: {
-        color:'#F7B599',
+        color:'#000000',
         fontSize: 16,
     },
     familyLetterNumber:{
-        color:'#F7B599',
+        color:'#000000',
         fontSize: 28,
     },
 
@@ -205,12 +205,12 @@ const styles = StyleSheet.create({
     },
     infoTextNumber:{
         fontSize: 20,
-        color: '#e7b79e', //강조색
+        color: '#ce7c50', //강조색
         fontWeight: 'bold',
     },
     infoTextCreate:{
         fontSize: 16,
-        color: '#e7b79e', //강조색
+        color: '#da875b', //강조색
 
     },
 

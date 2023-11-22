@@ -2,9 +2,8 @@ import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
 import axios from 'axios';
 import FormData from 'form-data'; // 수정된 부분
-
+import { UserContext } from '../../../App'
 import LetterIcon from '../../assets/images/svg/letter.svg';
-import { UserContext } from "../../contexts/UserContext";
 import IslandPng from '../../assets/images/png/island1.png'
 const AnswerItem = ({ item }) => {
   return(

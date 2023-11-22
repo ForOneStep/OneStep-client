@@ -1,6 +1,10 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
+import { Animated, Easing } from "react-native";
 import { View, StyleSheet, Text, Image } from "react-native";
+import { Modal, Button } from 'react-native'; // 모달과 버튼 컴포넌트를 import 합니다.
+
 import LetterIcon from '../../assets/images/svg/letter.svg';
+import QuizIcon from '../../assets/images/svg/QuizIcon.svg';
 import LoudSpeaker from '../../assets/images/svg/loudSpeaker.svg';
 import island1 from '../../assets/images/png/island1.png';
 import island2 from '../../assets/images/png/island2.png';
@@ -10,8 +14,10 @@ import island5 from '../../assets/images/png/island5.png';
 import island6 from '../../assets/images/png/island6.png';
 import island7 from '../../assets/images/png/island7.png';
 import island8 from '../../assets/images/png/island8.png';
-import { UserContext } from '../../contexts/UserContext.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingPage  from "../LoadingPage";
+import QuizModal  from "../../components/QuizModal";
+import { UserContext } from '../../../App'
 
 const ClosestBirth = ({ members }) => {
 
@@ -48,18 +54,43 @@ const ClosestBirth = ({ members }) => {
 
 
 const MainPage = ({ navigation }) => {
-    // const { userId, familyId } = React.useContext(UserContext);
-    const userId= 'user1'
-    const familyId= 'A1B5E6'
+    // AsyncStorage에서 값을 불러오기
+    // const userId = await AsyncStorage.getItem('userId');
+    // const familyId = await AsyncStorage.getItem('familyId');
+    const { userId, familyId } = useContext(UserContext);
+    // const userId= 'user1'
+    // const familyId= 'A1B5E6'
+    const [modalVisible, setModalVisible] = useState(false); // 모달의 표시 여부를 관리하는 state를 추가합니다.
+    const [quiz,setQuiz] =useState()
     const [question, setQuestion] = useState();
     const [familyMembers, setFamilyMembers] = useState();
     const [userData, setUserData] = useState();
     const [isLoading, setIsLoading] = useState(true);
 
+    const moveAnimation = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        const fetchQuizData = async () => {
+            try {
+                const quizResponse = await fetch(`http://52.79.97.196:8080/quiz/todayQuiz/${familyId}`);
+                const quizData = await quizResponse.json();
+                setQuiz(quizData)
+                // quizData가 null이 아니거나 quizData.quizAnswers에 userId가 없으면 모달을 표시합니다.
+                // console.log(quizData)
+                console.log(quizData && !quizData.quizAnswers.filter(answer => answer.quiz_state !== 2).some(answer => answer.user_id === userId))
+                if (quizData && !quizData.quizAnswers.filter(answer => answer.quiz_state !== 2).some(answer => answer.user_id === userId)){
+                    // console.log(userId)
+                    setModalVisible(true);
+                }
+            } catch (error) {
+                console.error('Error fetching quiz data:', error);
+            }
+        };
+        fetchQuizData();
+    }, [userId]);
     useEffect(() => {
         const fetchData = async () => {
             try {
-
                 const userResponse = await fetch(`http:/52.79.97.196:8080/user/${userId}`);
                 const userData = await userResponse.json();
                 setUserData(userData);
@@ -72,15 +103,33 @@ const MainPage = ({ navigation }) => {
                 const familyData = await familyResponse.json();
                 setFamilyMembers(familyData);
 
-
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
-
         fetchData();
-    }, []);
+
+        Animated.loop(
+          Animated.sequence([
+              Animated.timing(moveAnimation, {
+                  toValue: 20,
+                  duration: 2000,
+                  easing: Easing.inOut(Easing.quad),
+                  useNativeDriver: true
+              }),
+              Animated.timing(moveAnimation, {
+                  toValue: 0,
+                  duration: 2000,
+                  easing: Easing.inOut(Easing.quad),
+                  useNativeDriver: true
+              }),
+          ]),
+          {
+              iterations: Infinity
+          }
+        ).start();
+    }, [userId]);
     const islands = {
         island1,
         island2,
@@ -91,19 +140,36 @@ const MainPage = ({ navigation }) => {
         island7,
         island8,
     };
+    const modalVisibleFalse = () => {
+        setModalVisible(false)
+    }
     if (isLoading) {
         return <LoadingPage />;
     }
     return (
       <View style={styles.pageBackground}>
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={modalVisible}
+            onRequestClose={() => {
+                setModalVisible(!modalVisible);
+            }}
+          >
+              <QuizModal quiz={quiz} modalVisibleFalse={modalVisibleFalse}></QuizModal>
+          </Modal>
           <View style={styles.islandBackground}>
               <ClosestBirth members={familyMembers} />
-              <View style={styles.letterText}>
+              <View style={styles.iconContainer}>
+                  <QuizIcon
+                    onPress={() => navigation.navigate('QuizRecode')}
+                    style={styles.quizIcon}
+                    width={42} height={42}/>
                   <LetterIcon
                     onPress={() => navigation.navigate('Letter')}
                     width={40} height={40} />
               </View>
-              <Image source={islands[`island${userData.family.level}`] || islands.island1} style={styles.islandImg} />
+              <Animated.Image source={islands[`island${userData.family.level}`] || islands.island1} style={[styles.islandImg, { transform: [{ translateY: moveAnimation }] }]} />
               <Text style={styles.famliyName}>{`${userData.family.fam_nickname} 가족 섬`}</Text>
           </View>
           <View  style={styles.questionBlock}>
@@ -118,6 +184,15 @@ const MainPage = ({ navigation }) => {
 };
 
 const styles = StyleSheet.create({
+    quizIcon:{
+      marginRight:20,
+    },
+    iconContainer: {
+        position: 'absolute',
+        top: 10,
+        right: 10,
+        flexDirection: 'row',
+    },
     pageBackground: {
         width: '100%',
         height: '100%',
@@ -128,9 +203,9 @@ const styles = StyleSheet.create({
     },
     islandBackground: {
         width: '100%',
-        height: 400,
+        height: 500,
         alignItems:'center',
-        justifyContent:'center',
+        justifyContent:'space-around',
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
         backgroundColor: '#f9f8f5',
@@ -165,7 +240,7 @@ const styles = StyleSheet.create({
 
     },
     famliyName:{
-        color:'#00000077',
+        color:'#00000099',
         fontSize: 24, // 크기를 크게 설정
         fontWeight: 'bold', // 굵게 설정
     },
@@ -177,7 +252,7 @@ const styles = StyleSheet.create({
     islandImg:{
         width: 320,
         height: 320,
-        top:20,
+        top:60,
     },
     dDayText: {
         position: 'absolute',

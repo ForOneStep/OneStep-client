@@ -2,7 +2,6 @@ import React, { useState } from "react";
 import { Modal, View, TextInput, Button, Text, TouchableOpacity, StyleSheet } from "react-native";
 import CloseIcon from '../assets/images/svg/CloseIcon.svg';
 import axios from 'axios';
-import { UserContext } from "../contexts/UserContext";
 const LetterModal = ({ modalVisible, closeModal }) => {
     // const { userId, familyId } = React.useContext(UserContext);
     const [titleInputValue, setTitleInputValue] = useState('');

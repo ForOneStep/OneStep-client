@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useContext, useEffect } from "react";
 import { View, Text, StyleSheet } from 'react-native';
-
+import QuizIcon from "../../assets/images/svg/QuizIcon.svg";
+import { UserContext } from '../../../App'
 const RecodePage = () => {
+    const { userId, familyId,setUserData } = useContext(UserContext);
+
     return (
         <View style={styles.container}>
-            <Text style={styles.text}>recode</Text>
+            <Text style={styles.text}>{userId}</Text>
         </View>
     );
 };

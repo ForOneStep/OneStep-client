@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, Image } from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 import BirthdayCakeIcon from '../../assets/images/svg/BirthdayCakeIcon.svg';
 import FamilyIcon from '../../assets/images/svg/FamilyIcon.svg';
@@ -10,7 +10,7 @@ import EditPostIcon from '../../assets/images/svg/EditPostIcon.svg';
 import SettingIcon from '../../assets/images/svg/SettingIcon.svg';
 import { Button } from "react-native-paper";
 
-const UserPage = () => {
+const UserPage = ({navigation}) => {
     const [user,setUser] = useState([])
     const imgurl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Bbami_torty_cat.jpg/525px-Bbami_torty_cat.jpg'
     return (
@@ -52,10 +52,12 @@ const UserPage = () => {
             </View>
 
             <View style={styles.etcInfo}>
-                <View style={styles.optionItem}>
-                    <EditPostIcon style={styles.icon}/>
-                    <Text style={styles.text}> 프로필 수정 </Text>
-                </View>
+                <TouchableOpacity onPress={() => navigation.navigate('UserInfoChange')}>
+                    <View style={styles.optionItem}>
+                        <EditPostIcon style={styles.icon}/>
+                        <Text style={styles.text}> 프로필 수정 </Text>
+                    </View>
+                </TouchableOpacity>
                 <View style={styles.optionItem}>
                     <AnswerIcon style={styles.icon}/>
                     <Text style={styles.text}> 자주 묻는 질문 </Text>

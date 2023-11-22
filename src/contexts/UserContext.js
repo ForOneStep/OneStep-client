@@ -1,2 +1,2 @@
-import React from 'react';
-export const UserContext = React.createContext({ userId: '', familyId: ''});
+// import React from 'react';
+// export const UserContext = React.createContext();

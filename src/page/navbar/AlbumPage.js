@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { UserContext } from '../../../App'
 
 const Post = ({ item, navigation }) => {
     return (

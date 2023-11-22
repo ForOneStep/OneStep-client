@@ -25,7 +25,12 @@ import UserIcon from "../assets/images/svg/UserIcon.svg";
 
 
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { UserContext } from '../contexts/UserContext';
+import { UserContext } from '../../App'
+
+import QuizRecodePage from "../page/QuizRecodePage";
+import QuizModal from "./QuizModal";
+import QuizPostPage from "../page/QuizPostPage";
+import UserInfoChangePage from "../page/UserInfoChangePage";
 
 const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
@@ -49,6 +54,8 @@ const MainStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
     <Stack.Navigator>
       <Stack.Screen name="Main" component={MainPage} options={{ headerShown: false }}/>
       <Stack.Screen name="Letter" component={LetterPage} />
+      <Stack.Screen name="QuizRecode" component={QuizRecodePage} />
+      <Stack.Screen name="QuizPost" component={QuizPostPage} />
     </Stack.Navigator>
   );
 };
@@ -77,10 +84,31 @@ const AlbumStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
   );
 };
 
+const UserStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
+  const navigationState = useNavigationState(state => state);
+
+  useEffect(() => {
+    const currentRouteState = navigationState.routes[navigationState.index].state;
+    if (currentRouteState) {
+      if (currentRouteState.index !== 0) {
+        onTabVisibilityChange();
+      } else {
+        offTabVisibilityChange();
+      }
+    }
+  }, [navigationState]);
+
+  return (
+    <Stack.Navigator>
+      <Stack.Screen name="User" component={UserPage} options={{ headerShown: false }}/>
+      <Stack.Screen name="UserInfoChange" component={UserInfoChangePage} />
+    </Stack.Navigator>
+  );
+};
+
+
 const NavigationComponent = () => {
   const [isLoading, setIsLoading] = useState(true);
-  const [userId, setUserId] = useState('');
-  const [familyId, setFamilyId] = useState('');
   const [focusedDetailPage, setFocusedDetailPage] = useState(false);
 
   const handleTabVisibilityChangeOn = () => {
@@ -90,9 +118,7 @@ const NavigationComponent = () => {
   const handleTabVisibilityChangeOff = () => {
     setFocusedDetailPage(false);
   };
-
   return (
-    <UserContext.Provider value={{ userId, familyId }}>
       <NavigationContainer>
         <Tab.Navigator
           screenOptions={({ route }) => ({
@@ -148,10 +174,22 @@ const NavigationComponent = () => {
               />
             )}
           </Tab.Screen>
-          <Tab.Screen name="UserTab" component={UserPage} />
+            <Tab.Screen
+                name="UserTab"
+                options={{
+                    tabBarStyle: { display: focusedDetailPage ? "none" : "flex" },
+                }}
+            >
+                {(props) => (
+                    <UserStack
+                        {...props}
+                        onTabVisibilityChange={handleTabVisibilityChangeOn}
+                        offTabVisibilityChange={handleTabVisibilityChangeOff}
+                    />
+                )}
+            </Tab.Screen>
         </Tab.Navigator>
       </NavigationContainer>
-    </UserContext.Provider>
   );
 };
 
