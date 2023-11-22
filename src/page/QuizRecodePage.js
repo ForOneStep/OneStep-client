@@ -9,16 +9,18 @@ const QuizRecodePage = ({navigation}) => {
 
   useEffect(() => {
     const fetchQuizData = async () => {
+
       const familyId = 'A1B5E6';
       const response = await fetch(`http://52.79.97.196:8080/quiz/quizList/${familyId}`);
       const data = await response.json();
       setQuizData(data);
 
-      console.log(data)
-
       const canCreateResponse = await fetch(`http://52.79.97.196:8080/quiz/canQuiz/${familyId}`);
       const canCreateData = await canCreateResponse.json();
       setCanCreateQuiz(canCreateData);
+      console.log(canCreateData)
+
+      // console.log(data)
     };
     fetchQuizData();
   }, []);
