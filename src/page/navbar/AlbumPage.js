@@ -133,7 +133,7 @@ const styles = StyleSheet.create({
     },
     addButton: {
         zIndex:10,
-        backgroundColor: '#ff6200',
+        backgroundColor: '#F7B599',
         position: 'absolute',
         width: 60,
         height: 60,
