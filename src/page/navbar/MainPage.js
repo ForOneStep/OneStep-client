@@ -59,7 +59,7 @@ const MainPage = ({ navigation }) => {
     // const familyId = await AsyncStorage.getItem('familyId');
     const { userId, familyId } = useContext(UserContext);
     // const userId= 'user1'
-    // const familyId= 'A1B5E6'
+        // const familyId= 'A1B5E6'
     const [modalVisible, setModalVisible] = useState(false); // 모달의 표시 여부를 관리하는 state를 추가합니다.
     const [quiz,setQuiz] =useState()
     const [question, setQuestion] = useState();
@@ -207,7 +207,7 @@ const styles = StyleSheet.create({
         justifyContent:'space-around',
         borderBottomLeftRadius: 30,
         borderBottomRightRadius: 30,
-        backgroundColor: '#f9f8f5',
+        backgroundColor: '#fbfaf8',
         shadowColor: '#000', // 그림자 색상
         shadowOffset: {
             width: 0, // 좌우 그림자 위치
