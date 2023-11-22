@@ -20,7 +20,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#fbe6e1', // 예시 배경색
+    backgroundColor: '#fbfaf8', // 예시 배경색
   },
     islandImg:{
       width: 320,
