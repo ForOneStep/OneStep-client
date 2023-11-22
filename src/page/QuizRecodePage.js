@@ -14,6 +14,8 @@ const QuizRecodePage = ({navigation}) => {
       const data = await response.json();
       setQuizData(data);
 
+      console.log(data)
+
       const canCreateResponse = await fetch(`http://52.79.97.196:8080/quiz/canQuiz/${familyId}`);
       const canCreateData = await canCreateResponse.json();
       setCanCreateQuiz(canCreateData);

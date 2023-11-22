@@ -76,8 +76,7 @@ const MainPage = ({ navigation }) => {
                 const quizData = await quizResponse.json();
                 setQuiz(quizData)
                 // quizData가 null이 아니거나 quizData.quizAnswers에 userId가 없으면 모달을 표시합니다.
-                // console.log(quizData)
-                console.log(quizData && !quizData.quizAnswers.filter(answer => answer.quiz_state !== 2).some(answer => answer.user_id === userId))
+                console.log(quizData)
                 if (quizData && !quizData.quizAnswers.filter(answer => answer.quiz_state !== 2).some(answer => answer.user_id === userId)){
                     // console.log(userId)
                     setModalVisible(true);
