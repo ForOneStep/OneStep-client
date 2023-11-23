@@ -100,7 +100,7 @@ const QuestionPage = () => {
           <View style={styles.commentInputContainer}>
               <TextInput
                   style={styles.commentInput}
-                  placeholder="댓글을 입력하세요..."
+                  placeholder="답글을 입력하세요..."
                   value={comment}
                   onChangeText={handleCommentChange}
               />

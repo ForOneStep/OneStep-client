@@ -13,7 +13,7 @@ import QuestionPage from "../page/navbar/QuestionPage";
 import LetterPage from "../page/LetterPage";
 import LoadingPage from "../page/LoadingPage";
 import AlbumDetailPage from "../page/AlbumDedetailPage";
-
+import RecodeDetailPage from "../page/RecodeDetailPage";
 
 import AlbumIcon from "../assets/images/svg/AlbumIcon.svg";
 import RecodeIcon from "../assets/images/svg/RecodeIcon.svg";
@@ -36,75 +36,82 @@ const Stack = createStackNavigator();
 const Tab = createBottomTabNavigator();
 
 // MainStack 컴포넌트
+
 const MainStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
-  const navigationState = useNavigationState(state => state);
+    const navigationState = useNavigationState(state => state);
 
-  useEffect(() => {
-    const currentRouteState = navigationState.routes[navigationState.index].state;
-    if (currentRouteState) {
-      if (currentRouteState.index !== 0) {
-        onTabVisibilityChange();
-      } else {
-        offTabVisibilityChange();
-      }
-    }
-  }, [navigationState]);
+    useEffect(() => {
+        const currentRouteState = navigationState.routes[navigationState.index].state;
+        if (currentRouteState) {
+            currentRouteState.index !== 0 ? onTabVisibilityChange() : offTabVisibilityChange();
+        }
+    }, [navigationState]);
 
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Main" component={MainPage} options={{ headerShown: false }}/>
-      <Stack.Screen name="Letter" component={LetterPage} />
-      <Stack.Screen name="QuizRecode" component={QuizRecodePage} />
-      <Stack.Screen name="QuizPost" component={QuizPostPage} />
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Main" component={MainPage} options={{ headerShown: false }}/>
+            <Stack.Screen name="Letter" component={LetterPage} />
+            <Stack.Screen name="QuizRecode" component={QuizRecodePage} />
+            <Stack.Screen name="QuizPost" component={QuizPostPage} />
+        </Stack.Navigator>
+    );
 };
 
-// AlbumStack 컴포넌트
 const AlbumStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
-  const navigationState = useNavigationState(state => state);
+    const navigationState = useNavigationState(state => state);
 
-  useEffect(() => {
-    const currentRouteState = navigationState.routes[navigationState.index].state;
-    if (currentRouteState) {
-      if (currentRouteState.index !== 0) {
-        onTabVisibilityChange();
-      } else {
-        offTabVisibilityChange();
-      }
-    }
-  }, [navigationState]);
+    useEffect(() => {
+        const currentRouteState = navigationState.routes[navigationState.index].state;
+        if (currentRouteState) {
+            currentRouteState.index !== 0 ? onTabVisibilityChange() : offTabVisibilityChange();
+        }
+    }, [navigationState]);
 
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="Album" component={AlbumPage} options={{ headerShown: false }} />
-      <Stack.Screen name="AlbumDetail" component={AlbumDetailPage} />
-      <Stack.Screen name="NewPost" component={NewPost} />
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Album" component={AlbumPage} options={{ headerShown: false }} />
+            <Stack.Screen name="AlbumDetail" component={AlbumDetailPage} />
+            <Stack.Screen name="NewPost" component={NewPost} />
+        </Stack.Navigator>
+    );
+};
+
+const RecodeStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
+    const navigationState = useNavigationState(state => state);
+
+    useEffect(() => {
+        const currentRouteState = navigationState.routes[navigationState.index].state;
+        if (currentRouteState) {
+            currentRouteState.index !== 0 ? onTabVisibilityChange() : offTabVisibilityChange();
+        }
+    }, [navigationState]);
+
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="Recode" component={RecodePage} options={{ headerShown: false }} />
+            <Stack.Screen name="RecodeDetail" component={RecodeDetailPage} />
+        </Stack.Navigator>
+    );
 };
 
 const UserStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
-  const navigationState = useNavigationState(state => state);
+    const navigationState = useNavigationState(state => state);
 
-  useEffect(() => {
-    const currentRouteState = navigationState.routes[navigationState.index].state;
-    if (currentRouteState) {
-      if (currentRouteState.index !== 0) {
-        onTabVisibilityChange();
-      } else {
-        offTabVisibilityChange();
-      }
-    }
-  }, [navigationState]);
+    useEffect(() => {
+        const currentRouteState = navigationState.routes[navigationState.index].state;
+        if (currentRouteState) {
+            currentRouteState.index !== 0 ? onTabVisibilityChange() : offTabVisibilityChange();
+        }
+    }, [navigationState]);
 
-  return (
-    <Stack.Navigator>
-      <Stack.Screen name="User" component={UserPage} options={{ headerShown: false }}/>
-      <Stack.Screen name="UserInfoChange" component={UserInfoChangePage} />
-    </Stack.Navigator>
-  );
+    return (
+        <Stack.Navigator>
+            <Stack.Screen name="User" component={UserPage} options={{ headerShown: false }}/>
+            <Stack.Screen name="UserInfoChange" component={UserInfoChangePage} />
+        </Stack.Navigator>
+    );
 };
+
 
 
 const NavigationComponent = () => {
@@ -159,7 +166,20 @@ const NavigationComponent = () => {
             )}
           </Tab.Screen>
           <Tab.Screen name="QuestionTab" component={QuestionPage} />
-          <Tab.Screen name="RecodeTab" component={RecodePage} />
+            <Tab.Screen
+                name="RecodeTab"
+                options={{
+                    tabBarStyle: { display: focusedDetailPage ? "none" : "flex" },
+                }}
+            >
+                {(props) => (
+                    <RecodeStack
+                        {...props}
+                        onTabVisibilityChange={handleTabVisibilityChangeOn}
+                        offTabVisibilityChange={handleTabVisibilityChangeOff}
+                    />
+                )}
+            </Tab.Screen>
           <Tab.Screen
             name="AlbumTab"
             options={{
