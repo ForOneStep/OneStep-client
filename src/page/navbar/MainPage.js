@@ -18,6 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingPage  from "../LoadingPage";
 import QuizModal  from "../../components/QuizModal";
 import { UserContext } from '../../../App'
+import axios from "axios";
 
 const ClosestBirth = ({ members }) => {
 
@@ -61,7 +62,7 @@ const MainPage = ({ navigation }) => {
     // const userId= 'user1'
         // const familyId= 'A1B5E6'
     const [modalVisible, setModalVisible] = useState(false); // 모달의 표시 여부를 관리하는 state를 추가합니다.
-    const [quiz,setQuiz] =useState()
+    const [quiz,setQuiz] =useState();
     const [question, setQuestion] = useState();
     const [familyMembers, setFamilyMembers] = useState();
     const [userData, setUserData] = useState();
@@ -70,65 +71,56 @@ const MainPage = ({ navigation }) => {
     const moveAnimation = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
-        const fetchQuizData = async () => {
-            try {
-                const quizResponse = await fetch(`http://52.79.97.196:8080/quiz/todayQuiz/${familyId}`);
-                const quizData = await quizResponse.json();
-                setQuiz(quizData)
-                // quizData가 null이 아니거나 quizData.quizAnswers에 userId가 없으면 모달을 표시합니다.
-                console.log(quizData)
-                if (quizData && !quizData.quizAnswers.filter(answer => answer.quiz_state !== 2).some(answer => answer.user_id === userId)){
-                    // console.log(userId)
-                    setModalVisible(true);
-                }
-            } catch (error) {
-                console.error('Error fetching quiz data:', error);
-            }
-        };
-        fetchQuizData();
-    }, [userId]);
-    useEffect(() => {
         const fetchData = async () => {
+            console.log(userId,familyId)
             try {
-                const userResponse = await fetch(`http:/52.79.97.196:8080/user/${userId}`);
-                const userData = await userResponse.json();
+                const [quizResponse, userResponse, familyResponse] = await axios.all([
+                    axios.get(`http://52.79.97.196:8080/quiz/todayQuiz/${familyId}`),
+                    axios.get(`http://52.79.97.196:8080/user/${userId}`),
+                    axios.get(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`),
+                ]);
+
+                const quizData = quizResponse.data;
+                const userData = userResponse.data;
+                const familyData = familyResponse.data;
+
+                setQuiz(quizData);
                 setUserData(userData);
-
-                const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`);
-                const questionData = await questionResponse.json();
-                setQuestion(questionData);
-
-                const familyResponse = await fetch(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`);
-                const familyData = await familyResponse.json();
                 setFamilyMembers(familyData);
+
+                const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/1`)
+                // const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`)
+                const questionData = questionResponse.data;
+                setQuestion(questionData);
 
                 setIsLoading(false);
             } catch (error) {
                 console.error('Error fetching data:', error);
             }
         };
+
         fetchData();
 
         Animated.loop(
-          Animated.sequence([
-              Animated.timing(moveAnimation, {
-                  toValue: 20,
-                  duration: 2000,
-                  easing: Easing.inOut(Easing.quad),
-                  useNativeDriver: true
-              }),
-              Animated.timing(moveAnimation, {
-                  toValue: 0,
-                  duration: 2000,
-                  easing: Easing.inOut(Easing.quad),
-                  useNativeDriver: true
-              }),
-          ]),
-          {
-              iterations: Infinity
-          }
+            Animated.sequence([
+                Animated.timing(moveAnimation, {
+                    toValue: 20,
+                    duration: 2000,
+                    easing: Easing.inOut(Easing.quad),
+                    useNativeDriver: true,
+                }),
+                Animated.timing(moveAnimation, {
+                    toValue: 0,
+                    duration: 2000,
+                    easing: Easing.inOut(Easing.quad),
+                    useNativeDriver: true,
+                }),
+            ]),
+            {
+                iterations: Infinity,
+            }
         ).start();
-    }, [userId]);
+    }, [userId, familyId]);
     const islands = {
         island1,
         island2,

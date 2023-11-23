@@ -13,7 +13,7 @@ import QuestionPage from "../page/navbar/QuestionPage";
 import LetterPage from "../page/LetterPage";
 import LoadingPage from "../page/LoadingPage";
 import AlbumDetailPage from "../page/AlbumDedetailPage";
-import RecodeDetailPage from "../page/RecodeDetailPage";
+import RecodeDetailPage from "../page/RecodeDatailPage";
 
 import AlbumIcon from "../assets/images/svg/AlbumIcon.svg";
 import RecodeIcon from "../assets/images/svg/RecodeIcon.svg";

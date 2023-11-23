@@ -13,7 +13,7 @@ import { UserContext } from "../../../App";
 const QuestionItem = ({ question, navigation }) => (
     <TouchableOpacity
         style={styles.questionItem}
-        onPress={() => navigation.navigate('RecodeDetail', { question })}
+        onPress={() => navigation.navigate('RecodeDetail', { questionHeader: question })}
     >
         <View style={styles.questionText}>
             <Text style={styles.question_date}>{question.question_date}.</Text>

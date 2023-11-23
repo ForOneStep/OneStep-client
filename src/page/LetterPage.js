@@ -70,7 +70,6 @@ const LetterPage = ({navigation}) => {
 
 
     const openModal = () => {
-        console.log(modalVisible)
         setModalVisible(true);
     };
 

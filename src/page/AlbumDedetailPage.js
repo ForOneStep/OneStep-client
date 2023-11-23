@@ -5,7 +5,6 @@ import axios from 'axios';
 const AlbumDetailPage = ({ route, navigation }) => {
   const userId= 'user1'
   const { item } = route.params;
-  console.log(item);
   if (!item) {
     return <View style={styles.container}></View>;
   }
@@ -17,7 +16,6 @@ const AlbumDetailPage = ({ route, navigation }) => {
   };
 
   const handleCommentSubmit = () => {
-    console.log(comment)
     // 댓글 전송하는 로직
     const commentData = {
       photoBook_id: item.photo_id,
