@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
 import {launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions, Asset} from 'react-native-image-picker';
 import axios from "axios";
-
+import PhotoUploadIcon from '../assets/images/svg/PhotoUploadIcon.svg';
 
 const NewPost = () => {
   const [photo, setPhoto] = useState(null);
@@ -52,27 +52,28 @@ const NewPost = () => {
         alert('Upload failed!');
       });
   };
+
   return (
     <View style={styles.container}>
       {photo && (
         <Image source={{ uri: photo?.assets[0]?.uri }} style={styles.photo} />
       )}
-
-      <TextInput
-        style={styles.input}
-        placeholder="사진에 대한 설명을 해주세요!"
-        multiline={true}
-        onChangeText={(text) => setText(text)}
-        value={text}
-      />
-      <View style={styles.buttonContainer}>
-        <TouchableOpacity style={styles.button} onPress={onSelectImage}>
-          <Text style={styles.buttonText}>사진 선택</Text>
+      {!photo && (
+        <TouchableOpacity style={styles.selectPhotoButton} onPress={onSelectImage}>
+          <PhotoUploadIcon style={styles.photoUploadIcon}/>
+          <Text style={styles.selectPhotoButtonText}>터치해서 사진을 선택해주세요!</Text>
         </TouchableOpacity>
+      )}
+        <TextInput
+            style={styles.input}
+            placeholder="사진에 대한 설명을 해주세요!"
+            multiline={true}
+            onChangeText={(text) => setText(text)}
+            value={text}
+        />
         <TouchableOpacity style={styles.button} onPress={handleUploadPhoto}>
           <Text style={styles.buttonText}>업로드</Text>
         </TouchableOpacity>
-      </View>
     </View>
   );
 };
@@ -88,6 +89,34 @@ const styles = StyleSheet.create({
     width: 300,
     height: 300,
     borderRadius: 30,
+  },
+  selectPhotoButton: {
+    flexDirecion: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 300,
+    height: 300,
+    borderRadius: 30,
+    backgroundColor: 'white',
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  photoUploadIcon: {
+    width: 50,
+    height: 50,
+    fill: 'gray',
+    marginBottom: 30,
+  },
+  selectPhotoButtonText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: 'gray'
   },
   input: {
     width: '90%',
@@ -106,12 +135,6 @@ const styles = StyleSheet.create({
     shadowRadius: 3.84,
     elevation: 5,
   },
-  buttonContainer: {
-    width: '100%',
-    flexDirection: 'row',
-    marginTop: 50,
-    justifyContent: 'space-evenly',
-  },
   button: {
     width: 85,
     backgroundColor: '#F7B599',
@@ -119,7 +142,7 @@ const styles = StyleSheet.create({
     paddingVertical: 7,
     borderRadius: 10,
     alignItems: 'center',
-    marginTop: 10,
+    marginTop: 30,
 
     shadowColor: '#000', // 그림자 색상
     shadowOffset: {
