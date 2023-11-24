@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     height: 40,
     borderWidth: 1,
     borderColor: '#ccc',
-    borderRadius: 4,
+    borderRadius: 10,
     paddingHorizontal: 10,
     marginRight: 10,
   },
@@ -171,7 +171,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#F7B599',
     paddingHorizontal: 15,
     paddingVertical: 8,
-    borderRadius: 4,
+    borderRadius: 10,
   },
   commentButtonText: {
     color: 'white',
