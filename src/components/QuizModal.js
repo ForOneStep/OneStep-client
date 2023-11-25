@@ -3,7 +3,7 @@ import { View, Text, StyleSheet, TextInput, Button, TouchableOpacity } from "rea
 import { UserContext } from "../../App";
 
 const QuizModal = ({ quiz,modalVisibleFalse }) => {
-  const [answer, setAnswer] = useState(3); // 사용자의 답변을 저장하는 state를 추가합니다.
+  const [answer, setAnswer] = useState(1); // 사용자의 답변을 저장하는 state를 추가합니다.
   const { userId, familyId } = useContext(UserContext);
 
   const submitAnswer = async () => {
@@ -16,7 +16,7 @@ const QuizModal = ({ quiz,modalVisibleFalse }) => {
         body: JSON.stringify({
           quiz_id: quiz.quiz_id, // 퀴즈 ID
           user_id: userId, // 사용자 ID
-          quiz_ans: answer // 사용자의 답변
+          quiz_ans: answer+1 // 사용자의 답변
         })
       });
 
@@ -35,7 +35,7 @@ const QuizModal = ({ quiz,modalVisibleFalse }) => {
 
   return (
     <View style={styles.container}>
-      <View style={styles.quizItem}>
+      <View style={styles.qusizItem}>
         <Text style={styles.writerText}>{quiz.writer_id}님의 퀴즈!</Text>
         <Text style={styles.quizText}>Q.{quiz.quiz_txt}</Text>
         <TouchableOpacity onPress={() => setAnswer(0)}>

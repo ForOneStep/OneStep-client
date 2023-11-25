@@ -23,8 +23,11 @@ const LetterPage = ({navigation}) => {
     const [familyLetters, setFamilyLetters] = useState([]); // 가족의 쪽지
     const [userId, setUserId] = useState('user1'); // 로컬 스토리지에서 가져온 family_id
     const [familyId, setFamilyId] = useState('A1B5E6'); // 로컬 스토리지에서 가져온 family_id
+    const [refreshKey, setRefreshKey] = useState(0);
 
-
+    const addSetR = () =>{
+        setRefreshKey(oldKey => oldKey + 1);
+    }
     // 컴포넌트가 마운트되면 데이터 불러오기
         useEffect(() => {
             // 사용자가 작성한 쪽지 불러오기
@@ -63,11 +66,9 @@ const LetterPage = ({navigation}) => {
             loadFamilyLetters();
             loadWeeklyLetters();
 
-        }, []);
+        }, [refreshKey]);
 
     // 쪽지 작성
-
-
 
     const openModal = () => {
         setModalVisible(true);
@@ -80,7 +81,7 @@ const LetterPage = ({navigation}) => {
 
     return (
       <View style={styles.container}>
-          <LetterModal modalVisible={modalVisible} closeModal={closeModal} />
+          <LetterModal modalVisible={modalVisible} closeModal={closeModal} addSetR={addSetR}/>
           <View style={styles.letterInfoBox}>
               <LetterIcon style={styles.letterIcon}/>
               <View style={styles.myLetterBox}>

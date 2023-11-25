@@ -33,13 +33,15 @@ const QuestionItem = ({ question }) => {
     );
 };
 const QuestionPage = () => {
-    // const { userId, familyId } = React.useContext(UserContext);
+    const { userId, familyId } = React.useContext(UserContext);
     const [comment, setComment] = useState('');
     const [question, setQuestion] = useState();
     const [answerBlockList, setAnswerBlockList] = useState({"canRead":false,"answers":[{"answer_id":158,"question_id":154,"user_id":"user1","user_nickname":"피글렛","profile_path":"https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/profile/pig.jpeg","answer_txt":"테스트용 답변2222222222222","answer_img":null,"write_date":"2023-11-17","like":[]}]});
     const [userData, setUserData] = useState();
-    const userId = 'user1';
-    const familyId = 'A1B5E6';
+    const [refreshKey, setRefreshKey] = useState(0);
+
+    // const userId = 'user1';
+    // const familyId = 'A1B5E6';
 
     const handleCommentChange = (text) => {
         setComment(text);
@@ -68,6 +70,7 @@ const QuestionPage = () => {
                     data : data
                 });
             console.log(response.data);
+            setRefreshKey(oldKey => oldKey + 1);
         } catch (error) {
             console.error(error);
         }
@@ -87,7 +90,7 @@ const QuestionPage = () => {
             }
         };
         fetchQuestionData();
-    }, []);
+    }, [refreshKey]);
     return (
       <View style={styles.container}>
           <QuestionItem question={question} />

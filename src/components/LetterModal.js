@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Modal, View, TextInput, Button, Text, TouchableOpacity, StyleSheet } from "react-native";
 import CloseIcon from '../assets/images/svg/CloseIcon.svg';
 import axios from 'axios';
-const LetterModal = ({ modalVisible, closeModal }) => {
+const LetterModal = ({ modalVisible, closeModal, addSetR}) => {
     // const { userId, familyId } = React.useContext(UserContext);
     const [titleInputValue, setTitleInputValue] = useState('');
     const [contentInputValue, setContentInputValue] = useState('');
@@ -36,6 +36,7 @@ const LetterModal = ({ modalVisible, closeModal }) => {
             } else {
                 console.log("실패")
             }
+            addSetR()
         } catch (error) {
 
             console.log("실패",error)
