@@ -231,7 +231,7 @@ const styles = StyleSheet.create({
 
     },
     famliyName:{
-        color:'#00000099',
+        color:'#262627',
         fontSize: 24, // 크기를 크게 설정
         fontWeight: 'bold', // 굵게 설정
     },
@@ -254,12 +254,12 @@ const styles = StyleSheet.create({
         alignItems:'flex-end',
     },
     dDayTextDate:{
-        color:'black',
+        color:'#262627',
         fontSize: 24, // 크기를 크게 설정
         fontWeight: 'bold', // 굵게 설정
     },
     dDayTextName:{
-        color:'black',
+        color:'#262627',
         fontSize: 16, // 크기를 크게 설정
         marginLeft:10,
         marginBottom:3,
@@ -270,11 +270,13 @@ const styles = StyleSheet.create({
         right: 10,
     },
     questionText:{
+        color:'#262627',
         fontSize: 16, // 크기를 크게 설정
         fontWeight: 'bold', // 굵게 설정
         marginLeft:40,
     },
     goToAnwser:{
+        color:'#262627',
         top: 10,
         left : 120,
     }
