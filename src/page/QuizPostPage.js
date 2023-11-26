@@ -1,5 +1,5 @@
 import React, { useContext, useState } from "react";
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, TextInput, Button, StyleSheet, TouchableOpacity, Text } from 'react-native';
 import { RadioButton } from 'react-native-paper';
 import { UserContext } from "../../App";
 
@@ -38,10 +38,11 @@ const QuizPostPage = () => {
 
   return (
     <View style={styles.container}>
+      <Text style={styles.quizTitle}>Quiz</Text>
       <View style={styles.inputContainer}>
         <TextInput
           style={styles.input}
-          placeholder="퀴즈 내용"
+          placeholder="Quiz 내용"
           onChangeText={setQuizTxt}
         />
       </View>
@@ -51,10 +52,11 @@ const QuizPostPage = () => {
             value={index + 1}
             status={quiz_ans == String(index + 1) ? 'checked' : 'unchecked'}
             onPress={() => setQuizAns(String(index + 1))}
+            color='#F7B599'
           />
           <TextInput
             style={styles.input}
-            placeholder={`답변 ${index + 1}`}
+            placeholder={`${index + 1}. `}
             onChangeText={(text) => {
               if (index === 0) setAnswer1(text);
               else if (index === 1) setAnswer2(text);
@@ -64,7 +66,12 @@ const QuizPostPage = () => {
           />
         </View>
       ))}
-      <Button title="퀴즈 생성" onPress={submitQuiz} />
+      <TouchableOpacity
+        style={styles.quizButton}
+        onPress={submitQuiz}
+      >
+        <Text style={styles.quizButtonText}>Quiz 만들기</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -74,8 +81,33 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#F5FCFF',
+    backgroundColor:'#f2f2f2',
     padding: 20,
+  },
+  quizTitle: {
+    fontSize: 30,
+    fontWeight: '600',
+    marginBottom: 70,
+  },
+  quizButton: {
+    borderRadius: 20,
+    paddingHorizontal: 30,
+    paddingVertical: 10,
+    marginTop: 30,
+    backgroundColor: '#F7B599',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
+  },
+  quizButtonText: {
+    fontSize: 16,
+    fontWeight: '600',
   },
   inputContainer: {
     flexDirection: 'row',
@@ -85,10 +117,21 @@ const styles = StyleSheet.create({
   input: {
     flex: 1,
     height: 40,
-    borderColor: 'gray',
-    borderWidth: 1,
+    borderRadius: 20,
     marginTop: 10,
-    padding: 10,
+    marginBottom: 10,
+    paddingHorizontal: 15,
+    paddingVertical: 10,
+    backgroundColor: 'white',
+
+    shadowColor: '#000',
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 3.84,
+    elevation: 5,
   },
 });
 
