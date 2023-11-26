@@ -1,7 +1,8 @@
 import {launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, ImageLibraryOptions, Asset} from 'react-native-image-picker';
+import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
 import axios from "axios";
-import { StyleSheet, TextInput, TouchableOpacity, View, Text, Image} from "react-native";
-import {useState} from 'react'
+import PhotoUploadIcon from '../assets/images/svg/PhotoUploadIcon.svg';
+import { useState } from "react";
 
 const NewPost = () => {
     const [photo, setPhoto] = useState(null);
@@ -10,17 +11,17 @@ const NewPost = () => {
 
     const onSelectImage = () => {
         launchImageLibrary(
-            {
-                mediaType: 'photo',
-                maxWidth: 512,
-                maxHeight: 512,
-                includeBase64: Platform.OS === 'android',
-            },
-            (res) => {
-                console.log(res);
-                if (res.didCancel) return;
-                setPhoto(res);
-            }
+          {
+              mediaType: 'photo',
+              maxWidth: 512,
+              maxHeight: 512,
+              includeBase64: Platform.OS === 'android',
+          },
+          (res) => {
+              console.log(res);
+              if (res.didCancel) return;
+              setPhoto(res);
+          }
         );
     };
     const handleUploadPhoto = () => {
@@ -35,44 +36,45 @@ const NewPost = () => {
         formData.append('writeTxt', text);
 
         axios
-            .post(`http://52.79.97.196:8080/photobook/write/${userId}`, formData, {
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                },
-            })
-            .then((response) => {
-                console.log('upload success', response);
-                alert('Upload success!');
-                setPhoto(null);
-                setText('');
-            })
-            .catch((error) => {
-                console.log('upload error', error);
-                alert('Upload failed!');
-            });
+          .post(`http://52.79.97.196:8080/photobook/write/${userId}`, formData, {
+              headers: {
+                  'Content-Type': 'multipart/form-data',
+              },
+          })
+          .then((response) => {
+              console.log('upload success', response);
+              alert('Upload success!');
+              setPhoto(null);
+              setText('');
+          })
+          .catch((error) => {
+              console.log('upload error', error);
+              alert('Upload failed!');
+          });
     };
-    return (
-        <View style={styles.container}>
-            {photo && (
-                <Image source={{ uri: photo?.assets[0]?.uri }} style={styles.photo} />
-            )}
 
-            <TextInput
-                style={styles.input}
-                placeholder="사진에 대한 설명을 해주세요!"
-                multiline={true}
-                onChangeText={(text) => setText(text)}
-                value={text}
-            />
-            <View style={styles.buttonContainer}>
-                <TouchableOpacity style={styles.button} onPress={onSelectImage}>
-                    <Text style={styles.buttonText}>사진 선택</Text>
-                </TouchableOpacity>
-                <TouchableOpacity style={styles.button} onPress={handleUploadPhoto}>
-                    <Text style={styles.buttonText}>업로드</Text>
-                </TouchableOpacity>
-            </View>
-        </View>
+    return (
+      <View style={styles.container}>
+          {photo && (
+            <Image source={{ uri: photo?.assets[0]?.uri }} style={styles.photo} />
+          )}
+          {!photo && (
+            <TouchableOpacity style={styles.selectPhotoButton} onPress={onSelectImage}>
+                <PhotoUploadIcon style={styles.photoUploadIcon}/>
+                <Text style={styles.selectPhotoButtonText}>터치해서 사진을 선택해주세요!</Text>
+            </TouchableOpacity>
+          )}
+          <TextInput
+            style={styles.input}
+            placeholder="사진에 대한 설명을 해주세요!"
+            multiline={true}
+            onChangeText={(text) => setText(text)}
+            value={text}
+          />
+          <TouchableOpacity style={styles.button} onPress={handleUploadPhoto}>
+              <Text style={styles.buttonText}>업로드</Text>
+          </TouchableOpacity>
+      </View>
     );
 };
 
@@ -84,9 +86,37 @@ const styles = StyleSheet.create({
         // backgroundColor: '#F5FCFF',
     },
     photo: {
-        width: 300,
-        height: 300,
+        width: 350,
+        height: 350,
         borderRadius: 30,
+    },
+    selectPhotoButton: {
+        flexDirecion: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        width: 350,
+        height: 350,
+        borderRadius: 30,
+        backgroundColor: 'white',
+        shadowColor: '#000',
+        shadowOffset: {
+            width: 0,
+            height: 2,
+        },
+        shadowOpacity: 0.25,
+        shadowRadius: 3.84,
+        elevation: 5,
+    },
+    photoUploadIcon: {
+        width: 50,
+        height: 50,
+        fill: 'gray',
+        marginBottom: 30,
+    },
+    selectPhotoButtonText: {
+        fontSize: 18,
+        fontWeight: '600',
+        color: 'gray'
     },
     input: {
         width: '90%',
@@ -105,12 +135,6 @@ const styles = StyleSheet.create({
         shadowRadius: 3.84,
         elevation: 5,
     },
-    buttonContainer: {
-        width: '100%',
-        flexDirection: 'row',
-        marginTop: 50,
-        justifyContent: 'space-evenly',
-    },
     button: {
         width: 85,
         backgroundColor: '#F7B599',
@@ -118,7 +142,7 @@ const styles = StyleSheet.create({
         paddingVertical: 7,
         borderRadius: 10,
         alignItems: 'center',
-        marginTop: 10,
+        marginTop: 30,
 
         shadowColor: '#000', // 그림자 색상
         shadowOffset: {
