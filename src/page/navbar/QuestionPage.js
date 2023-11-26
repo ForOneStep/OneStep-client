@@ -11,7 +11,7 @@ const AnswerItem = ({ item }) => {
         <Text style={styles.user_nickname}>{item.user_nickname}</Text>
         <Text style={styles.answer_txt}>{item.answer_txt}</Text>
         <Text style={styles.write_date}>{item.write_date}</Text>
-        <Text style={styles.like}>{item.like.length}</Text>
+        {/*<Text style={styles.like}>{item.like.length}</Text>*/}
     </View>)
 };
 
@@ -106,6 +106,7 @@ const QuestionPage = () => {
                   placeholder="댓글을 입력하세요..."
                   value={comment}
                   onChangeText={handleCommentChange}
+                  placeholderTextColor="#999999"
               />
               <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>
                   <Text style={styles.commentButtonText}>전송</Text>
@@ -136,16 +137,19 @@ const styles = StyleSheet.create({
     },
     questionContent: {
         fontSize: 18,
-        marginLeft: 20,
+        // marginLeft: 10,
         textAlign: 'left',
-        marginVertical: 15,
+        alignSelf:'center',
+        marginTop:20,
+        color:'#262627',
     },
     questionDate: {
-        color: '#f7b599',
+        color: '#262627',
         position: 'absolute',
+        fontWeight: 'bold',
         top: 10,
         left: 20,
-        fontSize: 12,
+        fontSize: 16,
     },
     letterIcon: {
         position: 'absolute',
@@ -172,15 +176,23 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     user_nickname: {
-        color: 'black',
-        fontSize: 18,
+        color: '#262627',
+        fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 5,
     },
     answer_txt: {
+        color: '#262627',
         fontSize: 18,
+        marginBottom: 10,
     },
-    write_date: {},
+    write_date: {
+        top:10,
+        right:10,
+        position:"absolute",
+        // alignSelf: 'flex-end',
+        color: '#262627',
+    },
     like: {},
     commentInputContainer: {
         flexDirection: 'row',
@@ -213,7 +225,7 @@ const styles = StyleSheet.create({
         paddingHorizontal: 10,
     },
     commentButtonText: {
-        color: 'black',
+        color: '#262627',
         fontSize: 16,
     },
     createAnswerButton: {
