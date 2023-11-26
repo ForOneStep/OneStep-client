@@ -10,7 +10,7 @@ const AnswerItem = ({ item }) => {
             <Text style={styles.user_nickname}>{item.user_nickname}</Text>
             <Text style={styles.answer_txt}>{item.answer_txt}</Text>
             <Text style={styles.write_date}>{item.write_date}</Text>
-            <Text style={styles.like}>{item.like.length}</Text>
+            {/*<Text style={styles.like}>{item.like.length}</Text>*/}
         </View>)
 };
 
@@ -90,16 +90,20 @@ const styles = StyleSheet.create({
     },
     questionContent: {
         fontSize: 18,
-        marginLeft: 20,
+
+        fontWeight: 'bold',
+        // marginLeft: 10,
         textAlign: 'left',
-        marginVertical: 15,
+        alignSelf:'center',
+        marginTop:20,
+        color:'#262627',
     },
     questionDate: {
-        color: '#f7b599',
+        color: '#262627',
         position: 'absolute',
         top: 10,
         left: 20,
-        fontSize: 12,
+        fontSize: 16,
     },
     letterIcon: {
         position: 'absolute',
@@ -126,16 +130,23 @@ const styles = StyleSheet.create({
         elevation: 5,
     },
     user_nickname: {
-        color: 'black',
-        fontSize: 18,
+        color: '#262627',
+        fontSize: 20,
         fontWeight: 'bold',
-        marginBottom: 10,
+        marginBottom: 5,
     },
     answer_txt: {
+        color: '#262627',
         fontSize: 18,
+        marginBottom: 10,
     },
-    write_date: {},
-    like: {},
+    write_date: {
+        top:10,
+        right:10,
+        position:"absolute",
+        // alignSelf: 'flex-end',
+        color: '#262627',
+    },
     commentInputContainer: {
         flexDirection: 'row',
         alignItems: 'center',
