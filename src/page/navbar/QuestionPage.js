@@ -5,14 +5,24 @@ import FormData from 'form-data'; // 수정된 부분
 import { UserContext } from '../../../App'
 import LetterIcon from '../../assets/images/svg/letter.svg';
 import IslandPng from '../../assets/images/png/island1.png'
-const AnswerItem = ({ item }) => {
-  return(
-    <View style={styles.answerItem}>
-        <Text style={styles.user_nickname}>{item.user_nickname}</Text>
-        <Text style={styles.answer_txt}>{item.answer_txt}</Text>
-        <Text style={styles.write_date}>{item.write_date}</Text>
+const AnswerItem = ({ item ,isUserAnswer}) => {
+    return(
+
+      <View style={styles.answerItem}>
+          <Text style={styles.user_nickname}>{item.user_nickname}</Text>
+          {isUserAnswer
+            ? <Text style={styles.answer_txt}>{item.answer_txt}</Text>
+            : <View style={styles.blurView}>
+
+
+                <Text style={styles.answer_txt}>답변을 입력하시면 확인하실 수 있습니다.</Text>
+                <View style={styles.overlay} />
+            </View>
+          }
+          <Text style={styles.write_date}>{item.write_date}</Text>
+      </View>
+    );
         {/*<Text style={styles.like}>{item.like.length}</Text>*/}
-    </View>)
 };
 
 const QuestionItem = ({ question }) => {
@@ -39,7 +49,7 @@ const QuestionPage = () => {
     const [answerBlockList, setAnswerBlockList] = useState({"canRead":false,"answers":[{"answer_id":158,"question_id":154,"user_id":"user1","user_nickname":"피글렛","profile_path":"https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/profile/pig.jpeg","answer_txt":"테스트용 답변2222222222222","answer_img":null,"write_date":"2023-11-17","like":[]}]});
     const [userData, setUserData] = useState();
     const [refreshKey, setRefreshKey] = useState(0);
-
+    const [isUserAnswer,setIsUserAnswer] = useState(false)
     // const userId = 'user1';
     // const familyId = 'A1B5E6';
 
@@ -80,11 +90,16 @@ const QuestionPage = () => {
             try {
                 const userResponse = await axios.get(`http://52.79.97.196:8080/user/${userId}`);
                 setUserData(userResponse.data);
-                console.log(userResponse.data.family.fam_number)
+                // console.log(userResponse.data.family.fam_number)
                 const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/${userResponse.data.family.fam_number}`);
                 setQuestion(questionResponse.data);
                 const answerResponse = await axios.get(`http://52.79.97.196:8080/answer/read/${questionResponse.data.question_id}/${familyId}`);
                 setAnswerBlockList(answerResponse.data);
+
+                const isAnswerResponse = answerResponse.data.answers.some(item => item.user_id === userId);
+                setIsUserAnswer(isAnswerResponse);
+                console.log(isUserAnswer)
+
             } catch (error) {
                 console.error('데이터 가져오기 오류:', error);
             }
@@ -94,28 +109,61 @@ const QuestionPage = () => {
     return (
       <View style={styles.container}>
           <QuestionItem question={question} />
-          <FlatList
-            contentContainerStyle={styles.answerFlatList}
-            data={answerBlockList.answers}
-            keyExtractor={item => item.answer_id.toString()}
-            renderItem={({ item }) => <AnswerItem item={item} />}
-          />
+          {isUserAnswer?
+            <FlatList
+              contentContainerStyle={styles.answerFlatList}
+              data={answerBlockList.answers}
+              keyExtractor={item => item.answer_id.toString()}
+              renderItem={({ item }) => <AnswerItem item={item} isUserAnswer={isUserAnswer}/>}
+            />
+          :
+            <FlatList
+              contentContainerStyle={styles.answerFlatList}
+              data={answerBlockList.answers}
+              keyExtractor={item => item.answer_id.toString()}
+              renderItem={({ item }) => <AnswerItem item={item} />}
+            />
+          }
+          {isUserAnswer?
+            <View></View>
+            :
           <View style={styles.commentInputContainer}>
               <TextInput
                   style={styles.commentInput}
-                  placeholder="댓글을 입력하세요..."
+                  placeholder="답변을 입력하세요..."
                   value={comment}
                   onChangeText={handleCommentChange}
                   placeholderTextColor="#999999"
               />
+
               <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>
                   <Text style={styles.commentButtonText}>전송</Text>
               </TouchableOpacity>
           </View>
+          }
       </View>
     );
 };
 const styles = StyleSheet.create({
+    blurView: {
+        position: 'relative',
+    },
+    overlay: {
+        ...StyleSheet.absoluteFillObject,
+        backgroundColor: 'white',
+        opacity: 0.6,
+    },
+    notAnswerContainer:{
+        flex:1,
+        justifyContent:'center',
+        alignItems:'center'
+
+    },
+    notAnswerContainerText:{
+        color:'#262627',
+        fontSize:20,
+        marginHorizontal:40,
+    },
     container: {
         flex: 1,
     },
@@ -177,13 +225,13 @@ const styles = StyleSheet.create({
     },
     user_nickname: {
         color: '#262627',
-        fontSize: 20,
+        fontSize: 14,
         fontWeight: 'bold',
         marginBottom: 5,
     },
     answer_txt: {
         color: '#262627',
-        fontSize: 18,
+        fontSize: 20,
         marginBottom: 10,
     },
     write_date: {

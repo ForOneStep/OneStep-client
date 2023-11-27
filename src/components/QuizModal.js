@@ -32,11 +32,11 @@ const QuizModal = ({ quiz,modalVisibleFalse }) => {
       console.error('Error:', error);
     }
   };
-
+console.log(quiz)
   return (
     <View style={styles.container}>
-      <View style={styles.qusizItem}>
-        <Text style={styles.writerText}>{quiz.writer_id}님의 퀴즈!</Text>
+      <View style={styles.quizItem}>
+        <Text style={styles.writerText}>{quiz.writer_nickname} 님의 퀴즈!</Text>
         <Text style={styles.quizText}>Q.{quiz.quiz_txt}</Text>
         <TouchableOpacity onPress={() => setAnswer(0)}>
           <Text style={answer === 0 ? styles.selectAnswer : styles.answerText}> 1. {quiz.answer1}</Text>
@@ -63,18 +63,32 @@ const QuizModal = ({ quiz,modalVisibleFalse }) => {
 };
 
 const styles = StyleSheet.create({
+  quizItem:{
+    backgroundColor:'#fbfaf9',
+    padding:20,
+    width:290,
+    marginTop:20,
+    borderWidth: 1,
+    borderColor: '#ddd',
+    borderRadius: 20,
+    justifyContent:'center',
+    alignItems:'center',
+  },
   submitButtonText:{
     fontSize: 24,
     fontWeight: 'bold',
+    color:'#262627',
   },
   submitButton:{
     justifyContent:'center',
     alignItems:'center',
     backgroundColor:'#e7b79e',
     padding:10,
+    marginTop:20,
+    width:250,
     marginVertical:10,
     borderRadius: 20,
-    color: '#000000',
+    color: '#262627',
     marginBottom: 5,
     shadowColor: '#000',
     shadowOffset: {
@@ -91,35 +105,27 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "rgba(0, 0, 0, 0.5)"
   },
-  quizItem:{
-    backgroundColor:'#fbfaf9',
-    padding:15,
-    width:'90%',
-    marginTop:20,
-    borderWidth: 1,
-    borderColor: '#ddd',
-    borderRadius: 20,
-  },
   writerText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#262627',
     marginBottom: 10,
   },
   quizText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#262627',
     marginBottom: 10,
   },
   answerText: {
     backgroundColor:'#ffffff',
+    width:250,
     padding:10,
     marginVertical:10,
     fontSize: 18,
     fontWeight: 'bold',
     borderRadius: 20,
-    color: '#000000',
+    color: '#262627',
     marginBottom: 5,
     shadowColor: '#000',
     shadowOffset: {
@@ -132,12 +138,13 @@ const styles = StyleSheet.create({
   },
   selectAnswer: {
     backgroundColor:'#f4e6e1',
+    width:250,
     padding:10,
     marginVertical:10,
     fontSize: 18,
     fontWeight: 'bold',
     borderRadius: 20,
-    color: '#000000',
+    color: '#262627',
     marginBottom: 5,
     shadowColor: '#000',
     shadowOffset: {

@@ -13,7 +13,7 @@ import { UserContext } from "../../../App";
 
 const UserPage = ({navigation}) => {
     const { userId, familyId } = useContext(UserContext);
-
+    const [questionLen,setQuestionLen] = useState(0)
     const [user,setUser] = useState({
         "user_id": "user1",
         "family": {
@@ -41,6 +41,12 @@ const UserPage = ({navigation}) => {
                 const response = await fetch(`http://52.79.97.196:8080/user/${userId}`);  // 사용자 정보를 가져오는 URL
                 const data = await response.json();
                 setUser(data);
+
+                const questionResponse = await fetch(`http://52.79.97.196:8080/question/list/${familyId}`);  // 사용자 정보를 가져오는 URL
+
+                const questionData = await questionResponse.json();
+                setQuestionLen(questionData.length)
+
             } catch (error) {
                 console.error('Error:', error);
             }
@@ -67,14 +73,17 @@ const UserPage = ({navigation}) => {
                     <View style={styles.middleIconTextContainer}>
                         <QuestionIcon  width={40} height={40} />
                         <Text>답변</Text>
-                        <Text>32개</Text>
+                        <Text>{questionLen}개</Text>
                     </View>
                     <View style={styles.iconTextContainer}>
                         <ThermometerIcon  width={40} height={40} />
                         <Text>Lv.{user.family.level}</Text>
                     </View>
                 </View>
-                <Button style={styles.button}>섬 바로 가기</Button>
+                {/*<Button style={styles.button}*/}
+                {/*        onPress={() => navigation.navigate('MainTab')}*/}
+                {/*        //MainTab*/}
+                {/*>섬 바로 가기</Button>*/}
             </View>
 
             <View style={styles.userInfo}>
@@ -221,7 +230,7 @@ const styles = StyleSheet.create({
         button: {
             marginTop:40,
             backgroundColor: '#f7b599',
-            color:'black',
+            color:'#262627',
             width:'100%',
         },
 

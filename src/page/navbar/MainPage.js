@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, TouchableOpacity } from "react-native";
 import { View, StyleSheet, Text, Image } from "react-native";
 import { Modal, Button } from 'react-native'; // 모달과 버튼 컴포넌트를 import 합니다.
 
@@ -21,7 +21,6 @@ import { UserContext } from '../../../App'
 import axios from "axios";
 
 const ClosestBirth = ({ members }) => {
-
     const today = new Date();
     let closestBirthday = null;
 
@@ -52,7 +51,6 @@ const ClosestBirth = ({ members }) => {
       </View>
     );
 };
-
 
 const MainPage = ({ navigation }) => {
     // AsyncStorage에서 값을 불러오기
@@ -100,6 +98,22 @@ const MainPage = ({ navigation }) => {
         };
 
         fetchData();
+        const fetchQuizData = async () => {
+            try {
+                const quizResponse = await fetch(`http://52.79.97.196:8080/quiz/todayQuiz/${familyId}`);
+                const quizData = await quizResponse.json();
+                setQuiz(quizData)
+                // quizData가 null이 아니거나 quizData.quizAnswers에 userId가 없으면 모달을 표시합니다.
+                console.log(quizData)
+                if (quizData && !quizData.quizAnswers.filter(answer => answer.quiz_state !== 2).some(answer => answer.user_id === userId)){
+                    // console.log(userId)
+                    setModalVisible(true);
+                }
+            } catch (error) {
+                console.error('Error fetching quiz data:', error);
+            }
+        };
+        fetchQuizData();
 
         Animated.loop(
             Animated.sequence([
@@ -163,10 +177,11 @@ const MainPage = ({ navigation }) => {
               <Animated.Image source={islands[`island${userData.family.level}`] || islands.island1} style={[styles.islandImg, { transform: [{ translateY: moveAnimation }] }]} />
               <Text style={styles.famliyName}>{`${userData.family.fam_nickname} 가족 섬`}</Text>
           </View>
-          <View  style={styles.questionBlock}>
+          <TouchableOpacity   style={styles.questionBlock}
+                              onPress={() => navigation.navigate('Question')}>
               <LoudSpeaker style={styles.loudSpeaker}/>
               <Text style={styles.questionText}> {question.question_txt} </Text>
-          </View>
+          </TouchableOpacity>
           <Text
             onPress={() => navigation.navigate('Question')}
             style={styles.goToAnwser}>답변하러 가기 ></Text>
@@ -213,6 +228,7 @@ const styles = StyleSheet.create({
     },
     questionBlock : {
         width: '90%',
+        paddingRight:20,
         height: 80,
         marginTop: 40,
         borderRadius: 15,
@@ -272,7 +288,7 @@ const styles = StyleSheet.create({
     questionText:{
         color:'#262627',
         fontSize: 16, // 크기를 크게 설정
-        fontWeight: 'bold', // 굵게 설정
+        // fontWeight: 'bold', // 굵게 설정
         marginLeft:40,
     },
     goToAnwser:{

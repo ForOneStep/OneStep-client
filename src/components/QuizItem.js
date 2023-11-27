@@ -32,11 +32,11 @@ const QuizItem = ({ quiz, navigation }) => {
     inputRange: [0, 1],
     outputRange: ['darkgray', 'black']
   });
-
+console.log(quiz)
   return (
     <View style={styles.quizContainer}>
-      <Text style={styles.writerText}>{quiz.writer_id} 님의 퀴즈</Text>
-      <Text>{quiz.write_date} </Text>
+      <Text style={styles.writerText}>{quiz.writer_nickname} 님의 퀴즈</Text>
+      <Text style ={styles.write_date}>{quiz.write_date} </Text>
       <Text style={styles.quizText}> {quiz.quiz_txt}</Text>
       <TouchableWithoutFeedback onPress={() => setIsAnswerVisible(true)}>
         <Animated.View style={[styles.correctAnswer, {backgroundColor: bgColorInterpolate}]}>
@@ -47,12 +47,12 @@ const QuizItem = ({ quiz, navigation }) => {
       </TouchableWithoutFeedback>
       <FlatList
         data={correctUsers}
-        renderItem={({ item }) => <CorrectUsers user={item.user_id} />}
+        renderItem={({ item }) => <CorrectUsers user={item.user_nickname} />}
         keyExtractor={item => item.quizAnswer_id.toString()}
       />
       <FlatList
         data={incorrectUsers}
-        renderItem={({ item }) => <IncorrectUsers user={item.user_id} answer={quiz[`answer${item.quiz_ans}`]} />}
+        renderItem={({ item }) => <IncorrectUsers user={item.user_nickname} answer={quiz[`answer${item.quiz_ans}`]} />}
         keyExtractor={item => item.quizAnswer_id.toString()}
       />
     </View>
@@ -77,20 +77,20 @@ const styles = StyleSheet.create({
   writerText: {
     fontSize: 15,
     // fontWeight: 'bold',
-    color: '#000000',
+    color: '#262627',
     marginBottom: 5,
     marginLeft:8,
   },
   quizText: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#262627',
     marginBottom: 10,
   },
   correctAnswer: {
     fontSize: 18,
     fontWeight: 'bold',
-    color: '#000000',
+    color: '#262627',
     marginBottom: 15,
     backgroundColor:'#f2f2f2',
     padding:10,
@@ -107,7 +107,7 @@ const styles = StyleSheet.create({
   // backgroundColor:'#ffc0bf',
   answerText: {
     fontSize: 17,
-    color: '#000000',
+    color: '#262627',
     marginBottom: 10,
 
     borderRadius: 10,
@@ -116,7 +116,7 @@ const styles = StyleSheet.create({
     paddingLeft:10,
     shadowColor: '#000',
 
-    backgroundColor:'#ffc0bf',
+    backgroundColor:'#f2f2f2',
     shadowOffset: {
       width: 2,
       height:24,
@@ -127,12 +127,12 @@ const styles = StyleSheet.create({
   },
   correctAnswerText:{
     fontSize: 17,
-    color: '#000000',
+    color: '#262627',
     marginBottom: 10,
     padding:7,
     paddingLeft:10,
     borderRadius: 10,
-    backgroundColor:'#d5f5b7',
+    backgroundColor:'#e8ffd2',
 
     shadowColor: '#000',
     shadowOffset: {
@@ -143,7 +143,11 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 2,
   },
-
+  write_date:{
+position:"absolute",
+    top:10,
+    right:10,
+  },
 });
 
 export default QuizItem;

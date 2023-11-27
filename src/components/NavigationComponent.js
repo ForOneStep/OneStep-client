@@ -53,6 +53,8 @@ const MainStack = ({ onTabVisibilityChange, offTabVisibilityChange }) => {
             <Stack.Screen name="Letter" component={LetterPage} />
             <Stack.Screen name="QuizRecode" component={QuizRecodePage} />
             <Stack.Screen name="QuizPost" component={QuizPostPage} />
+            <Stack.Screen name="Question" component={QuestionPage} />
+
         </Stack.Navigator>
     );
 };
@@ -154,6 +156,7 @@ const NavigationComponent = () => {
           <Tab.Screen
             name="MainTab"
             options={{
+              // tabBarStyle: { display: 'none' },
               tabBarStyle: { display: focusedDetailPage ? "none" : "flex" },
             }}
           >
@@ -165,7 +168,7 @@ const NavigationComponent = () => {
               />
             )}
           </Tab.Screen>
-          <Tab.Screen name="QuestionTab" component={QuestionPage} />
+          {/*<Tab.Screen name="QuestionTab" component={QuestionPage} />*/}
             <Tab.Screen
                 name="RecodeTab"
                 options={{

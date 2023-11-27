@@ -72,6 +72,7 @@ const AlbumDetailPage = ({ route, navigation }) => {
           placeholder="댓글을 입력하세요..."
           value={comment}
           onChangeText={handleCommentChange}
+          placeholderTextColor='#999999'
         />
         <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>
           <Text style={styles.commentButtonText}>전송</Text>
@@ -113,14 +114,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
   },
   username: {
+
+    color:'#262627',
+    fontSize:14,
     fontWeight: 'bold',
   },
   date: {
     fontSize: 12,
-    color: 'gray',
+    color: '#999999',
   },
   text: {
     fontSize: 16,
+    marginLeft:10,
+    color:'#262627',
   },
   commentContainer: {
     flexDirection: 'row',
@@ -137,14 +143,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   commentUsername: {
-    fontWeight: 'bold',
+    color:'#262627',
+    fontSize:14,
   },
   commentText: {
+    color:'#262627',
+    fontSize:16,
     marginBottom: 5,
   },
   commentDate: {
+    alignSelf:'flex-end',
+    marginRight:10,
     fontSize: 12,
-    color: 'gray',
+    color: '#999999',
   },
   separator: {
     height: 1,
@@ -174,7 +185,7 @@ const styles = StyleSheet.create({
     borderRadius: 10,
   },
   commentButtonText: {
-    color: 'white',
+    color: '#262627',
     fontWeight: 'bold',
   },
 });

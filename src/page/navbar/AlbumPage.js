@@ -14,9 +14,9 @@ const Post = ({ item, navigation }) => {
 </View>
                   <Text style={styles.text}>{item.photo_txt}</Text>
               </View>
-              <View style={styles.dateContainer}>
+              {/*<View style={styles.dateContainer}>*/}
                   <Text style={styles.date}>{item.write_date}</Text>
-              </View>
+              {/*</View>*/}
           </View>
       </TouchableOpacity>
     );
@@ -40,11 +40,12 @@ const AlbumPage = ({navigation}) => {
 
         fetchData();
     }, [familyId]);
+    console.log(data)
     return (
       <View style={styles.container}>
           <Text style={styles.title}>가족엘범</Text>
           <FlatList
-              data={data.slice().reverse()}
+              data={ data.sort((a, b) => new Date(b.write_date) - new Date(a.write_date))}
             renderItem={({ item }) => <Post item={item} navigation={navigation} />}
             keyExtractor={item => item.photo_id.toString()}
           />
@@ -67,12 +68,12 @@ const styles = StyleSheet.create({
 
         width: '96%',
         alignSelf:'center',
-        height: 150,
+        height: 115,
         display:'flex',
         flexDirection:'row',
 //        alignItems: 'center',
         marginBottom: 20,
-        padding: 15,
+        padding: 8,
         borderRadius: 20,
         borderColor: '#ddd',
         backgroundColor:'#fff',
@@ -141,15 +142,18 @@ const styles = StyleSheet.create({
 //        backgroundColor: 'cornflowerblue',
     },
     date: {
+        position:"absolute",
+        right:10,
+        bottom:10,
         fontSize: 12,
         color:'#999999',
     },
     image: {
-        width: 120,
-        height: 120,
-
+        width: 100,
+        height: 100,
+        alignSelf:'center',
         marginRight: 10,
-        borderRadius: 10,
+        borderRadius: 15,
         borderColor: '#ddd',
         borderWidth: 1,
     },

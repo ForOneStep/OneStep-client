@@ -1,6 +1,6 @@
 import React, { useEffect, useState, FC, createContext } from "react";
 import NavigationComponent from "./src/components/NavigationComponent";
-// import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingPage from "./src/page/LoadingPage";
 import { check, PERMISSIONS, RESULTS, request } from 'react-native-permissions';
 type UserDataType = {
@@ -25,24 +25,20 @@ const App: FC = () => {
 
   useEffect(() => {
     const loadInitialData = async () => {
-      // try {
-        const storedUserId = 'user1';
-        const storedFamilyId = 'A1B5E6';
-
+      try {
         // AsyncStorage에서 값을 불러오기
-        // const fetchedUserId = await AsyncStorage.getItem('userId');
-        // const fetchedFamilyId = await AsyncStorage.getItem('familyId');
+        const fetchedUserId = await AsyncStorage.getItem('userId');
+        const fetchedFamilyId = await AsyncStorage.getItem('familyId');
 
-        // console.log("ads",fetchedUserId,fetchedFamilyId)
-        // if (!fetchedUserId || !fetchedFamilyId) {
-        //   // 로그인 페이지 실행
-        // } else {
-        //   setUserId(fetchedUserId);
-        //   setFamilyId(fetchedFamilyId);
-        // }
-      // } catch (error) {
-      //   console.error('Error with AsyncStorage:', error);
-      // }
+        if (!fetchedUserId || !fetchedFamilyId) {
+          // 로그인 페이지 실행
+        } else {
+          setUserId(fetchedUserId);
+          setFamilyId(fetchedFamilyId);
+        }
+      } catch (error) {
+        console.error('Error with AsyncStorage:', error);
+      }
 
       // 앨범 접근 권한 및 카메라 사용 권한 요청
       const permissions = [PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE, PERMISSIONS.ANDROID.CAMERA];
