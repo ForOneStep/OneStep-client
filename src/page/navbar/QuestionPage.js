@@ -1,20 +1,37 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
 import axios from 'axios';
 import FormData from 'form-data'; // 수정된 부분
 import { UserContext } from '../../../App'
 import LetterIcon from '../../assets/images/svg/letter.svg';
 import IslandPng from '../../assets/images/png/island1.png'
 const AnswerItem = ({ item ,isUserAnswer}) => {
+    const [com,setCom] = useState('')
+    useEffect(() => {
+        console.log(item.answerId)
+        const fetchQuestionData = async () => {
+            try {
+                const comResponse = await axios.get(`http://52.79.97.196:8080/comment/viewComment/${item.answerId}`);
+                setCom(comResponse.data);}
+            catch (error) {
+                console.error('데이터 가져오기 오류:', error);
+            }
+        }
+        fetchQuestionData()
+    }, []);
     return(
-
       <View style={styles.answerItem}>
           <Text style={styles.user_nickname}>{item.user_nickname}</Text>
           {isUserAnswer
-            ? <Text style={styles.answer_txt}>{item.answer_txt}</Text>
+            ? <View>
+                {item.answer_img?
+                  <Image style={styles.answerImg} source={item.answer_img}></Image>
+                  :
+                  <View></View>
+                }
+                <Text style={styles.answer_txt}>{item.answer_txt}</Text>
+            </View>
             : <View style={styles.blurView}>
-
-
                 <Text style={styles.answer_txt}>답변을 입력하시면 확인하실 수 있습니다.</Text>
                 <View style={styles.overlay} />
             </View>
@@ -50,6 +67,7 @@ const QuestionPage = () => {
     const [userData, setUserData] = useState();
     const [refreshKey, setRefreshKey] = useState(0);
     const [isUserAnswer,setIsUserAnswer] = useState(false)
+    const [cco,setCco] = useState()
     // const userId = 'user1';
     // const familyId = 'A1B5E6';
 
@@ -79,7 +97,6 @@ const QuestionPage = () => {
                     },
                     data : data
                 });
-            console.log(response.data);
             setRefreshKey(oldKey => oldKey + 1);
         } catch (error) {
             console.error(error);
@@ -95,6 +112,8 @@ const QuestionPage = () => {
                 setQuestion(questionResponse.data);
                 const answerResponse = await axios.get(`http://52.79.97.196:8080/answer/read/${questionResponse.data.question_id}/${familyId}`);
                 setAnswerBlockList(answerResponse.data);
+
+
 
                 const isAnswerResponse = answerResponse.data.answers.some(item => item.user_id === userId);
                 setIsUserAnswer(isAnswerResponse);
@@ -145,6 +164,9 @@ const QuestionPage = () => {
     );
 };
 const styles = StyleSheet.create({
+    answerImg:{
+
+    },
     blurView: {
         position: 'relative',
     },

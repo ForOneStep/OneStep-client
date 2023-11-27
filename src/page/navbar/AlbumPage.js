@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { UserContext } from '../../../App'
+import { useFocusEffect } from "@react-navigation/native";
 
 const Post = ({ item, navigation }) => {
     return (
@@ -26,6 +27,7 @@ const AlbumPage = ({navigation}) => {
     // const { familyId } = useContext(UserContext);
     const familyId = 'A1B5E6'
     const [data, setData] = useState([]);
+    const [refreshKey, setRefreshKey] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,14 +41,28 @@ const AlbumPage = ({navigation}) => {
         }
 
         fetchData();
-    }, [familyId]);
-    console.log(data)
+    }, [refreshKey]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const myScreenFocusListener = navigation.addListener('focus', () => {
+                postRe()
+            });
+
+            return myScreenFocusListener;
+        }, [navigation])
+    );
+
+    const postRe = () =>{
+        setRefreshKey(oldKey => oldKey + 1);
+        console.log("새로고침됨 표시")
+    }
     return (
       <View style={styles.container}>
-          <Text style={styles.title}>가족엘범</Text>
+          <Text style={styles.title}>가족 앨범</Text>
           <FlatList
               data={ data.sort((a, b) => new Date(b.write_date) - new Date(a.write_date))}
-            renderItem={({ item }) => <Post item={item} navigation={navigation} />}
+            renderItem={({ item }) => <Post item={item} navigation={navigation} postRe={postRe}/>}
             keyExtractor={item => item.photo_id.toString()}
           />
           <TouchableOpacity

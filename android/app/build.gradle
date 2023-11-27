@@ -79,16 +79,14 @@ android {
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
         versionCode 1
-        versionName "1.0"
+        versionName "1.01"
     }
     signingConfigs {
         release {
-            if (project.hasProperty('MYAPP_RELEASE_STORE_FILE')) {
-                storeFile file(MYAPP_RELEASE_STORE_FILE)
-                storePassword MYAPP_RELEASE_STORE_PASSWORD
-                keyAlias MYAPP_RELEASE_KEY_ALIAS
-                keyPassword MYAPP_RELEASE_KEY_PASSWORD
-            }
+            storeFile file("app-release-key.keystore")  // 여기에 keyStore 파일의 경로를 입력하세요.
+            storePassword "onestep"  // 여기에 keyStore 파일의 비밀번호를 입력하세요.
+            keyAlias "onestep"  // 여기에 keyStore 내의 키 별명을 입력하세요.
+            keyPassword "onestep"  // 여기에 keyStore 내의 키 비밀번호를 입력하세요.
         }
     }
     buildTypes {
@@ -96,14 +94,13 @@ android {
             signingConfig signingConfigs.debug
         }
         release {
-            // Caution! In production, you need to generate your own keystore file.
-            // see https://reactnative.dev/docs/signed-apk-android.
-            signingConfig signingConfigs.debug
             minifyEnabled enableProguardInReleaseBuilds
             proguardFiles getDefaultProguardFile("proguard-android.txt"), "proguard-rules.pro"
             signingConfig signingConfigs.release
+
         }
     }
+
 }
 
 dependencies {

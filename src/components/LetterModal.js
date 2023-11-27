@@ -3,11 +3,11 @@ import { Modal, View, TextInput, Button, Text, TouchableOpacity, StyleSheet } fr
 import CloseIcon from '../assets/images/svg/CloseIcon.svg';
 import axios from 'axios';
 const LetterModal = ({ modalVisible, closeModal, addSetR}) => {
-    // const { userId, familyId } = React.useContext(UserContext);
+    const { userId, familyId } = React.useContext(UserContext);
     const [titleInputValue, setTitleInputValue] = useState('');
     const [contentInputValue, setContentInputValue] = useState('');
-    const userId = 'user1';
-    const familyId = 'A1B5E6';
+    // const userId = 'user1';
+    // const familyId = 'A1B5E6';
 
     // 타이틀 인풋 값이 바뀌면 타이틀 값을 바꾸는 함수
     const handleTitleInputChange = (text) => {

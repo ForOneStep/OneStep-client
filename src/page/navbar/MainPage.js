@@ -89,6 +89,8 @@ const MainPage = ({ navigation }) => {
                 const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/1`)
                 // const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`)
                 const questionData = questionResponse.data;
+
+
                 setQuestion(questionData);
 
                 setIsLoading(false);
@@ -106,8 +108,10 @@ const MainPage = ({ navigation }) => {
                 // quizData가 null이 아니거나 quizData.quizAnswers에 userId가 없으면 모달을 표시합니다.
                 console.log(quizData)
                 if (quizData && !quizData.quizAnswers.filter(answer => answer.quiz_state !== 2).some(answer => answer.user_id === userId)){
-                    // console.log(userId)
+                    console.log(quizData)
+                    if(quizData.writer_id !== userId){
                     setModalVisible(true);
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching quiz data:', error);

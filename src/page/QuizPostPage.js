@@ -31,7 +31,6 @@ const QuizPostPage = () => {
       },
       body: JSON.stringify(quizData)
     });
-
     const data = await response.json();
     console.log(data);  // 응답 결과를 콘솔에 출력
   };

@@ -1,11 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import axios from 'axios';
 
-const AlbumDetailPage = ({ route, navigation }) => {
+const AlbumDetailPage = ({ route, navigation, postRe }) => {
   const userId= 'user1'
   const { item } = route.params;
-  console.log(item);
+  // const [item,setItem] = useState(itemDum)
+
+  // useEffect(() => {
+  //   setItem(itemDum)
+  // }, []);
+
   if (!item) {
     return <View style={styles.container}></View>;
   }
@@ -16,7 +21,7 @@ const AlbumDetailPage = ({ route, navigation }) => {
     setComment(text);
   };
 
-  const handleCommentSubmit = () => {
+  const handleCommentSubmit =  () => {
     console.log(comment)
     // 댓글 전송하는 로직
     const commentData = {
@@ -36,8 +41,9 @@ const AlbumDetailPage = ({ route, navigation }) => {
         console.error('댓글 전송 실패:', error);
         // 댓글 전송 실패 시 에러 처리를 할 수 있습니다.
       });
-
     setComment('');
+
+
   };
 
   return (

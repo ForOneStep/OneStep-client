@@ -4,7 +4,7 @@ import axios from "axios";
 import PhotoUploadIcon from '../assets/images/svg/PhotoUploadIcon.svg';
 import { useState } from "react";
 
-const NewPost = () => {
+const NewPost = ({navigation, postRe}) => {
     const [photo, setPhoto] = useState(null);
     const [text, setText] = useState('');
     const userId = 'user1';
@@ -42,8 +42,8 @@ const NewPost = () => {
               },
           })
           .then((response) => {
-              console.log('upload success', response);
-              alert('Upload success!');
+              // console.log('upload success', response);
+              // alert('Upload success!');
               setPhoto(null);
               setText('');
           })
@@ -51,6 +51,7 @@ const NewPost = () => {
               console.log('upload error', error);
               alert('Upload failed!');
           });
+        navigation.goBack();
     };
 
     return (
