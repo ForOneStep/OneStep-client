@@ -1,20 +1,23 @@
 import React, { useContext, useState } from "react";
 import { View, Text, StyleSheet, TextInput, Button } from 'react-native';
 import { UserContext } from '../../App'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const UserInfoChangePage = () => {
     const { userId, familyId, setUserData } = useContext(UserContext);
     const [inputUserId, setInputUserId] = useState(userId);
     const [inputFamilyId, setInputFamilyId] = useState(familyId);
 
-    const handleChange = () => {
-        setUserData({ userId: inputUserId, familyId: inputFamilyId });
+    const handleChange = async () => {
+        // setUserData({ userId: inputUserId, familyId: inputFamilyId });
+
+      await AsyncStorage.setItem('userId', inputUserId);
+      await AsyncStorage.setItem('familyId', inputFamilyId);
     }
 
     return (
         <View style={styles.container}>
             <TextInput
-
                 style={styles.input}
                 value={inputUserId}
                 onChangeText={setInputUserId}

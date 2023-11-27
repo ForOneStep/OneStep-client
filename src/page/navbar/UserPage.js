@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 import BirthdayCakeIcon from '../../assets/images/svg/BirthdayCakeIcon.svg';
@@ -9,10 +9,53 @@ import AnswerIcon from '../../assets/images/svg/AnswerIcon.svg';
 import EditPostIcon from '../../assets/images/svg/EditPostIcon.svg';
 import SettingIcon from '../../assets/images/svg/SettingIcon.svg';
 import { Button } from "react-native-paper";
+import { UserContext } from "../../../App";
 
 const UserPage = ({navigation}) => {
-    const [user,setUser] = useState([])
+    const { userId, familyId } = useContext(UserContext);
+    const [questionLen,setQuestionLen] = useState(0)
+    const [user,setUser] = useState({
+        "user_id": "user1",
+        "family": {
+            "fam_id": "아이디1",
+            "fam_nickname": "닉네임1",
+            "level": 0,
+            "is_valid": true,
+            "fam_number": 0,
+            "fam_anniversary": "1991-01-01"
+        },
+        "user_name": "김이름",
+        "user_nickname": "닉네임1",
+        "user_role": "",
+        "user_phone_number": "",
+        "user_birth": "2000-01-01",
+        "token": "",
+        "profile_path": ""
+    })
     const imgurl = 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/db/Bbami_torty_cat.jpg/525px-Bbami_torty_cat.jpg'
+    // const [user, setUser] = useState(null);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`http://52.79.97.196:8080/user/${userId}`);  // 사용자 정보를 가져오는 URL
+                const data = await response.json();
+                setUser(data);
+
+                const questionResponse = await fetch(`http://52.79.97.196:8080/question/list/${familyId}`);  // 사용자 정보를 가져오는 URL
+
+                const questionData = await questionResponse.json();
+                setQuestionLen(questionData.length)
+
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+    }, [userId]);
+
+
     return (
         <View style={styles.container}>
             <View style={styles.groupInfo}>
@@ -21,7 +64,7 @@ const UserPage = ({navigation}) => {
                         <Text style={styles.titleName}>송도 김가네 </Text>가족
                     </Text>
                 </View>
-                <Text style={styles.hashTag}>#B2CN5</Text>
+                <Text style={styles.hashTag}>#{user.family.fam_id}</Text>
                 <View style={styles.iconContainer}>
                     <View style={styles.iconTextContainer}>
                         <FamilyIcon  width={40} height={40} />
@@ -30,23 +73,26 @@ const UserPage = ({navigation}) => {
                     <View style={styles.middleIconTextContainer}>
                         <QuestionIcon  width={40} height={40} />
                         <Text>답변</Text>
-                        <Text>32개</Text>
+                        <Text>{questionLen}개</Text>
                     </View>
                     <View style={styles.iconTextContainer}>
                         <ThermometerIcon  width={40} height={40} />
-                        <Text>LV2</Text>
+                        <Text>Lv.{user.family.level}</Text>
                     </View>
                 </View>
-                <Button style={styles.button}>섬 바로 가기</Button>
+                {/*<Button style={styles.button}*/}
+                {/*        onPress={() => navigation.navigate('MainTab')}*/}
+                {/*        //MainTab*/}
+                {/*>섬 바로 가기</Button>*/}
             </View>
 
             <View style={styles.userInfo}>
-                <Image source={{ uri: imgurl }} style={styles.userImage}  />
+                <Image source={{ uri:  user.profile_path  }} style={styles.userImage}  />
                 <View>
-                    <Text style={styles.name}>김가네 막둥이</Text>
+                    <Text style={styles.name}>{user.user_name}</Text>
                     <View style={styles.birthdayContainer}>
                         <BirthdayCakeIcon style={styles.birthdayIcon}/>
-                        <Text style={styles.birthdayText}>2001.09.27</Text>
+                        <Text style={styles.birthdayText}>{user.user_birth}</Text>
                     </View>
                 </View>
             </View>
@@ -184,7 +230,7 @@ const styles = StyleSheet.create({
         button: {
             marginTop:40,
             backgroundColor: '#f7b599',
-            color:'black',
+            color:'#262627',
             width:'100%',
         },
 

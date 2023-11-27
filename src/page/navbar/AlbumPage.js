@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, Image, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { UserContext } from '../../../App'
+import { useFocusEffect } from "@react-navigation/native";
 
 const Post = ({ item, navigation }) => {
     return (
@@ -14,9 +15,9 @@ const Post = ({ item, navigation }) => {
 </View>
                   <Text style={styles.text}>{item.photo_txt}</Text>
               </View>
-              <View style={styles.dateContainer}>
+              {/*<View style={styles.dateContainer}>*/}
                   <Text style={styles.date}>{item.write_date}</Text>
-              </View>
+              {/*</View>*/}
           </View>
       </TouchableOpacity>
     );
@@ -26,6 +27,7 @@ const AlbumPage = ({navigation}) => {
     // const { familyId } = useContext(UserContext);
     const familyId = 'A1B5E6'
     const [data, setData] = useState([]);
+    const [refreshKey, setRefreshKey] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
@@ -39,13 +41,28 @@ const AlbumPage = ({navigation}) => {
         }
 
         fetchData();
-    }, [familyId]);
+    }, [refreshKey]);
+
+    useFocusEffect(
+        React.useCallback(() => {
+            const myScreenFocusListener = navigation.addListener('focus', () => {
+                postRe()
+            });
+
+            return myScreenFocusListener;
+        }, [navigation])
+    );
+
+    const postRe = () =>{
+        setRefreshKey(oldKey => oldKey + 1);
+        console.log("새로고침됨 표시")
+    }
     return (
       <View style={styles.container}>
-          <Text style={styles.title}>가족엘범</Text>
+          <Text style={styles.title}>가족 앨범</Text>
           <FlatList
-              data={data.slice().reverse()}
-            renderItem={({ item }) => <Post item={item} navigation={navigation} />}
+              data={ data.sort((a, b) => new Date(b.write_date) - new Date(a.write_date))}
+            renderItem={({ item }) => <Post item={item} navigation={navigation} postRe={postRe}/>}
             keyExtractor={item => item.photo_id.toString()}
           />
           <TouchableOpacity
@@ -56,37 +73,56 @@ const AlbumPage = ({navigation}) => {
       </View>
     );
 };
-
 const styles = StyleSheet.create({
     container: {
-        padding: 10,
+        width: "100%",
+        paddingBottom: 100,
         backgroundColor:'#f2f2f2',
+//        backgroundColor: 'red',
     },
     post: {
-        marginBottom: 20,
-        borderColor: '#ddd',
-        borderWidth: 1,
-        borderRadius: 10,
-        padding: 5,
-        backgroundColor:'#fff',
+
+        width: '96%',
+        alignSelf:'center',
+        height: 115,
         display:'flex',
         flexDirection:'row',
+//        alignItems: 'center',
+        marginBottom: 20,
+        padding: 8,
+        borderRadius: 20,
+        borderColor: '#ddd',
+        backgroundColor:'#fff',
+//        backgroundColor: 'blue',
         shadowColor: '#000', // 그림자 색상
         shadowOffset: {
             width: 0, // 좌우 그림자 위치
-            height: 2, // 상하 그림자 위치
+//            height: 2, // 상하 그림자 위치
+            height: 2,
         },
         shadowOpacity: 0.25, // 그림자 투명도
         shadowRadius: 3.84,   // 그림자 반경
-
+//        shadowRadius: 10,
         elevation: 5, // Android에만 적용되는 그림자 깊이
+    },
+    imgContentContainer: {
+        flexDirection: 'row',
+        width: '83%',
+        justifyContent: 'center',
+        alignItems: 'flex-start',
+//        backgroundColor: 'coral',
     },
     title: {
         fontSize: 24,
-        fontWeight: 'bold',
+        // fontWeight: 'bold',
         textAlign: 'center',
-        marginBottom:20,
+        marginBottom:40,
         marginTop: 20,
+    },
+    albumFlatlist: {
+        width: '100%',
+        paddingTop: 10,
+        paddingHorizontal: 10,
     },
     contentContainer: {
         flexDirection: 'column',
@@ -94,9 +130,9 @@ const styles = StyleSheet.create({
         alignItems: 'start',
         justifyContent:'flex-start',
         marginBottom: 10,
+//        backgroundColor: 'coral',
     },
     userContainer:{
-
         flexDirection: 'row',
         justifyContent:'center',
         alignItems:'center',
@@ -108,40 +144,52 @@ const styles = StyleSheet.create({
         marginRight: 10,
     },
     username: {
-        fontWeight: 'bold',
+
+        // fontWeight: 'bold',
+
+        fontSize: 18,
+        color:'#262627',
         flex: 1,
     },
     dateContainer: {
+        alignItems: 'center',
         justifyContent: 'flex-end',
-
+        width: '17%',
+//        backgroundColor: 'cornflowerblue',
     },
     date: {
+        position:"absolute",
+        right:10,
+        bottom:10,
         fontSize: 12,
-        color: 'gray',
+        color:'#999999',
     },
     image: {
         width: 100,
         height: 100,
-
-        borderRadius: 1,
+        alignSelf:'center',
+        marginRight: 10,
+        borderRadius: 15,
         borderColor: '#ddd',
         borderWidth: 1,
     },
     text: {
-        marginTop: 20,
-        fontSize: 16,
+        marginTop: 10,
+        fontSize: 14,
+        color:'#262627'
+        // fontWeight: 600,
     },
     addButton: {
         zIndex:10,
-        backgroundColor: '#ff6200',
+        backgroundColor: '#F7B599',
         position: 'absolute',
         width: 60,
         height: 60,
         borderRadius: 30,
         alignItems: 'center',
         justifyContent: 'center',
-        right: 10,
-        bottom: 85,
+        right: 15,
+        bottom: 120,
         shadowColor: '#000',
         shadowOffset: {
             width: 0,

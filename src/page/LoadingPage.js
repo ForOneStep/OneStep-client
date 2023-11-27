@@ -10,7 +10,7 @@ const LoadingPage = () => {
   return (
     <View style={styles.container}>
       <Image source={island8} style={styles.islandImg} />
-
+  <Text> v0.9 </Text>
     </View>
   );
 };

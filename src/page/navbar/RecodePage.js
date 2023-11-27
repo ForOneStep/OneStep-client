@@ -13,11 +13,10 @@ import { UserContext } from "../../../App";
 const QuestionItem = ({ question, navigation }) => (
     <TouchableOpacity
         style={styles.questionItem}
-        onPress={() => navigation.navigate('RecodeDetail', { question })}
+        onPress={() => navigation.navigate('RecodeDetail', { questionHeader: question })}
     >
         <View style={styles.questionText}>
-            <Text style={styles.question_date}>{question.question_date}.</Text>
-            <Text style={styles.questionContent} numberOfLines={1}>
+           <Text style={styles.questionContent} numberOfLines={1}>
                 {question.question_txt}
             </Text>
         </View>
@@ -83,23 +82,17 @@ const styles = StyleSheet.create({
     questionFlatList: {
         flex: 1,
         width: '100%',
-        // alignItems: 'center',
-        // flexDirection: 'row',
-        // backgroundColor: 'coral',
         padding: 20,
     },
     questionItem: {
-        // width: '90%',
-        // height: '100%',
-        flexDirection: 'row',
-        alignItems: 'flex-end',
+        flexDirection: "row",
+        alignItems: "center",
         marginVertical: 5,
-//    borderWidth: 1,
         borderRadius: 6,
         paddingHorizontal: 15,
-        paddingVertical: 5,
-        backgroundColor: '#ffe6e0',
-        shadowColor: '#000',
+        paddingVertical: 10,
+        backgroundColor: "#FFE6E0",
+        shadowColor: "#000",
         shadowOffset: {
             width: 0,
             height: 2,
@@ -110,27 +103,22 @@ const styles = StyleSheet.create({
     },
     questionText: {
         flex: 1,
-        flexDirection: 'row',
-    },
-    question_date: {
-        // flex: 1,
-        fontSize: 14,
-        // backgroundColor: 'teal',
+        flexDirection: "row",
+        alignItems: "center",
+        marginBottom:20,
     },
     questionContent: {
-        // flex: 6,
-        marginLeft: 5,
-        fontSize: 14,
-        // color: 'red',
-        // backgroundColor: 'yellow',
+        flex: 1,
+        fontSize: 16,
+        padding:5,
+        color: "#262627",
     },
     writeDate: {
-        // flex: 3,
-        color: 'grey',
-        fontSize: 10,
-        // textAlign: ''
-        // fontWeight: 'bold',
-        // backgroundColor: 'coral',
+        color: "#999999",
+        fontSize: 12,
+        position:"absolute",
+        right:10,
+        bottom:10,
     },
 });
 

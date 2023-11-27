@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
-import { Animated, Easing } from "react-native";
+import { Animated, Easing, TouchableOpacity } from "react-native";
 import { View, StyleSheet, Text, Image } from "react-native";
 import { Modal, Button } from 'react-native'; // 모달과 버튼 컴포넌트를 import 합니다.
 
@@ -18,9 +18,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import LoadingPage  from "../LoadingPage";
 import QuizModal  from "../../components/QuizModal";
 import { UserContext } from '../../../App'
+import axios from "axios";
 
 const ClosestBirth = ({ members }) => {
-
     const today = new Date();
     let closestBirthday = null;
 
@@ -52,7 +52,6 @@ const ClosestBirth = ({ members }) => {
     );
 };
 
-
 const MainPage = ({ navigation }) => {
     // AsyncStorage에서 값을 불러오기
     // const userId = await AsyncStorage.getItem('userId');
@@ -61,7 +60,7 @@ const MainPage = ({ navigation }) => {
     // const userId= 'user1'
         // const familyId= 'A1B5E6'
     const [modalVisible, setModalVisible] = useState(false); // 모달의 표시 여부를 관리하는 state를 추가합니다.
-    const [quiz,setQuiz] =useState()
+    const [quiz,setQuiz] =useState();
     const [question, setQuestion] = useState();
     const [familyMembers, setFamilyMembers] = useState();
     const [userData, setUserData] = useState();
@@ -70,6 +69,37 @@ const MainPage = ({ navigation }) => {
     const moveAnimation = useRef(new Animated.Value(0)).current;
 
     useEffect(() => {
+        const fetchData = async () => {
+            console.log(userId,familyId)
+            try {
+                const [quizResponse, userResponse, familyResponse] = await axios.all([
+                    axios.get(`http://52.79.97.196:8080/quiz/todayQuiz/${familyId}`),
+                    axios.get(`http://52.79.97.196:8080/user/${userId}`),
+                    axios.get(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`),
+                ]);
+
+                const quizData = quizResponse.data;
+                const userData = userResponse.data;
+                const familyData = familyResponse.data;
+
+                setQuiz(quizData);
+                setUserData(userData);
+                setFamilyMembers(familyData);
+
+                const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/1`)
+                // const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`)
+                const questionData = questionResponse.data;
+
+
+                setQuestion(questionData);
+
+                setIsLoading(false);
+            } catch (error) {
+                console.error('Error fetching data:', error);
+            }
+        };
+
+        fetchData();
         const fetchQuizData = async () => {
             try {
                 const quizResponse = await fetch(`http://52.79.97.196:8080/quiz/todayQuiz/${familyId}`);
@@ -78,57 +108,37 @@ const MainPage = ({ navigation }) => {
                 // quizData가 null이 아니거나 quizData.quizAnswers에 userId가 없으면 모달을 표시합니다.
                 console.log(quizData)
                 if (quizData && !quizData.quizAnswers.filter(answer => answer.quiz_state !== 2).some(answer => answer.user_id === userId)){
-                    // console.log(userId)
+                    console.log(quizData)
+                    if(quizData.writer_id !== userId){
                     setModalVisible(true);
+                    }
                 }
             } catch (error) {
                 console.error('Error fetching quiz data:', error);
             }
         };
         fetchQuizData();
-    }, [userId]);
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const userResponse = await fetch(`http:/52.79.97.196:8080/user/${userId}`);
-                const userData = await userResponse.json();
-                setUserData(userData);
-
-                const questionResponse = await fetch(`http://52.79.97.196:8080/question/daily/${userData.family.fam_number}`);
-                const questionData = await questionResponse.json();
-                setQuestion(questionData);
-
-                const familyResponse = await fetch(`http://52.79.97.196:8080/user/userInfoByFamId/${familyId}`);
-                const familyData = await familyResponse.json();
-                setFamilyMembers(familyData);
-
-                setIsLoading(false);
-            } catch (error) {
-                console.error('Error fetching data:', error);
-            }
-        };
-        fetchData();
 
         Animated.loop(
-          Animated.sequence([
-              Animated.timing(moveAnimation, {
-                  toValue: 20,
-                  duration: 2000,
-                  easing: Easing.inOut(Easing.quad),
-                  useNativeDriver: true
-              }),
-              Animated.timing(moveAnimation, {
-                  toValue: 0,
-                  duration: 2000,
-                  easing: Easing.inOut(Easing.quad),
-                  useNativeDriver: true
-              }),
-          ]),
-          {
-              iterations: Infinity
-          }
+            Animated.sequence([
+                Animated.timing(moveAnimation, {
+                    toValue: 20,
+                    duration: 2000,
+                    easing: Easing.inOut(Easing.quad),
+                    useNativeDriver: true,
+                }),
+                Animated.timing(moveAnimation, {
+                    toValue: 0,
+                    duration: 2000,
+                    easing: Easing.inOut(Easing.quad),
+                    useNativeDriver: true,
+                }),
+            ]),
+            {
+                iterations: Infinity,
+            }
         ).start();
-    }, [userId]);
+    }, [userId, familyId]);
     const islands = {
         island1,
         island2,
@@ -171,10 +181,11 @@ const MainPage = ({ navigation }) => {
               <Animated.Image source={islands[`island${userData.family.level}`] || islands.island1} style={[styles.islandImg, { transform: [{ translateY: moveAnimation }] }]} />
               <Text style={styles.famliyName}>{`${userData.family.fam_nickname} 가족 섬`}</Text>
           </View>
-          <View  style={styles.questionBlock}>
+          <TouchableOpacity   style={styles.questionBlock}
+                              onPress={() => navigation.navigate('Question')}>
               <LoudSpeaker style={styles.loudSpeaker}/>
               <Text style={styles.questionText}> {question.question_txt} </Text>
-          </View>
+          </TouchableOpacity>
           <Text
             onPress={() => navigation.navigate('Question')}
             style={styles.goToAnwser}>답변하러 가기 ></Text>
@@ -221,6 +232,7 @@ const styles = StyleSheet.create({
     },
     questionBlock : {
         width: '90%',
+        paddingRight:20,
         height: 80,
         marginTop: 40,
         borderRadius: 15,
@@ -239,7 +251,7 @@ const styles = StyleSheet.create({
 
     },
     famliyName:{
-        color:'#00000099',
+        color:'#262627',
         fontSize: 24, // 크기를 크게 설정
         fontWeight: 'bold', // 굵게 설정
     },
@@ -262,12 +274,12 @@ const styles = StyleSheet.create({
         alignItems:'flex-end',
     },
     dDayTextDate:{
-        color:'black',
+        color:'#262627',
         fontSize: 24, // 크기를 크게 설정
         fontWeight: 'bold', // 굵게 설정
     },
     dDayTextName:{
-        color:'black',
+        color:'#262627',
         fontSize: 16, // 크기를 크게 설정
         marginLeft:10,
         marginBottom:3,
@@ -278,11 +290,13 @@ const styles = StyleSheet.create({
         right: 10,
     },
     questionText:{
+        color:'#262627',
         fontSize: 16, // 크기를 크게 설정
-        fontWeight: 'bold', // 굵게 설정
+        // fontWeight: 'bold', // 굵게 설정
         marginLeft:40,
     },
     goToAnwser:{
+        color:'#262627',
         top: 10,
         left : 120,
     }
