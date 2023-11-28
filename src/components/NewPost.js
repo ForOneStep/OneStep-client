@@ -70,11 +70,12 @@ const NewPost = ({navigation, postRe}) => {
             </TouchableOpacity>
           )}
           <TextInput
-            style={styles.input}
             placeholder="사진에 대한 설명을 해주세요!"
             multiline={true}
             onChangeText={(text) => setText(text)}
             value={text}
+            style={[styles.input, {color: '#262627'}]}
+            placeholderTextColor="#999"
           />
           <TouchableOpacity style={styles.button} onPress={handleUploadPhoto}>
               <Text style={styles.buttonText}>업로드</Text>

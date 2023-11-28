@@ -63,16 +63,18 @@ const LetterModal = ({ modalVisible, closeModal, addSetR}) => {
                         </TouchableOpacity>
                     </View>
                     <TextInput
-                        style={styles.titleInput}
                         value={titleInputValue}
                         onChangeText={handleTitleInputChange}
                         placeholder="제목을 입력해주세요"
+                        style={[styles.titleInput, {color: '#262627'}]}
+                        placeholderTextColor="#999"
                     />
                     <TextInput
-                        style={styles.contentInput}
                         value={contentInputValue}
                         onChangeText={handleContentInputChange}
                         placeholder="내용을 입력해주세요"
+                        style={[styles.contentInput, {color: '#262627'}]}
+                        placeholderTextColor="#999"
                         multiline
                     />
                     <Button style={styles.submitButton} title="Submit" onPress={handleSubmit} >

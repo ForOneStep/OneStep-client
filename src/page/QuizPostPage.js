@@ -40,9 +40,10 @@ const QuizPostPage = () => {
       <Text style={styles.quizTitle}>Quiz</Text>
       <View style={styles.inputContainer}>
         <TextInput
-          style={styles.input}
           placeholder="Quiz 내용"
           onChangeText={setQuizTxt}
+          style={[styles.input, {color: '#262627'}]}
+          placeholderTextColor="#999"
         />
       </View>
       {[answer1, answer2, answer3, answer4].map((answer, index) => (
@@ -54,7 +55,8 @@ const QuizPostPage = () => {
             color='#F7B599'
           />
           <TextInput
-            style={styles.input}
+            style={[styles.input, {color: '#262627'}]}
+            placeholderTextColor="#999"
             placeholder={`${index + 1}. `}
             onChangeText={(text) => {
               if (index === 0) setAnswer1(text);

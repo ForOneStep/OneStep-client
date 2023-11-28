@@ -231,14 +231,17 @@ const styles = StyleSheet.create({
         elevation: 5, // Android에만 적용되는 그림자 깊이
     },
     titleText: {
+        color:'#262627',
         fontSize: 18,
         fontWeight: 'bold',
     },
     contentText: {
+        color:'#262627',
         fontSize: 16,
         marginTop:5,
     },
     dateText: {
+        alignSelf:'flex-end',
         fontSize: 14,
         color: '#888',
         marginTop:10,

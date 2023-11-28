@@ -68,16 +68,16 @@ const UserPage = ({navigation}) => {
                 <View style={styles.iconContainer}>
                     <View style={styles.iconTextContainer}>
                         <FamilyIcon  width={40} height={40} />
-                        <Text>4명</Text>
+                        <Text style={styles.textBlack}>4명</Text>
                     </View>
                     <View style={styles.middleIconTextContainer}>
                         <QuestionIcon  width={40} height={40} />
-                        <Text>답변</Text>
-                        <Text>{questionLen}개</Text>
+                        <Text style={styles.textBlack}>답변</Text>
+                        <Text style={styles.textBlack}>{questionLen}개</Text>
                     </View>
                     <View style={styles.iconTextContainer}>
                         <ThermometerIcon  width={40} height={40} />
-                        <Text>Lv.{user.family.level}</Text>
+                        <Text style={styles.textBlack}>Lv.{user.family.level}</Text>
                     </View>
                 </View>
                 {/*<Button style={styles.button}*/}
@@ -118,7 +118,9 @@ const UserPage = ({navigation}) => {
 };
 
 const styles = StyleSheet.create({
-
+    textBlack:{
+      color:'#262627',
+    },
     userImage: {
         width: 64,
         height: 64,
@@ -143,6 +145,8 @@ const styles = StyleSheet.create({
         marginRight: 5,
     },
     birthdayText: {
+
+        color:'#262627',
         marginLeft:10,
         fontSize: 16,
     },
@@ -158,6 +162,8 @@ const styles = StyleSheet.create({
 
     },
     text: {
+
+        color:'#262627',
         fontSize: 20,
     },
     groupInfo:{
@@ -211,6 +217,8 @@ const styles = StyleSheet.create({
             width: '100%',
         },
         middleIconTextContainer:{
+
+            color:'#262627',
             alignItems: 'center',
 
             borderRightWidth:1,
@@ -222,6 +230,7 @@ const styles = StyleSheet.create({
 
         },
         iconTextContainer: {
+        color:'#262627',
             alignItems: 'center',
             justifyContent:'space-around',
             flex:1,

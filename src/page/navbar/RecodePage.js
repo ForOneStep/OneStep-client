@@ -78,6 +78,8 @@ const styles = StyleSheet.create({
         // backgroundColor: 'red'
     },
     recodeTitle: {
+
+        color:'#262627',
         fontSize: 20,
         fontWeight: 'bold',
     },

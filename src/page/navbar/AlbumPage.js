@@ -112,6 +112,7 @@ const styles = StyleSheet.create({
 //        backgroundColor: 'coral',
     },
     title: {
+        color:'#262627',
         fontSize: 24,
         // fontWeight: 'bold',
         textAlign: 'center',

@@ -95,10 +95,11 @@ const AnswerItem = ({ item ,isUserAnswer}) => {
                   </View>
                 ))}
                 <TextInput
-                  style={styles.input}
                   placeholder="댓글을 입력하세요"
                   value={commentText}
                   onChangeText={setCommentText}
+                  style={[styles.input, {color: '#262627'}]}
+                  placeholderTextColor="#999"
                 />
                 <Button style={styles.commentSubButton} title="댓글 전송" onPress={sendComment} />
             </View>}
@@ -229,11 +230,11 @@ const QuestionPage = () => {
                     style={styles.commentIcon}></AlbumIcon>
              </TouchableOpacity>
               <TextInput
-                  style={styles.commentInput}
                   placeholder="답변을 입력하세요..."
                   value={comment}
                   onChangeText={handleCommentChange}
-                  placeholderTextColor="#999999"
+                  style={[styles.commentInput, {color: '#262627'}]}
+                  placeholderTextColor="#999"
               />
 
               <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>

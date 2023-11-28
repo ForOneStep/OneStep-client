@@ -87,11 +87,11 @@ const AlbumDetailPage = ({ route, navigation, postRe }) => {
       </ScrollView>
       <View style={styles.commentInputContainer}>
         <TextInput
-          style={styles.commentInput}
           placeholder="댓글을 입력하세요..."
           value={comment}
           onChangeText={handleCommentChange}
-          placeholderTextColor='#999999'
+          style={[styles.commentInput, {color: '#262627'}]}
+          placeholderTextColor="#999"
         />
         <TouchableOpacity style={styles.commentButton} onPress={handleCommentSubmit}>
           <Text style={styles.commentButtonText}>전송</Text>

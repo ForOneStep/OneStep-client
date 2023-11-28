@@ -41,16 +41,16 @@ const App: FC = () => {
       }
 
       // 앨범 접근 권한 및 카메라 사용 권한 요청
-      const permissions = [PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE, PERMISSIONS.ANDROID.CAMERA];
-      for (let permission of permissions) {
-        let result = await check(permission);
-        if (result !== RESULTS.GRANTED) {
-          result = await request(permission);
-          if (result !== RESULTS.GRANTED) {
-            console.log('Permission not granted: ', permission);
-          }
-        }
-      }
+      // const permissions = [PERMISSIONS.ANDROID.READ_EXTERNAL_STORAGE, PERMISSIONS.ANDROID.CAMERA];
+      // for (let permission of permissions) {
+      //   let result = await check(permission);
+      //   if (result !== RESULTS.GRANTED) {
+      //     result = await request(permission);
+      //     if (result !== RESULTS.GRANTED) {
+      //       console.log('Permission not granted: ', permission);
+      //     }
+      //   }
+      // }
 
       setIsLoading(false);  // 로딩 완료
     };
