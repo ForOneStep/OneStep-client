@@ -4,6 +4,7 @@ import { UserContext } from '../../../App'
 import { useFocusEffect } from "@react-navigation/native";
 
 const Post = ({ item, navigation }) => {
+    // const item = itemP// console.log(item)
     return (
       <TouchableOpacity onPress={() => navigation.navigate('AlbumDetail', { item })}>
           <View style={styles.post}>
@@ -29,29 +30,27 @@ const AlbumPage = ({navigation}) => {
     const [data, setData] = useState([]);
     const [refreshKey, setRefreshKey] = useState([]);
 
-    useEffect(() => {
-        const fetchData = async () => {
-            try {
-                const response = await fetch(`http://52.79.97.196:8080/photobook/read/${familyId}`);
-                const data = await response.json();
-                setData(data);
-            } catch (error) {
-                console.error('Error:', error);
-            }
+    const fetchData = async () => {
+        try {
+            const response = await fetch(`http://52.79.97.196:8080/photobook/read/${familyId}`);
+            const data = await response.json();
+            setData(data);
+            console.log('새새새')
+        } catch (error) {
+            console.error('Error:', error);
         }
+    }
 
+    useEffect(() => {
         fetchData();
-    }, [refreshKey]);
+    }, []);
 
     useFocusEffect(
         React.useCallback(() => {
-            const myScreenFocusListener = navigation.addListener('focus', () => {
-                postRe()
-            });
-
-            return myScreenFocusListener;
-        }, [navigation])
+            fetchData();
+        }, [])
     );
+
 
     const postRe = () =>{
         setRefreshKey(oldKey => oldKey + 1);

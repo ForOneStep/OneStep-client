@@ -26,7 +26,10 @@ const NewPost = ({navigation, postRe}) => {
     };
     const handleUploadPhoto = () => {
         const formData = new FormData();
-
+        if(photo === null){
+            alert("사진을 입력해주세요")
+            return
+        }
         formData.append('img', {
             name: photo.assets[0].fileName,
             type: photo.assets[0].type,
@@ -46,12 +49,12 @@ const NewPost = ({navigation, postRe}) => {
               // alert('Upload success!');
               setPhoto(null);
               setText('');
+              navigation.goBack();
           })
           .catch((error) => {
               console.log('upload error', error);
               alert('Upload failed!');
           });
-        navigation.goBack();
     };
 
     return (

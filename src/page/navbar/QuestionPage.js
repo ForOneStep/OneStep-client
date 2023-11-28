@@ -1,35 +1,72 @@
 import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
+import { View, Text, FlatList, StyleSheet, TextInput, TouchableOpacity, Image, Button } from "react-native";
 import axios from 'axios';
 import FormData from 'form-data'; // 수정된 부분
 import { UserContext } from '../../../App'
 import LetterIcon from '../../assets/images/svg/letter.svg';
 import IslandPng from '../../assets/images/png/island1.png'
+import { launchImageLibrary } from "react-native-image-picker";
+import AlbumIcon from '../../assets/images/svg/AlbumIcon.svg'
+import CommentIcon from '../../assets/images/svg/CommentIcon.svg'
+
 const AnswerItem = ({ item ,isUserAnswer}) => {
-    const [com,setCom] = useState('')
+    const { userId } = React.useContext(UserContext);
+    const [comment,setComment] = useState('')
+    const [showComments, setShowComments] = useState(false) // 댓글 영역 표시 상태
+    const [commentText, setCommentText] = useState('') // 유저 인풋 상태 관리
+    const [re,sRe] = useState(0)
+    const sendComment = async () => {
+        console.log(item)
+        try {
+            const res = await axios.post('http://52.79.97.196:8080/comment/writeComment', {
+                answer_id: item.answer_id,
+                root_comment_id: 0,
+                writer_id: userId,
+                comment_txt: commentText
+            });
+            setCommentText('')
+            sRe(user => user +1)
+            console.log(res.data);
+        } catch (error) {
+            console.error('댓글 전송 오류:', error);
+        }
+    };
+
     useEffect(() => {
-        console.log(item.answerId)
         const fetchQuestionData = async () => {
             try {
-                const comResponse = await axios.get(`http://52.79.97.196:8080/comment/viewComment/${item.answerId}`);
-                setCom(comResponse.data);}
+                console.log(`http://52.79.97.196:8080/comment/viewComment/${item.answer_id}`)
+                const comResponse = await axios.get(`http://52.79.97.196:8080/comment/viewComment/${item.answer_id}`);
+                setComment(comResponse.data);
+                console.log(comResponse.data)
+            }
             catch (error) {
                 console.error('데이터 가져오기 오류:', error);
             }
+
         }
         fetchQuestionData()
-    }, []);
+    }, [re]);
+    const toggleComments = () => {
+        setShowComments(!showComments);
+    };
+    if(!item){
+
+        console.log(item)
+        return(
+          <View></View>
+        )
+    }
     return(
       <View style={styles.answerItem}>
           <Text style={styles.user_nickname}>{item.user_nickname}</Text>
           {isUserAnswer
             ? <View>
                 {item.answer_img?
-                  <Image style={styles.answerImg} source={item.answer_img}></Image>
-                  :
-                  <View></View>
-                }
-                <Text style={styles.answer_txt}>{item.answer_txt}</Text>
+                <Image style={styles.answerImg}
+                       source={{ uri: item.answer_img }}></Image>
+                :<View></View>}
+                <Text style={styles.answerTxt}>{item.answer_txt}</Text>
             </View>
             : <View style={styles.blurView}>
                 <Text style={styles.answer_txt}>답변을 입력하시면 확인하실 수 있습니다.</Text>
@@ -37,6 +74,34 @@ const AnswerItem = ({ item ,isUserAnswer}) => {
             </View>
           }
           <Text style={styles.write_date}>{item.write_date}</Text>
+
+          {/*<TouchableOpacity onPress={toggleComments}>*/}
+              <CommentIcon
+                onPress={toggleComments}
+                style={styles.commentIcon}
+                width={32} height={32}
+              />
+          {/*</TouchableOpacity>*/}
+          {showComments &&
+            <View>
+                {comment.map((comment, index) => ( // com이 댓글 데이터를 담고 있는 배열이라고 가정
+                  <View key={index} style={styles.commentItem}>
+                      <Image style={styles.profileImg} source={{ uri: comment.writer_profile }} />
+                      <View style={styles.commentContent}>
+                          <Text style={styles.nickname}>{comment.writer_nickname}</Text>
+                          <Text style={styles.commentTxt}>{comment.comment_txt}</Text>
+                          <Text style={styles.aWriteDate}>{comment.write_date}</Text>
+                      </View>
+                  </View>
+                ))}
+                <TextInput
+                  style={styles.input}
+                  placeholder="댓글을 입력하세요"
+                  value={commentText}
+                  onChangeText={setCommentText}
+                />
+                <Button style={styles.commentSubButton} title="댓글 전송" onPress={sendComment} />
+            </View>}
       </View>
     );
         {/*<Text style={styles.like}>{item.like.length}</Text>*/}
@@ -68,25 +133,36 @@ const QuestionPage = () => {
     const [refreshKey, setRefreshKey] = useState(0);
     const [isUserAnswer,setIsUserAnswer] = useState(false)
     const [cco,setCco] = useState()
-    // const userId = 'user1';
-    // const familyId = 'A1B5E6';
+    const [photo, setPhoto] = useState(null);
 
     const handleCommentChange = (text) => {
         setComment(text);
     };
-
+    const onSelectImage = () => {
+        launchImageLibrary(
+          {
+              mediaType: 'photo',
+              maxWidth: 512,
+              maxHeight: 512,
+              includeBase64: Platform.OS === 'android',
+          },
+          (res) => {
+              console.log(res);
+              if (res.didCancel) return;
+              setPhoto(res);
+          }
+        );
+    };
     const handleCommentSubmit = async () => {
         let data = new FormData();
         data.append('answerTxt', comment);
-        // const path = RNFetchBlob.fs.dirs.DocumentDir + '/empty.txt'; // 빈 파일 경로
-        // await RNFetchBlob.fs.writeFile(path, '', 'utf8'); // 빈 파일 생성
-
-        // data.append('answerTxt', '테스트용 답변');
-        // data.append('img', {
-        //     uri: path,
-        //     type: 'text/plain',
-        //     name: 'empty.txt',
-        // });
+        if(photo !== null) {
+            data.append('img', {
+                name: photo.assets[0].fileName,
+                type: photo.assets[0].type,
+                uri: photo.assets[0].uri,
+            });
+        }
 
         try {
                 const response = await axios({
@@ -110,9 +186,9 @@ const QuestionPage = () => {
                 // console.log(userResponse.data.family.fam_number)
                 const questionResponse = await axios.get(`http://52.79.97.196:8080/question/daily/${userResponse.data.family.fam_number}`);
                 setQuestion(questionResponse.data);
+                console.log(`http://52.79.97.196:8080/answer/read/${questionResponse.data.question_id}/${familyId}`)
                 const answerResponse = await axios.get(`http://52.79.97.196:8080/answer/read/${questionResponse.data.question_id}/${familyId}`);
                 setAnswerBlockList(answerResponse.data);
-
 
 
                 const isAnswerResponse = answerResponse.data.answers.some(item => item.user_id === userId);
@@ -128,25 +204,30 @@ const QuestionPage = () => {
     return (
       <View style={styles.container}>
           <QuestionItem question={question} />
-          {isUserAnswer?
-            <FlatList
-              contentContainerStyle={styles.answerFlatList}
-              data={answerBlockList.answers}
-              keyExtractor={item => item.answer_id.toString()}
-              renderItem={({ item }) => <AnswerItem item={item} isUserAnswer={isUserAnswer}/>}
-            />
-          :
-            <FlatList
-              contentContainerStyle={styles.answerFlatList}
-              data={answerBlockList.answers}
-              keyExtractor={item => item.answer_id.toString()}
-              renderItem={({ item }) => <AnswerItem item={item} />}
-            />
-          }
+          {isUserAnswer ?
+              <FlatList
+                contentContainerStyle={styles.answerFlatList}
+                data={answerBlockList.answers}
+                keyExtractor={item => item.answer_id.toString()}
+                renderItem={({ item }) => <AnswerItem item={item} isUserAnswer={isUserAnswer}/>}
+              />
+              :
+              <FlatList
+                contentContainerStyle={styles.answerFlatList}
+                data={answerBlockList.answers}
+                keyExtractor={item => item.answer_id.toString()}
+                renderItem={({ item }) => <AnswerItem item={item} />}
+              />}
           {isUserAnswer?
             <View></View>
             :
           <View style={styles.commentInputContainer}>
+
+              <TouchableOpacity  onPress={onSelectImage}>
+                  <AlbumIcon
+                    // onClick={() => onSelectImage()}
+                    style={styles.commentIcon}></AlbumIcon>
+             </TouchableOpacity>
               <TextInput
                   style={styles.commentInput}
                   placeholder="답변을 입력하세요..."
@@ -164,7 +245,63 @@ const QuestionPage = () => {
     );
 };
 const styles = StyleSheet.create({
+    commentSubButton:{
+    },
+    commentItem: {
+        flexDirection: 'row',
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    profileImg: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10,
+    },
+    commentContent: {
+        flex: 1,
+    },
+    nickname: {
+        fontWeight: 'bold',
+        marginBottom: 5,
+
+        color:'#262627'
+    },
+    commentTxt: {
+        marginBottom: 5,
+        color:'#262627'
+    },
+    aWriteDate: {
+        fontSize: 12,
+        color: '#999',
+        alignSelf:'flex-end'
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginTop: 10,
+        marginBottom: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    commentIcon:{
+        zIndex:100,
+        width:32,
+        height:32,
+        marginRight:10,
+        alignSelf:'flex-end',
+        // right:10,
+        // bottom:10,
+        // position:"absolute",
+    },
     answerImg:{
+
+        borderRadius: 15,
+        width: '100%',
+        height: 300,
+        marginBottom: 10,
 
     },
     blurView: {
@@ -248,13 +385,25 @@ const styles = StyleSheet.create({
     user_nickname: {
         color: '#262627',
         fontSize: 14,
+
         fontWeight: 'bold',
-        marginBottom: 5,
+        marginBottom: 15,
+        marginLeft: 5,
     },
     answer_txt: {
         color: '#262627',
         fontSize: 20,
         marginBottom: 10,
+        paddingBottom:20,
+    },
+    answerTxt: {
+        color: '#262627',
+        fontSize: 20,
+        marginBottom: 10,
+
+        borderBottomWidth:1,
+        borderBottomColor:'#262627',
+        paddingBottom:20,
     },
     write_date: {
         top:10,

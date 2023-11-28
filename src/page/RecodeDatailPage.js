@@ -1,16 +1,64 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, FlatList, TextInput, TouchableOpacity, Image } from "react-native";
 import LetterIcon from "../assets/images/svg/letter.svg";
 import axios from "axios";
 import { UserContext } from "../../App";
+import CommentIcon from "../assets/images/svg/CommentIcon.svg";
 
 const AnswerItem = ({ item }) => {
+    const [comment,setComment] = useState('')
+    const [showComments, setShowComments] = useState(false) // 댓글 영역 표시 상태
+
+    useEffect(() => {
+        const fetchQuestionData = async () => {
+            try {
+                console.log(`http://52.79.97.196:8080/comment/viewComment/${item.answer_id}`)
+                const comResponse = await axios.get(`http://52.79.97.196:8080/comment/viewComment/${item.answer_id}`);
+                setComment(comResponse.data);
+                console.log(comResponse.data)
+            }
+            catch (error) {
+                console.error('데이터 가져오기 오류:', error);
+            }
+
+        }
+        fetchQuestionData()
+    }, []);
+
+    const toggleComments = () => {
+        setShowComments(!showComments);
+    };
+
     return(
         <View style={styles.answerItem}>
             <Text style={styles.user_nickname}>{item.user_nickname}</Text>
+            {item.answer_img &&
+                <Image style={styles.answerImg}
+                       source={{ uri: item.answer_img }}></Image>
+                }
             <Text style={styles.answer_txt}>{item.answer_txt}</Text>
             <Text style={styles.write_date}>{item.write_date}</Text>
             {/*<Text style={styles.like}>{item.like.length}</Text>*/}
+            <CommentIcon
+                onPress={toggleComments}
+                style={styles.commentIcon}
+                width={32} height={32}
+            />
+            {showComments &&
+                <View>
+                    {comment.map((comment, index) => ( // com이 댓글 데이터를 담고 있는 배열이라고 가정
+                        <View key={index} style={styles.commentItem}>
+                            <Image style={styles.profileImg} source={{ uri: comment.writer_profile }} />
+                            <View style={styles.commentContent}>
+                                <Text style={styles.nickname}>{comment.writer_nickname}</Text>
+                                <Text style={styles.commentTxt}>{comment.comment_txt}</Text>
+                                <Text style={styles.aWriteDate}>{comment.write_date}</Text>
+                            </View>
+                        </View>
+                    ))}
+                </View>
+                }
+
         </View>)
 };
 
@@ -33,12 +81,10 @@ const QuestionItem = ({ question }) => {
     );
 };
 
-
 const RecodeDetailPage = ({route}) => {
     const { questionHeader } = route.params;
     const { familyId } = useContext(UserContext);
     const [answerBlockList, setAnswerBlockList] = useState({"canRead":false,"answers":[{"answer_id":158,"question_id":154,"user_id":"user1","user_nickname":"피글렛","profile_path":"https://conteswt-bucket.s3.ap-northeast-2.amazonaws.com/profile/pig.jpeg","answer_txt":"테스트용 답변2222222222222","answer_img":null,"write_date":"2023-11-17","like":[]}]});
-
 
     // questionHeader
     useEffect(() => {
@@ -69,6 +115,65 @@ const RecodeDetailPage = ({route}) => {
 };
 
 const styles = StyleSheet.create({
+    commentSubButton:{
+    },
+    commentItem: {
+        flexDirection: 'row',
+        padding: 10,
+        borderBottomWidth: 1,
+        borderBottomColor: '#eee',
+    },
+    profileImg: {
+        width: 40,
+        height: 40,
+        borderRadius: 20,
+        marginRight: 10,
+    },
+    commentContent: {
+        flex: 1,
+    },
+    nickname: {
+        fontWeight: 'bold',
+        marginBottom: 5,
+
+        color:'#262627'
+    },
+    commentTxt: {
+        marginBottom: 5,
+        color:'#262627'
+    },
+    aWriteDate: {
+        fontSize: 12,
+        color: '#999',
+        alignSelf:'flex-end'
+    },
+    input: {
+        height: 40,
+        borderColor: 'gray',
+        borderWidth: 1,
+        marginTop: 10,
+        marginBottom: 10,
+        paddingLeft: 10,
+        paddingRight: 10,
+    },
+    commentIcon:{
+        zIndex:100,
+        width:32,
+        height:32,
+        marginRight:10,
+        alignSelf:'flex-end',
+        // right:10,
+        // bottom:10,
+        // position:"absolute",
+    },
+    answerImg:{
+
+        borderRadius: 15,
+        width: '100%',
+        height: 300,
+        marginBottom: 10,
+
+    },
     container: {
         flex: 1,
     },

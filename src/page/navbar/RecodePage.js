@@ -10,14 +10,14 @@ import {
 import axios from 'axios';
 import { UserContext } from "../../../App";
 
-const QuestionItem = ({ question, navigation }) => (
+const QuestionItem = ({ question, navigation, order }) => (
     <TouchableOpacity
         style={styles.questionItem}
         onPress={() => navigation.navigate('RecodeDetail', { questionHeader: question })}
     >
         <View style={styles.questionText}>
            <Text style={styles.questionContent} numberOfLines={1}>
-                {question.question_txt}
+               {order}. {question.question_txt}
             </Text>
         </View>
         <Text style={styles.writeDate}>{question.question_date}</Text>
@@ -47,11 +47,13 @@ const RecodePage = ({ navigation }) => {
             </View>
             <FlatList
                 contentContainerStyle={styles.questionFlatList}
-                data={questionBlockList}
+                data={questionBlockList.reverse()}
                 keyExtractor={(item) => item.question_id.toString()}
-                renderItem={({ item }) => <QuestionItem question={item} navigation={navigation} />}
+                renderItem={({ item, index }) => {
+                    const order = questionBlockList.length - index; // 순서 계산
+                    return <QuestionItem question={item} order={order} navigation={navigation} />;
+                }}
             />
-
         </View>
     );
 };
@@ -80,7 +82,7 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
     },
     questionFlatList: {
-        flex: 1,
+        flexGrow: 1, // 추가
         width: '100%',
         padding: 20,
     },

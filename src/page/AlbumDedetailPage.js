@@ -1,28 +1,27 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { View, Text, Image, StyleSheet, ScrollView, TextInput, TouchableOpacity } from 'react-native';
 import axios from 'axios';
+import { UserContext } from "../../App";
 
 const AlbumDetailPage = ({ route, navigation, postRe }) => {
-  const userId= 'user1'
-  const { item } = route.params;
-  // const [item,setItem] = useState(itemDum)
+  const { userId, familyId } = useContext(UserContext);
+  const { item:itemp } = route.params;
+  const [item, setItem] = useState(itemp)
 
-  // useEffect(() => {
-  //   setItem(itemDum)
-  // }, []);
+  console.log("item",item)
+  const [comment, setComment] = useState(null);
 
   if (!item) {
     return <View style={styles.container}></View>;
   }
 
-  const [comment, setComment] = useState('');
 
   const handleCommentChange = (text) => {
     setComment(text);
   };
 
   const handleCommentSubmit =  () => {
-    console.log(comment)
+    // console.log(comment)
     // 댓글 전송하는 로직
     const commentData = {
       photoBook_id: item.photo_id,
@@ -35,7 +34,21 @@ const AlbumDetailPage = ({ route, navigation, postRe }) => {
       .post('http://52.79.97.196:8080/photoBookcomment/writeComment', commentData)
       .then((response) => {
         console.log('댓글 전송 성공:', response.data);
-        // 댓글 전송 성공 시 추가적인 작업을 수행할 수 있습니다.
+        const fetchData = async () => {
+          try {
+            const response = await fetch(`http://52.79.97.196:8080/photobook/read/${familyId}`);
+            const data = await response.json();
+            // console.log(data.find(i => i.photo_id === item.photo_id))
+            // console.log("item",item)
+
+            setItem(data.find(i => i.photo_id === item.photo_id))
+
+          } catch (error) {
+            console.error('Error:', error);
+          }
+        }
+
+        fetchData();
       })
       .catch((error) => {
         console.error('댓글 전송 실패:', error);
