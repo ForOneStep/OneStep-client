@@ -2,12 +2,13 @@ import {launchCamera, launchImageLibrary, CameraOptions, ImagePickerResponse, Im
 import { View, Text, StyleSheet, TextInput, TouchableOpacity, Image } from "react-native";
 import axios from "axios";
 import PhotoUploadIcon from '../assets/images/svg/PhotoUploadIcon.svg';
-import { useState } from "react";
+import React, { useState , useContext} from "react";
+import { UserContext } from "../../App";
 
 const NewPost = ({navigation, postRe}) => {
+    const { userId, familyId } = useContext(UserContext);
     const [photo, setPhoto] = useState(null);
     const [text, setText] = useState('');
-    const userId = 'user1';
 
     const onSelectImage = () => {
         launchImageLibrary(

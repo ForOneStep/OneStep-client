@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, StyleSheet, FlatList, Modal, TextInput, TouchableOpacity } from "react-native";
+import { UserContext } from "../../App";
 
 import CloseIcon from '../assets/images/svg/CloseIcon.svg';
 import EditIcon from '../assets/images/svg/EditIcon.svg';
@@ -17,12 +18,11 @@ const LetterItem = ({ item }) => (
 );
 
 const LetterPage = ({navigation}) => {
+    const { userId, familyId } = useContext(UserContext);
     const [modalVisible, setModalVisible] = useState(false);
     const [weeklyLetters,setWeeklyLetters] = useState([])
     const [userLetters, setUserLetters] = useState([]); // 사용자가 작성한 쪽지
     const [familyLetters, setFamilyLetters] = useState([]); // 가족의 쪽지
-    const [userId, setUserId] = useState('user1'); // 로컬 스토리지에서 가져온 family_id
-    const [familyId, setFamilyId] = useState('A1B5E6'); // 로컬 스토리지에서 가져온 family_id
     const [refreshKey, setRefreshKey] = useState(0);
 
     const addSetR = () =>{

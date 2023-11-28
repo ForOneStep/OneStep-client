@@ -12,10 +12,10 @@ const AnswerItem = ({ item }) => {
     useEffect(() => {
         const fetchQuestionData = async () => {
             try {
-                console.log(`http://52.79.97.196:8080/comment/viewComment/${item.answer_id}`)
+                // console.log(`http://52.79.97.196:8080/comment/viewComment/${item.answer_id}`)
                 const comResponse = await axios.get(`http://52.79.97.196:8080/comment/viewComment/${item.answer_id}`);
                 setComment(comResponse.data);
-                console.log(comResponse.data)
+                // console.log(comResponse.data)
             }
             catch (error) {
                 console.error('데이터 가져오기 오류:', error);
@@ -71,11 +71,11 @@ const QuestionItem = ({ question }) => {
             </View>
         );
     }
-
+    console.log(question)
     return (
         <View style={styles.questionItem}>
             <LetterIcon style={styles.letterIcon} />
-            <Text style={styles.questionDate}>#{question.date}일 질문</Text>
+            <Text style={styles.questionDate}>{question.question_date} 일 질문</Text>
             <Text style={styles.questionContent}>{question.question_txt}</Text>
         </View>
     );
@@ -94,7 +94,7 @@ const RecodeDetailPage = ({route}) => {
                 const answerBlockResponse = await axios.get(`http:/52.79.97.196:8080/answer/read/${questionHeader.question_id}/${familyId}`)
                 const answerBlock = answerBlockResponse.data;
                 setAnswerBlockList(answerBlock);
-                console.log(answerBlock)
+                // console.log(answerBlock)
             } catch (error) {
                 console.error('데이터 가져오기 오류:', error);
             }

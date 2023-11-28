@@ -28,13 +28,13 @@ const QuizRecodePage = ({navigation}) => {
   if (!quizData) {
     return <Text>Loading...</Text>;
   }
-
+  console.log(quizData)
   return (
     <View style={styles.container}>
       <FlatList
-        data={quizData}
-        renderItem={({ item }) => <QuizItem quiz={item} navigation={navigation} />}
-        keyExtractor={item => item.quiz_id.toString()}
+          data={quizData.sort((a, b) => new Date(b.write_date) - new Date(a.write_date))}
+          renderItem={({ item }) => <QuizItem quiz={item} navigation={navigation} />}
+          keyExtractor={item => item.quiz_id.toString()}
       />
       <TouchableOpacity
         style={[styles.createButton, !canCreateQuiz && styles.disabledButton]}
